@@ -1,14 +1,11 @@
 package dev.cromo29.durkcore.Util;
 
-
 import dev.cromo29.durkcore.SpecificUtils.NumberUtil;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class Cooldown {
-    public Cooldown() {
-    }
 
     private static String format(long value) {
         return value > 9L ? "" + value : "0" + value;
@@ -129,7 +126,7 @@ public class Cooldown {
     }
 
     public static long getDateType(long time, Cooldown.Time t) {
-        switch (t) {
+        switch(t) {
             case YEAR:
                 return 31104000L * time;
             case MONTH:
@@ -285,7 +282,5 @@ public class Cooldown {
         MINUTE,
         SECOND;
 
-        private Time() {
-        }
     }
 }

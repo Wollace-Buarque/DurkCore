@@ -1,8 +1,7 @@
 package dev.cromo29.durkcore.Commands;
 
 import dev.cromo29.durkcore.API.DurkCommand;
-import dev.cromo29.durkcore.API.DurkPlugin;
-import dev.cromo29.durkcore.Util.TXT;
+import dev.cromo29.durkcore.DurkCore;
 import org.bukkit.Bukkit;
 
 import java.util.ArrayList;
@@ -12,18 +11,20 @@ public class Plugins extends DurkCommand {
 
     @Override
     public void perform() {
-        List<String> pl = new ArrayList<>();
+        List<String> pluginList = new ArrayList<>();
 
-        for (String pls : DurkPlugin.getPlugins())
-            if (Bukkit.getPluginManager().getPlugin(pls).isEnabled())
-                pl.add("<a>" + pls);
+        List<String> plugins = DurkCore.durkCore.getRegisteredPlugins();
+
+        for (String plugin : plugins)
+            if (Bukkit.getPluginManager().getPlugin(plugin).isEnabled())
+                pluginList.add("<7>" + plugin);
             else
-                pl.add("<c>" + pls);
+                pluginList.add("<4>" + plugin);
 
-        String plugins = TXT.createString(pl.toArray(new String[0]), 0, "<f>, ") + "<f>.";
-        int size = DurkPlugin.getPlugins().size();
+        String message = createString(pluginList.toArray(new String[0]), 0, "<e>, ") + "<e>.";
+        int size = plugins.size();
 
-        sendMessage("DurkPlugins <e>(<b>" + size + "<e>): " + plugins);
+        sendMessage("<e>DurkPlugins (<d>" + size + "<e>): " + message);
     }
 
     @Override
@@ -43,7 +44,7 @@ public class Plugins extends DurkCommand {
 
     @Override
     public List<String> getAliases() {
-        return getList("durkplugins", "durkplugin", "dplugin");
+        return getList("durkplugins", "durkplugin", "dplugin", "dplugins", "dplugins");
     }
 
     @Override

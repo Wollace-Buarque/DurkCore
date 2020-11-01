@@ -3,19 +3,7 @@ package dev.cromo29.durkcore.Inventory;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
-
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
-import java.util.function.Consumer;
-import java.util.function.Predicate;
-import java.util.stream.IntStream;
-
+import dev.cromo29.durkcore.Util.TXT;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.HumanEntity;
@@ -27,16 +15,22 @@ import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
-import dev.cromo29.durkcore.Util.TXT;
+
+import java.util.*;
+import java.util.function.Consumer;
+import java.util.function.Predicate;
+import java.util.stream.IntStream;
 
 public class Inv implements InventoryHolder {
-    private final HashMap<Integer, Consumer<InventoryClickEvent>> itemHandlers;
+
+    private final Map<Integer, Consumer<InventoryClickEvent>> itemHandlers;
     private Set<Consumer<InventoryOpenEvent>> openHandlers;
     private Set<Consumer<InventoryCloseEvent>> closeHandlers;
     private Set<Consumer<InventoryClickEvent>> clickHandlers;
     private List<Inv> pages;
     private Map<String, Inv> pagesByKey;
     private Predicate<Player> closeFilter;
+
     private Inventory inventory;
     private boolean ignorePlayerInventory;
     private boolean cancelPlayerInventoryClick;
@@ -45,6 +39,7 @@ public class Inv implements InventoryHolder {
     public Inv clone() {
         try {
             Inv toRet = new Inv(inventory.getSize(), inventory.getName() == null ? inventory.getType().getDefaultTitle() : inventory.getName());
+
             toRet.inventory.setContents(inventory.getContents());
             toRet.closeFilter = closeFilter;
             toRet.itemHandlers.putAll(itemHandlers);
@@ -69,8 +64,8 @@ public class Inv implements InventoryHolder {
             toRet.cancelClick = cancelClick;
 
             return toRet;
-        } catch (Exception var2) {
-            var2.printStackTrace();
+        } catch (Exception exception) {
+            exception.printStackTrace();
             return null;
         }
     }
@@ -96,9 +91,9 @@ public class Inv implements InventoryHolder {
     }
 
     public boolean setPage(int id, Inv page) {
-        if (!hasPage(id)) {
+        if (!hasPage(id))
             return false;
-        } else {
+        else {
             pages.set(id, page);
             return true;
         }
@@ -109,27 +104,27 @@ public class Inv implements InventoryHolder {
     }
 
     public boolean setPage(String id, Inv page) {
-        if (!hasPage(id)) {
+        if (!hasPage(id))
             return false;
-        } else {
+        else {
             pagesByKey.put(id, page);
             return true;
         }
     }
 
     public boolean removePage(int id) {
-        if (!hasPage(id)) {
+        if (!hasPage(id))
             return false;
-        } else {
+        else {
             pages.remove(id);
             return true;
         }
     }
 
     public boolean removePage(String id) {
-        if (!hasPage(id)) {
+        if (!hasPage(id))
             return false;
-        } else {
+        else {
             pagesByKey.remove(id);
             return true;
         }
@@ -154,6 +149,7 @@ public class Inv implements InventoryHolder {
 
     public void closeInventoryAndPagesForAll() {
         closeInventoryForAll();
+
         Lists.newArrayList(getPages()).forEach(Inv::closeInventoryAndPagesForAll);
         Lists.newArrayList(getPagesByStringId().values()).forEach(Inv::closeInventoryAndPagesForAll);
     }
@@ -184,8 +180,7 @@ public class Inv implements InventoryHolder {
 
         if (type == InventoryType.CHEST && size > 0)
             inventory = Bukkit.createInventory(this, size, TXT.parse(title));
-         else
-            inventory = Bukkit.createInventory(this, Objects.requireNonNull(type, "type"), TXT.parse(title));
+        else inventory = Bukkit.createInventory(this, Objects.requireNonNull(type, "type"), TXT.parse(title));
 
         if (inventory.getHolder() != this)
             throw new IllegalStateException("Inventory holder is not Inv, found: " + inventory.getHolder());
@@ -228,9 +223,7 @@ public class Inv implements InventoryHolder {
 
         if (handler != null)
             itemHandlers.put(slot, handler);
-         else
-            itemHandlers.remove(slot);
-
+        else itemHandlers.remove(slot);
     }
 
     public void updateItem(int slot, ItemStack item) {
@@ -266,27 +259,53 @@ public class Inv implements InventoryHolder {
 
     public List<ItemStack> getItems() {
         List<ItemStack> items = Lists.newArrayList();
-        ItemStack[] var2 = inventory.getContents();
-        int var3 = var2.length;
 
-        for (int var4 = 0; var4 < var3; ++var4) {
-            ItemStack content = var2[var4];
-
-            if (content != null && content.getType() != Material.AIR)
-                items.add(content);
-        }
+        for (ItemStack content : inventory.getContents())
+            if (content != null && content.getType() != Material.AIR) items.add(content);
 
         return items;
+    }
+
+    public List<ItemStack> getItemsIncludingNull() {
+        return Lists.newArrayList(inventory.getContents());
     }
 
     public List<ItemStack> getItems(int fromSlot, int toSlot) {
         List<ItemStack> items = Lists.newArrayList();
 
-        for (int i = fromSlot; i <= toSlot; ++i) {
+        for (int i = fromSlot; i <= toSlot; i++) {
             ItemStack item = getItem(i);
+
             if (item != null && item.getType() != Material.AIR)
                 items.add(item);
         }
+        return items;
+    }
+
+    public List<ItemStack> getItemsIncludingNull(int fromSlot, int toSlot) {
+        List<ItemStack> items = Lists.newArrayList();
+
+        for (int i = fromSlot; i <= toSlot; i++) items.add(getItem(i));
+
+        return items;
+    }
+
+    public List<ItemStack> getItems(int... slots) {
+        List<ItemStack> items = Lists.newArrayList();
+
+        for (int slot : slots) {
+            ItemStack item = getItem(slot);
+
+            if (item != null && item.getType() != Material.AIR)
+                items.add(item);
+        }
+        return items;
+    }
+
+    public List<ItemStack> getItemsIncludingNull(int... slots) {
+        List<ItemStack> items = Lists.newArrayList();
+
+        for (int slot : slots) items.add(getItem(slot));
 
         return items;
     }
@@ -299,8 +318,12 @@ public class Inv implements InventoryHolder {
         for (ItemStack itemStack : item) setItem(TXT.getMiddleSlot(inventory), itemStack);
     }
 
-    public void setInMiddle(ItemStack item, Consumer<InventoryClickEvent> clickHandler) {
-        setItem(TXT.getMiddleSlot(inventory), item, clickHandler);
+    public int setInMiddle(ItemStack item, Consumer<InventoryClickEvent> clickHandler) {
+        int toReturn = TXT.getMiddleSlot(inventory);
+
+        setItem(toReturn, item, clickHandler);
+
+        return toReturn;
     }
 
     public void setInMiddle(Consumer<InventoryClickEvent> clickHandler, ItemStack... item) {
@@ -435,14 +458,15 @@ public class Inv implements InventoryHolder {
     }
 
     public void setItems(int[] slots, ItemStack item, Consumer<InventoryClickEvent> handler) {
-        int[] var4 = slots;
-        int var5 = slots.length;
 
-        for (int var6 = 0; var6 < var5; ++var6) {
-            int slot = var4[var6];
+        for (int slot : slots)
             setItem(slot, item, handler);
-        }
+    }
 
+    public void setItems(Consumer<InventoryClickEvent> handler, int[] slots, ItemStack... items) {
+        for (ItemStack itemStack : items)
+            for (int slot : slots)
+                setItem(slot, itemStack, handler);
     }
 
     public ItemStack getItem(int slot) {
@@ -455,14 +479,9 @@ public class Inv implements InventoryHolder {
     }
 
     public void removeItems(int... slots) {
-        int[] var2 = slots;
-        int var3 = slots.length;
 
-        for (int var4 = 0; var4 < var3; ++var4) {
-            int slot = var2[var4];
+        for (int slot : slots)
             removeItem(slot);
-        }
-
     }
 
     public void setCloseFilter(Predicate<Player> closeFilter) {
@@ -512,20 +531,18 @@ public class Inv implements InventoryHolder {
         closeHandlers.add(closeHandler);
     }
 
+    public void addCloseHandlerToAllPages(Consumer<InventoryCloseEvent> closeHandler) {
+        addCloseHandler(closeHandler);
+
+        pages.forEach(page -> page.addCloseHandler(closeHandler));
+    }
+
     public void setItemToFirstEmpty(ItemStack item) {
         setItem(firstEmpty(), item);
     }
 
     public void setItemToFirstEmpty(ItemStack... items) {
-        ItemStack[] var2 = items;
-        int var3 = items.length;
-
-        for (int var4 = 0; var4 < var3; ++var4) {
-            ItemStack item = var2[var4];
-
-            if (firstEmpty() != -1)
-                setItem(firstEmpty(), item);
-        }
+        for (ItemStack item : items) if (firstEmpty() != -1) setItem(firstEmpty(), item);
     }
 
     public void setItemToFirstEmpty(Material material) {
@@ -533,15 +550,7 @@ public class Inv implements InventoryHolder {
     }
 
     public void setItemToFirstEmpty(Material... materials) {
-        Material[] var2 = materials;
-        int var3 = materials.length;
-
-        for (int var4 = 0; var4 < var3; ++var4) {
-            Material material = var2[var4];
-
-            if (firstEmpty() != -1)
-                setItem(firstEmpty(), new ItemStack(material));
-        }
+        for (Material material : materials) if (firstEmpty() != -1) setItem(firstEmpty(), new ItemStack(material));
     }
 
     public void setItemToFirstEmpty(ItemStack item, Consumer<InventoryClickEvent> clickHandler) {
@@ -549,14 +558,7 @@ public class Inv implements InventoryHolder {
     }
 
     public void setItemToFirstEmpty(Consumer<InventoryClickEvent> clickHandler, ItemStack... items) {
-        ItemStack[] var3 = items;
-        int var4 = items.length;
-
-        for (int var5 = 0; var5 < var4; ++var5) {
-            ItemStack item = var3[var5];
-            if (firstEmpty() != -1)
-                setItem(firstEmpty(), item, clickHandler);
-        }
+        for (ItemStack item : items) if (firstEmpty() != -1) setItem(firstEmpty(), item, clickHandler);
     }
 
     public void setItemToFirstEmpty(Material material, Consumer<InventoryClickEvent> clickHandler) {
@@ -564,14 +566,21 @@ public class Inv implements InventoryHolder {
     }
 
     public void setItemToFirstEmpty(Consumer<InventoryClickEvent> clickHandler, Material... materials) {
-        Material[] var3 = materials;
-        int var4 = materials.length;
+        for (Material material : materials)
+            if (firstEmpty() != -1) setItem(firstEmpty(), new ItemStack(material), clickHandler);
+    }
 
-        for (int var5 = 0; var5 < var4; ++var5) {
-            Material material = var3[var5];
-            if (firstEmpty() != -1)
-                setItem(firstEmpty(), new ItemStack(material), clickHandler);
+    public int inventorySize() {
+        return inventory.getSize();
+    }
+
+    public int middleFirstEmpty() {
+        for (int i : getMiddle()) {
+            ItemStack item = getItem(i);
+
+            if (item == null || item.getType() == Material.AIR) return i;
         }
+        return -1;
     }
 
     public int firstEmpty() {
@@ -582,6 +591,16 @@ public class Inv implements InventoryHolder {
         return inventory.getViewers();
     }
 
+    public void clearInventorySafe(int... slot) {
+
+        for (int i = 0; i < inventory.getSize(); i++)
+            for (int safeSlot : slot) {
+                if (i == safeSlot) continue;
+
+                removeItem(safeSlot);
+            }
+    }
+
     public void clearInventory() {
         inventory.clear();
         itemHandlers.clear();
@@ -589,14 +608,9 @@ public class Inv implements InventoryHolder {
 
     public int emptySlots() {
         int empty = 0;
-        ItemStack[] var2 = inventory.getContents();
-        int var3 = var2.length;
 
-        for (int var4 = 0; var4 < var3; ++var4) {
-            ItemStack content = var2[var4];
-            if (content == null || content.getType() == Material.AIR)
-                ++empty;
-        }
+        for (ItemStack content : inventory.getContents())
+            if (content == null || content.getType() == Material.AIR) empty++;
 
         return empty;
     }
@@ -604,42 +618,28 @@ public class Inv implements InventoryHolder {
     public void removeAll(ItemStack item) {
         Map<Integer, ItemStack> items = Maps.newHashMap();
         int slot = 0;
-        ItemStack[] var4 = inventory.getContents();
-        int var5 = var4.length;
 
-        for (int var6 = 0; var6 < var5; ++var6) {
-            ItemStack content = var4[var6];
-            if (content != null && content.getType() != Material.AIR)
-                items.put(slot, content);
-
-            ++slot;
+        for (ItemStack content : inventory.getContents()) {
+            if (content != null && content.getType() != Material.AIR) items.put(slot, content);
+            slot++;
         }
 
         items.forEach((s, i) -> {
-
-            if (item.isSimilar(i))
-                removeItem(s);
+            if (item.isSimilar(i)) removeItem(s);
         });
     }
 
     public void removeAll(Material material) {
         Map<Integer, Material> items = Maps.newHashMap();
         int slot = 0;
-        ItemStack[] var4 = inventory.getContents();
-        int var5 = var4.length;
 
-        for (int var6 = 0; var6 < var5; ++var6) {
-            ItemStack content = var4[var6];
-
-            if (content != null && content.getType() != Material.AIR)
-                items.put(slot, content.getType());
-
-            ++slot;
+        for (ItemStack content : inventory.getContents()) {
+            if (content != null && content.getType() != Material.AIR) items.put(slot, content.getType());
+            slot++;
         }
 
         items.forEach((s, m) -> {
-            if (m == material)
-                removeItem(s);
+            if (m == material) removeItem(s);
         });
     }
 
@@ -650,60 +650,73 @@ public class Inv implements InventoryHolder {
         clickHandlers.add(clickHandler);
     }
 
+    public void addClickHandlerToAllPages(Consumer<InventoryClickEvent> clickHandler) {
+        addClickHandler(clickHandler);
+
+        pages.forEach(page -> page.addClickHandler(clickHandler));
+    }
+
     public void open(Player player) {
         player.openInventory(inventory);
     }
 
+    public void open(HumanEntity whoClicked) {
+        whoClicked.openInventory(inventory);
+    }
+
     public int[] getBorders() {
         int size = inventory.getSize();
-        return IntStream.range(0, size).filter((i) -> {
-            return size < 27 || i < 9 || i % 9 == 0 || (i - 8) % 9 == 0 || i > size - 9;
-        }).toArray();
+
+        return IntStream.range(0, size).filter(i -> size < 27 || i < 9 || i % 9 == 0 || (i - 8) % 9 == 0 || i > size - 9).toArray();
     }
 
     public int[] getMiddle() {
         int size = inventory.getSize();
-        return IntStream.range(0, size).filter((i) -> {
-            return i > 9 && i < 17 || i > 18 && i < 26 || i > 27 && i < 35 || i > 36 && i < 44;
-        }).toArray();
+
+        if (size == 3 * 9) return new int[]{10, 11, 12, 13, 14, 15, 16};
+
+        return IntStream.range(0, size).filter(i -> i > 9 && i < 17 && size > 18 || i > 18 && i < 26 && size > 27 || i > 27 && i < 35 && size > 36 || i > 36 && i < 44 && size > 45).toArray();
     }
 
     public Inventory getInventory() {
         return inventory;
     }
 
-    public void handleOpen(InventoryOpenEvent e) {
-        onOpen(e);
+    public void handleOpen(InventoryOpenEvent inventoryOpenEvent) {
+        onOpen(inventoryOpenEvent);
+
         if (openHandlers != null) {
-            openHandlers.forEach((c) -> {
-                c.accept(e);
+            openHandlers.forEach((consumer) -> {
+                consumer.accept(inventoryOpenEvent);
             });
         }
 
     }
 
-    public boolean handleClose(InventoryCloseEvent e) {
-        onClose(e);
+    public boolean handleClose(InventoryCloseEvent inventoryCloseEvent) {
+        onClose(inventoryCloseEvent);
+
         if (closeHandlers != null) {
-            closeHandlers.forEach((c) -> {
-                c.accept(e);
+            closeHandlers.forEach((consumer) -> {
+                consumer.accept(inventoryCloseEvent);
             });
         }
 
-        return closeFilter != null && closeFilter.test((Player) e.getPlayer());
+        return closeFilter != null && closeFilter.test((Player) inventoryCloseEvent.getPlayer());
     }
 
-    public void handleClick(InventoryClickEvent e) {
-        onClick(e);
+    public void handleClick(InventoryClickEvent inventoryClickEvent) {
+        onClick(inventoryClickEvent);
+
         if (clickHandlers != null) {
-            clickHandlers.forEach((c) -> {
-                c.accept(e);
+            clickHandlers.forEach((consumer) -> {
+                consumer.accept(inventoryClickEvent);
             });
         }
 
-        Consumer<InventoryClickEvent> clickConsumer = itemHandlers.get(e.getSlot());
+        Consumer<InventoryClickEvent> clickConsumer = itemHandlers.get(inventoryClickEvent.getSlot());
         if (clickConsumer != null) {
-            clickConsumer.accept(e);
+            clickConsumer.accept(inventoryClickEvent);
         }
 
     }

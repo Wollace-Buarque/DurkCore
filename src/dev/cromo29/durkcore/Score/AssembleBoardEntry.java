@@ -82,6 +82,7 @@ public class AssembleBoardEntry {
 		}
 
 		Score score = board.objective.getScore(identifier);
+
 		score.setScore(position);
 	}
 

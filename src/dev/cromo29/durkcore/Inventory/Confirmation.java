@@ -12,34 +12,29 @@ import java.util.function.Consumer;
 
 public class Confirmation {
 
-    public static Inv confirm(String title, ItemStack middleItem, Player p, Confirmation.OnConfirm onConfirm, Confirmation.OnReject onReject) {
-        Inv confirm = new Inv(36, TXT.parse(title));
+    public static Inv confirm(String title, ItemStack middleItem, Player p, OnConfirm onConfirm, OnReject onReject) {
+        Inv confirm = new Inv(4 * 9, TXT.parse(title));
+
         confirm.setItem(13, middleItem);
-        confirm.setItem(20, (new MakeItem(Material.WOOL, (byte) 5)).setName("<a>Confirmar").build(), (e) -> {
-            if (e.getClickedInventory().getType() != InventoryType.PLAYER) {
-                e.getWhoClicked().closeInventory();
 
-                if (onConfirm != null)
-                    onConfirm.accept(e);
+        confirm.setItem(20, new MakeItem(Material.WOOL, (byte) 5).setName("<a>Confirmar").build(), e -> {
+            if (e.getClickedInventory().getType() == InventoryType.PLAYER) return;
 
-            }
+            e.getWhoClicked().closeInventory();
+            if (onConfirm != null) onConfirm.accept(e);
         });
-        confirm.setItem(24, (new MakeItem(Material.WOOL, (byte) 14)).setName("<c>Cancelar").build(), (e) -> {
-            if (e.getClickedInventory().getType() != InventoryType.PLAYER) {
-                e.getWhoClicked().closeInventory();
 
-                if (onReject != null)
-                    onReject.accept(e);
+        confirm.setItem(24, new MakeItem(Material.WOOL, (byte) 14).setName("<c>Cancelar").build(), e -> {
+            if (e.getClickedInventory().getType() == InventoryType.PLAYER) return;
 
-            }
+            e.getWhoClicked().closeInventory();
+            if (onReject != null) onReject.accept(e);
         });
+
         confirm.open(p);
         return confirm;
     }
 
-    public interface OnReject extends Consumer<InventoryClickEvent> {
-    }
-
-    public interface OnConfirm extends Consumer<InventoryClickEvent> {
-    }
+    public interface OnConfirm extends Consumer<InventoryClickEvent> {}
+    public interface OnReject extends Consumer<InventoryClickEvent> {}
 }

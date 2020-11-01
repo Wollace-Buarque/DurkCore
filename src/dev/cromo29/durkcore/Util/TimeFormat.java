@@ -1,8 +1,19 @@
 package dev.cromo29.durkcore.Util;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.concurrent.TimeUnit;
 
 public class TimeFormat {
+
+    public static String getTime(long milisegundos) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(milisegundos);
+
+        SimpleDateFormat formatador = new SimpleDateFormat("dd/MM/yyyy # HH:mm");
+
+        return formatador.format(calendar.getTime()).replace("#", "às");
+    }
 
     public static String format(long time) {
 

@@ -4,43 +4,52 @@ import dev.cromo29.durkcore.Util.TXT;
 
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.text.NumberFormat;
+import java.util.Locale;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class NumberUtil {
 
-    private static String[] formats = new String[]{"-", "-", "K", "M", "B", "T", "Q", "QT", "S", "ST", "O", "N", "D", "UD", "DD", "TD", "QD", "QTD", "SD", "STD", "OD", "ND", "V"};
+    public static final double LOG = 6.907755278982137D;
+    public static final Object[][] VALUES = {
+            {"", "K", "M", "B", "T", "Q", "QQ", "S", "SS", "O", "N", "D", "UN", "DD", "TR", "QT", "QN", "SD", "SPD", "OD", "ND", "VG", "UVG", "DVG", "TVG", "QTV"},
+            {1D, 1000.0D, 1000000.0D, 1.0E9D, 1.0E12D, 1.0E15D, 1.0E18D, 1.0E21D, 1.0E24D, 1.0E27D, 1.0E30D, 1.0E33D, 1.0E36D, 1.0E39D, 1.0E42D, 1.0E45D, 1.0E48D, 1.0E51D, 1.0E54D, 1.0E57D, 1.0E60D, 1.0E63D, 1.0E66D, 1.0E69D, 1.0E72D}
+    };
 
-    public static String format(Object value) {
-        int ii;
-        try {
-            String val = (new DecimalFormat("###,###")).format(value).replace(".", ",");
-            ii = val.indexOf(",");
-            ii = val.split(",").length;
-            return ii == -1 ? val : (val.substring(0, ii + 2) + formats[ii]).replace(",0", "");
-        } catch (Exception var6) {
-            String val = (new DecimalFormat("###,###")).format(value).replace(".", ",");
-            ii = val.indexOf(",");
-            if (ii == -1) {
-                return val;
-            } else {
-                String num = val.substring(0, 1);
-                String finalVal = val.substring(1).replace(",", "");
-                return num + "e" + finalVal.length();
-            }
-        }
+    public static final DecimalFormat FORMAT = new DecimalFormat("#,###.##", new DecimalFormatSymbols(new Locale("pt", "BR")));
+
+    public static String format(double number) {
+        if (number == 0) return FORMAT.format(number);
+
+        int index = (int) (Math.log(number) / LOG);
+
+        return FORMAT.format(number / (double) VALUES[1][index]) + VALUES[0][index];
     }
 
-    public static int getPercentage(double value, double percentage) {
-        return (int) Math.round(value * percentage / 100.0D);
+    public static int getPercentageRounded(double value, double percentage) {
+        return (int) getPercentage(value, percentage);
+    }
+
+    public static double getPercentage(double value, double percentage) {
+        return Math.round(value * percentage / 100d);
+    }
+
+    public static double randomPercentage() {
+        return ThreadLocalRandom.current().nextDouble() * 100.0;
+    }
+
+    public static boolean randomChance(double chance) {
+        return randomPercentage() <= chance;
     }
 
     public static int getValueMax(double value, double maxOfValue, int maxValue) {
         float percent = (float) (value / maxOfValue);
-        return (int) ((float) maxValue * percent);
+        return (int) (maxValue * percent);
     }
 
-    public static String getProgressBar(int current, int max, int totalBars, String symbol, String completedColor, String notCompletedColor) {
+
+    public static String getProgressBar(double current, double max, int totalBars, String symbol, String completedColor, String notCompletedColor) {
         float percent = (float) current / (float) max;
         int progressBars = (int) ((float) totalBars * percent);
         int leftOver = totalBars - progressBars;
@@ -67,7 +76,7 @@ public class NumberUtil {
             try {
                 Integer.parseInt(toCheck);
                 return true;
-            } catch (Exception var2) {
+            } catch (Exception ignored) {
                 return false;
             }
         }
@@ -80,7 +89,7 @@ public class NumberUtil {
             try {
                 Double.parseDouble(toCheck);
                 return true;
-            } catch (Exception var2) {
+            } catch (Exception ignored) {
                 return false;
             }
         }
@@ -89,7 +98,7 @@ public class NumberUtil {
     public static int getInt(String s) {
         try {
             return Integer.parseInt(s);
-        } catch (Exception var2) {
+        } catch (Exception ignored) {
             return 0;
         }
     }
@@ -97,7 +106,7 @@ public class NumberUtil {
     public static double getDouble(String s) {
         try {
             return Double.parseDouble(s);
-        } catch (Exception var2) {
+        } catch (Exception ignored) {
             return 0.0D;
         }
     }
@@ -105,7 +114,7 @@ public class NumberUtil {
     public static long getLong(String s) {
         try {
             return Long.parseLong(s);
-        } catch (Exception var2) {
+        } catch (Exception ignored) {
             return 0L;
         }
     }
@@ -113,7 +122,7 @@ public class NumberUtil {
     public static float getFloat(String s) {
         try {
             return Float.parseFloat(s);
-        } catch (Exception var2) {
+        } catch (Exception ignored) {
             return 0.0F;
         }
     }
@@ -167,7 +176,9 @@ public class NumberUtil {
     }
 
     public static BigDecimal getBigDecimal(String number) {
-        return number.equals("") ? new BigDecimal(0) : new BigDecimal(number);
+        if (number.equals("")) return new BigDecimal(0);
+
+        return new BigDecimal(number);
     }
 
     public static String formatNumberSimple(double s) {
@@ -185,7 +196,9 @@ public class NumberUtil {
 
     public static String formatNumber(double s, char spacer, char decimalSpacer) {
         DecimalFormat f = new DecimalFormat("###,###.##");
-        String formated = f.format(s).replace(",", "@").replace(".", "#");
+        String formated = f.format(s).replace(",", "@")
+                .replace(".", "#");
+
         return formated.replace("#", spacer + "").replace("@", decimalSpacer + "");
     }
 

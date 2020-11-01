@@ -3,16 +3,14 @@ package dev.cromo29.durkcore.Util;
 import com.google.common.collect.Lists;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import dev.cromo29.durkcore.SpecificUtils.ItemUtil;
 import org.bukkit.Location;
 import org.bukkit.inventory.ItemStack;
 
-
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class JsonBuilder {
     public JsonBuilder() {}
@@ -34,9 +32,10 @@ public class JsonBuilder {
 
     public List<ItemStack> getItemStackList(String key) {
         List<ItemStack> items = new ArrayList<>();
-        List<String> brute = (List<String>)this.data.get(key);
+        List<String> brute = (List<String>)data.get(key);
         int size = brute.size();
         int loop = 0;
+
         while (loop < size) {
             items.add(ItemUtil.fromJson(brute.get(loop)));
             loop++;
@@ -45,11 +44,13 @@ public class JsonBuilder {
     }
 
     public Location getLocation(String key) { return GsonManager.unserealizeLocationFull(data.get(key).toString()); }
+
     public List<Location> getLocationList(String key) {
         List<Location> items = new ArrayList<>();
-        List<String> brute = (List<String>)this.data.get(key);
+        List<String> brute = (List<String>)data.get(key);
         int size = brute.size();
         int loop = 0;
+
         while (loop < size) {
             items.add(GsonManager.unserealizeLocationFull(brute.get(loop)));
             loop++;
@@ -58,6 +59,7 @@ public class JsonBuilder {
     }
 
     public JsonBuilder put(String key, Object value) { data.put(key, value); return this; }
+
     public JsonBuilder remove(String key) { data.remove(key); return this; }
 
     public JsonBuilder putLocation(String key, Location location) { data.put(key, GsonManager.serealizeLocationFull(location)); return this; }
@@ -70,7 +72,7 @@ public class JsonBuilder {
 
         return this;
     }
-    public JsonBuilder putItemStack(String key, ItemStack location) { this.data.put(key, ItemUtil.toJson(location)); return this; }
+    public JsonBuilder putItemStack(String key, ItemStack location) { data.put(key, ItemUtil.toJson(location)); return this; }
 
     public JsonBuilder putItemStackList(String key, List<ItemStack> locations) {
 
@@ -81,7 +83,7 @@ public class JsonBuilder {
         return this;
     }
 
-    public String build() { return this.gson.toJson(this.data); }
+    public String build() { return gson.toJson(data); }
 
 }
 

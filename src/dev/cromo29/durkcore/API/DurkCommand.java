@@ -1,44 +1,84 @@
 package dev.cromo29.durkcore.API;
 
+import com.google.common.collect.Lists;
+import dev.cromo29.durkcore.Entity.DurkPlayer;
 import dev.cromo29.durkcore.SpecificUtils.ListUtil;
+import dev.cromo29.durkcore.Util.BreakLine;
+import dev.cromo29.durkcore.Util.JAction;
 import dev.cromo29.durkcore.Util.TXT;
-import net.minecraft.server.v1_8_R3.IChatBaseComponent;
-import net.minecraft.server.v1_8_R3.PacketPlayOutChat;
-import org.bukkit.*;
-import org.bukkit.command.*;
-import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
+import net.md_5.bungee.api.chat.ClickEvent;
+import net.md_5.bungee.api.chat.HoverEvent;
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.OfflinePlayer;
+import org.bukkit.Sound;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandExecutor;
+import org.bukkit.command.CommandMap;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.util.StringUtil;
+import org.bukkit.inventory.Inventory;
 
 import java.lang.reflect.Field;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.List;
+import java.util.UUID;
 
 public abstract class DurkCommand implements CommandExecutor {
 
     private static CommandMap cmap;
+
+    private String usedCommand;
     private CommandSender sender;
     private String[] args;
-    private static String usedCommand;
+
+    private String command, permission;
+    private List<String> aliases;
+    private boolean canConsolePerform;
+
+    public DurkCommand() {
+        this.command = getCommand();
+        this.permission = getPermission();
+        this.aliases = getAliases();
+        this.canConsolePerform = canConsolePerform();
+    }
 
     private void setValues(String cmd, CommandSender sender, String[] args) {
+        this.usedCommand = cmd;
         this.sender = sender;
         this.args = args;
-        usedCommand = cmd;
+    }
+
+    public void setCommand(String command) {
+        this.command = command;
+    }
+
+    public void setPermission(String permission) {
+        this.permission = permission;
+    }
+
+    public void setAliases(List<String> aliases) {
+        this.aliases = aliases;
+    }
+
+    public void setCanConsolePerform(boolean canConsolePerform) {
+        this.canConsolePerform = canConsolePerform;
     }
 
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String s, String[] args) {
-        if (!cmd.getLabel().equalsIgnoreCase(getCommand())) return true;
 
-        if (getPermission() != null && !sender.hasPermission(getPermission())) {
+        if (!cmd.getLabel().equalsIgnoreCase(command)) return true;
+
+        if (permission != null && !hasPermission(sender, permission)) {
             warnNoPermission();
             return true;
         }
 
-        if (!canConsolePerform() && !(sender instanceof Player)) {
+        if (!canConsolePerform && !(sender instanceof Player)) {
             warnConsoleCannotPerform();
             return true;
         }
@@ -46,6 +86,7 @@ public abstract class DurkCommand implements CommandExecutor {
         perform();
         return false;
     }
+
 
     public abstract void perform();
 
@@ -60,17 +101,26 @@ public abstract class DurkCommand implements CommandExecutor {
     public abstract String getDescription();
 
     public List<String> tabComplete() {
-        String lastWord = args[args.length - 1];
-        Player senderPlayer = (sender instanceof Player) ? ((Player) sender) : null;
-        ArrayList<String> matchedPlayers = new ArrayList<>();
-        for (Player player : sender.getServer().getOnlinePlayers()) {
-            String name = player.getName();
-            if ((senderPlayer == null || senderPlayer.canSee(player)) && StringUtil.startsWithIgnoreCase(name, lastWord))
-                matchedPlayers.add(name);
 
+        try {
+            List<String> toRet = Lists.newArrayList();
+            String currentArg = args[args.length - 1];
+
+            for (Player player : Bukkit.getServer().getOnlinePlayers()) {
+
+                if (currentArg.equals("")) toRet.add(player.getName());
+                else if (player.getName().toLowerCase().startsWith(currentArg.toLowerCase()))
+                    toRet.add(player.getName());
+            }
+
+            return toRet;
+        } catch (Exception exception) {
+            List<String> toRet = Lists.newArrayList();
+
+            for (Player player : Bukkit.getServer().getOnlinePlayers()) toRet.add(player.getName());
+
+            return toRet;
         }
-        Collections.sort(matchedPlayers, String.CASE_INSENSITIVE_ORDER);
-        return matchedPlayers;
     }
 
 
@@ -86,12 +136,17 @@ public abstract class DurkCommand implements CommandExecutor {
         return args;
     }
 
-    public Player getPlayer(String uuid) {
+
+    public Player getPlayer(UUID uuid) {
         return Bukkit.getPlayer(uuid);
     }
 
+    public Player getPlayer(String name) {
+        return Bukkit.getPlayer(name);
+    }
+
     public Player getPlayer(int i) {
-        return Bukkit.getPlayer(argsAt(i));
+        return Bukkit.getPlayer(argAt(i));
     }
 
     public Player getPlayerAt(String args) {
@@ -102,36 +157,47 @@ public abstract class DurkCommand implements CommandExecutor {
         return Bukkit.getPlayerExact(name);
     }
 
-    public OfflinePlayer getOfflinePlayer(String uuid) {
+
+    public OfflinePlayer getOfflinePlayer(UUID uuid) {
         return Bukkit.getOfflinePlayer(uuid);
     }
 
+    public OfflinePlayer getOfflinePlayer(String name) {
+        return Bukkit.getOfflinePlayer(name);
+    }
+
     public OfflinePlayer getOfflinePlayer(int i) {
-        return Bukkit.getOfflinePlayer(argsAt(i));
+        return Bukkit.getOfflinePlayer(argAt(i));
     }
 
     public OfflinePlayer getOfflinePlayerAt(String args) {
         return Bukkit.getOfflinePlayer(args);
     }
 
+
     public Location getCenter(Location loc) {
         return loc.add(0.5, 0, 0.5);
     }
 
+
     public int getInt(String asInt) {
         return Integer.parseInt(asInt);
+    }
+
+    public long getLong(String asLong) {
+        return Long.parseLong(asLong);
     }
 
     public double getDouble(String asDouble) {
         return Double.parseDouble(asDouble);
     }
 
-    public String getArgsAfter(int start) {
-        return TXT.createString(getArgs(), start);
+    public boolean getBoolean(String asBoolean) {
+        return Boolean.parseBoolean(asBoolean);
     }
 
-    public List<String> getStringList(String... ss) {
-        return ListUtil.getStringList(ss);
+    public String getArgsAfter(int start) {
+        return TXT.createString(getArgs(), start);
     }
 
     @SafeVarargs
@@ -139,69 +205,81 @@ public abstract class DurkCommand implements CommandExecutor {
         return ListUtil.getList(values);
     }
 
-    private static void sendGlobalMessage(String s) {
-        Bukkit.broadcastMessage(TXT.parse(s));
+    public List<String> getStringList(String... strings) {
+        return ListUtil.getStringList(strings);
     }
 
-    private static void sendGlobalMessage(String s, String perm) {
-        Bukkit.broadcast(TXT.parse(s), perm);
+
+    public void sendGMessage(String message) {
+        Bukkit.broadcastMessage(parse(message));
     }
 
-    public void sendMessages(Player target, String... msgs) {
-        for (String s : msgs) sendMessage(target, s);
+    public void sendGMessage(String message, String permission) {
+        Bukkit.broadcast(parse(message), permission);
     }
 
-    public void sendMessages(String... msgs) {
-        for (String s : msgs) sendMessage(s);
+    public void sendMessages(CommandSender target, String... messages) {
+        for (String s : messages) sendMessage(target, s);
     }
 
-    public void sendMessage(String s) {
-        sender.sendMessage(TXT.parse(s));
+    public void sendMessages(String... messages) {
+        for (String text : messages) sendMessage(text);
     }
 
-    public void sendMessage(Player target, String s) {
-        target.sendMessage(TXT.parse(s));
+    public void sendMessage(String message) {
+        sender.sendMessage(parse(message));
     }
 
-    public void sendMessage(String s, Object... args) {
-        String txt = String.format(s, args);
-        sendMessage(txt);
+    public void sendMessage(CommandSender sender, String s) {
+        sender.sendMessage(parse(s));
     }
 
-    public static void sendActionBar(Player p, String s) {
-        PacketPlayOutChat packet = new PacketPlayOutChat(IChatBaseComponent.ChatSerializer.a("{\"text\":\"" + TXT.parse(s) + "\"}"), (byte) 2);
-        ((CraftPlayer) p).getHandle().playerConnection.sendPacket(packet);
+    public void sendMessage(String message, Object... args) {
+        sendMessage(String.format(message, args));
     }
 
-    public void log(String s, String... ss) {
-        Bukkit.getConsoleSender().sendMessage(TXT.parse(s));
-        for (String text : ss)
-            Bukkit.getConsoleSender().sendMessage(TXT.parse(text));
+
+    public void sendActionBar(Player player, String actionBar) {
+        TXT.sendActionBar(player, actionBar);
     }
 
-    public static void logMessages(String perm, String m, String... ms) {
-        for (Player p : Bukkit.getServer().getOnlinePlayers())
-            if (p.hasPermission(perm))
-                p.sendMessage(TXT.parse(m));
-        for (String s : ms)
-            for (Player p : Bukkit.getServer().getOnlinePlayers())
-                if (p.hasPermission(perm))
-                    p.sendMessage(TXT.parse(s));
+    public void sendActionBar(Player player, String actionBar, int stayInSeconds) {
+        TXT.sendActionBar(player, actionBar, stayInSeconds);
     }
 
-    public static void logConsoleMessages(String m, String... ms) {
-        Bukkit.getConsoleSender().sendMessage(TXT.parse(m));
-        for (String s : ms)
-            Bukkit.getConsoleSender().sendMessage(TXT.parse(s));
+    public void sendHoverableMessage(String message, String hover) {
+        JAction jAction = new JAction();
+        jAction.parseText(message);
+
+        if (hover != null) jAction.setParseEvent(hover, HoverEvent.Action.SHOW_TEXT);
+
+        jAction.endJson().send(getSender());
     }
 
+    public void sendClickableCommand(String message, String hover, String click) {
+        JAction jAction = new JAction();
+        jAction.parseText(message);
+
+        if (hover != null) jAction.setParseEvent(hover, HoverEvent.Action.SHOW_TEXT);
+        if (click != null) jAction.setParseEvent(click, ClickEvent.Action.SUGGEST_COMMAND);
+
+        jAction.endJson().send(getSender());
+    }
+
+
+    @Deprecated
     public String argsAt(int i) {
+        return args[i];
+    }
+
+    public String argAt(int i) {
         return args[i];
     }
 
     public Player asPlayer() {
         return (Player) sender;
     }
+
 
     public boolean isPlayer() {
         return sender instanceof Player;
@@ -211,6 +289,16 @@ public abstract class DurkCommand implements CommandExecutor {
         return sender instanceof Player;
     }
 
+    public boolean isConsole() {
+        return !isPlayer();
+    }
+
+    public boolean isConsole(CommandSender sender) {
+        return !isPlayer(sender);
+    }
+
+
+    @Deprecated
     public int isArgsLength() {
         return args.length;
     }
@@ -219,16 +307,40 @@ public abstract class DurkCommand implements CommandExecutor {
         return args.length == i;
     }
 
+
+    public int argsLength() {
+        return args.length;
+    }
+
+    public String lastArg() {
+        return argAt(argsLength() - 1);
+    }
+
+
+    public boolean isArgsAt(int i, String s) {
+        return s.equals(argAt(i));
+    }
+
+    public boolean isArgAt(int i, String s, String... ss) {
+        String arg = argAt(i);
+
+        if (arg.equals(s))
+            return true;
+
+        if (ss != null && ss.length > 0)
+            for (String ssArg : ss)
+                if (arg.equals(ssArg))
+                    return true;
+        return false;
+    }
+
+
     public boolean isArgAtIgnoreCase(int i, String s) {
         return args[i].equalsIgnoreCase(s);
     }
 
-    public boolean isArgsAt(int i, String s) {
-        return s.equals(argsAt(i));
-    }
-
     public boolean isArgAtIgnoreCase(int i, String s, String... ss) {
-        String arg = argsAt(i);
+        String arg = argAt(i);
 
         if (arg.equalsIgnoreCase(s))
             return true;
@@ -238,6 +350,27 @@ public abstract class DurkCommand implements CommandExecutor {
                 if (arg.equalsIgnoreCase(ssArg))
                     return true;
         return false;
+    }
+
+    public boolean isInventoryFull(Inventory inventory) {
+        return inventory.firstEmpty() == -1;
+    }
+
+    public boolean isInventoryFull(Player player) {
+        return player.getInventory().firstEmpty() == -1;
+    }
+
+    public boolean hasPermission(CommandSender sender, String permission) {
+        return sender.hasPermission(permission);
+    }
+
+    public boolean hasPermission(String permission) {
+        return getSender().hasPermission(permission);
+    }
+
+
+    public void warnMustBeHoldingItem() {
+        sendMessage("<c>Você precisa estar segurando um item.");
     }
 
     public void warnConsoleCannotPerform() {
@@ -260,16 +393,60 @@ public abstract class DurkCommand implements CommandExecutor {
         sendMessage(name + " <c>não está online.");
     }
 
-    public void warnInventoryFull(Player p) {
-        sendMessage(p.getName() + " <c>está com o inventário cheio.");
+    public void warnInventoryFull(Player player) {
+        sendMessage(player.getName() + " <c>está com o inventário cheio.");
     }
 
-    public void playSound(Player p, Sound s, double volume, double distortion) {
-        p.playSound(p.getLocation(), s, (float) volume, (float) distortion);
+
+    public void playSound(Player player, Sound sound, double volume, double distortion) {
+        player.playSound(player.getLocation(), sound, (float) volume, (float) distortion);
     }
 
-    public void spawnEntity(Player p, EntityType e) {
-        p.getWorld().spawnEntity(p.getLocation(), e);
+    public void spawnEntity(Player player, EntityType entityType) {
+        player.getWorld().spawnEntity(player.getLocation(), entityType);
+    }
+
+    public void callEvent(Event event) {
+        Bukkit.getPluginManager().callEvent(event);
+    }
+
+
+    public String parse(String string, Object... ss) {
+        return TXT.parse(string, ss);
+    }
+
+    public String unparse(String string) {
+        return TXT.unparse(string);
+    }
+
+    public String createString(String[] args, int start) {
+        return TXT.createString(args, start);
+    }
+
+    public String createString(String[] args, int start, String glue) {
+        return TXT.createString(args, start, glue);
+    }
+
+
+    public boolean isCommandPerformed(boolean ignoreCase, String cmd, String... orCmds) {
+        if (ignoreCase) {
+            if (usedCommand.equalsIgnoreCase(cmd)) return true;
+
+            if (orCmds != null && orCmds.length > 0)
+                for (String orCmd : orCmds)
+                    if (orCmd.equalsIgnoreCase(usedCommand))
+                        return true;
+
+        } else {
+            if (usedCommand.equals(cmd))
+                return true;
+
+            if (orCmds != null && orCmds.length > 0)
+                for (String orCmd : orCmds)
+                    if (orCmd.equals(usedCommand))
+                        return true;
+        }
+        return false;
     }
 
     public boolean isValidInt(String toCheck) {
@@ -298,7 +475,24 @@ public abstract class DurkCommand implements CommandExecutor {
         }
     }
 
-    public <T> T tryCast(Object value, T to) {
+    public boolean isValidBoolean(String toCheck) {
+        try {
+            Boolean.parseBoolean(toCheck);
+            return true;
+        } catch (Exception ignored) {
+        }
+        return false;
+    }
+
+    public <T extends Enum<T>> T tryEnumValueOf(Class<T> enm, String enumName) {
+        try {
+            return Enum.valueOf(enm, enumName);
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    public <T> T tryCast(Object value) {
         try {
             return (T) value;
         } catch (Exception e) {
@@ -316,54 +510,44 @@ public abstract class DurkCommand implements CommandExecutor {
 
     public boolean containsArg(int i) {
         try {
-            String a = this.args[i];
+            String a = args[i];
             return true;
         } catch (Exception e) {
             return false;
         }
     }
 
-    public String parse(String s, Object... ss) {
-        return TXT.parse(s, ss);
+    public int getEmptySlots(Player player) {
+        DurkPlayer durkPlayer = DurkPlayer.get(player);
+
+        return durkPlayer.getInventoryEmptySlots();
     }
 
-    public String unParse(String s) {
-        return TXT.unparse(s);
-    }
+    public boolean isEmptyInventory(Player player) {
+        DurkPlayer durkPlayer = DurkPlayer.get(player);
 
-    public void callEvent(Event e) {
-        Bukkit.getPluginManager().callEvent(e);
-    }
-
-    public String createString(String[] args, int start) {
-        return TXT.createString(args, start);
-    }
-
-    public String createString(String[] args, int start, String glue) {
-        return TXT.createString(args, start, glue);
-    }
-
-    public static boolean isEmptyInventory(Player target) {
-        for (ItemStack itens : target.getInventory().getContents())
-            if (itens != null
-                    || target.getInventory().getHelmet() != null
-                    || target.getInventory().getChestplate() != null
-                    || target.getInventory().getLeggings() != null
-                    || target.getInventory().getBoots() != null)
-                return false;
-        return true;
+        return durkPlayer.isEmptyInventory();
     }
 
     public String replace(String text, String toReplace, String value, Object... replace) {
         text = text.replace(toReplace + "", value + "");
 
         Iterator<Object> iter = Arrays.asList(replace).iterator();
+
         while (iter.hasNext()) {
             String key = iter.next() + "";
             String iterValue = iter.next() + "";
+
             text = text.replace(key, iterValue);
         }
         return text;
+    }
+
+    public void log(String message, String... ss) {
+        Bukkit.getConsoleSender().sendMessage(parse(message));
+
+        for (String text : ss)
+            Bukkit.getConsoleSender().sendMessage(parse(text));
     }
 
     protected static CommandMap getCommandMap() {
@@ -394,73 +578,83 @@ public abstract class DurkCommand implements CommandExecutor {
             this.durkCmd = durkCommand;
         }
 
+        private void logMessages(String permission, String... messagges) {
+            for (Player player : Bukkit.getServer().getOnlinePlayers()) {
+                if (player.hasPermission(permission)) TXT.sendMessages(player, messagges);
+            }
+        }
+
+        private void logConsoleMessages(String... messages) {
+            for (String text : messages)
+                Bukkit.getConsoleSender().sendMessage(TXT.parse(text));
+        }
+
         @Override
         public boolean execute(CommandSender sender, String s, String[] args) {
             if (durkCmd != null) {
                 try {
                     durkCmd.setValues(s, sender, args);
+
                     return durkCmd.onCommand(sender, this, s, args);
-                } catch (Exception e) {
-                    e.printStackTrace();
+
+                } catch (Exception exception) {
+                    exception.printStackTrace();
 
                     StringBuilder errors = new StringBuilder();
-                    for (StackTraceElement stack : e.getStackTrace()) {
+                    for (StackTraceElement stack : exception.getStackTrace()) {
                         String clazz = stack.getClassName();
-                        if (!clazz.contains("DurkPlugin") && !clazz.contains("DurkCommand")
+
+                        if (!clazz.contains("DurkPlugin")
+                                && !clazz.contains("DurkCommand")
                                 && !clazz.contains("org.bukkit") && !clazz.contains("java")
                                 && !clazz.contains("net.minecraft") && !clazz.contains("minecraft")
                                 && !clazz.contains("spigot")) {
+
                             clazz = clazz.substring(clazz.lastIndexOf(".") + 1);
-                            errors.append("<7>").append(clazz).append("<f>: <e>").append(stack.getLineNumber()).append(" <7>(<e>").append(stack.getMethodName()).append("<7>)<f>, ");
+
+                            errors.append("<7>").append(clazz).append("<f>: <e>").append(stack.getLineNumber()).append(" <7>(<d>").append(stack.getMethodName()).append("<7>)<f>, ");
                         }
                     }
-                    String cmd2 = s;
+
+                    String cmd = s;
                     if (args.length != 0)
-                        cmd2 = s + " " + TXT.createString(args, 0);
+                        cmd = s + " " + TXT.createString(args, 0);
 
                     if (errors.toString().equals(""))
-                        errors.append("Indisponivel!");
+                        errors.append("<c>Indisponivel");
 
-                    String error2;
-                    if (e.getCause() != null)
-                        error2 = e.getCause().getLocalizedMessage();
-                    else
-                        error2 = e.getMessage();
+                    String error;
 
-                    int i = 0;
-                    for (Player on : Bukkit.getServer().getOnlinePlayers())
-                        if (on.hasPermission("29Erros.ADM")) {
-                            i++;
-                            break;
-                        }
+                    if (exception.getCause() != null)
+                        error = exception.getCause().getLocalizedMessage();
+                    else error = exception.getMessage();
 
-                    String warnPlayer;
-                    if (i > 0) {
-                        warnPlayer = "<a>Um staff foi avisado! tenha paciencia ate resolvermos este erro!";
-                    } else warnPlayer = "<a>Contate um staff urgentemente e tenha paciencia ate resolvermos este erro!";
+                    sender.sendMessage(TXT.parse("<c>Ocorreu um erro ao executar o comando <7>'" + cmd + "'<c>."));
 
-                    sender.sendMessage(TXT.parse("<c>Ocorreu um erro ao tentar executar este comando! " + warnPlayer));
+                    BreakLine breakWord = new BreakLine();
+
+                    String err = errors.substring(0, errors.length() - 5);
+                    String formated = breakWord.addWordOnBreak("  <8>> ", err).get();
 
                     logMessages("29Erros.ADM"
                             , ""
-                            , "<e><m>}----------------------------------{"
-                            , "  <e>| <c>Comando com erro: <7>" + cmd2
-                            , "  <e>| <c>Quem usou: <7>" + sender.getName()
-                            , "  <e>| <c>Erro: <7>" + error2
-                            , "  <e>| <c>O erro se encontra em:"
-                            , "  <e>| <c>» " + errors.toString().substring(0, errors.length() - 5) + "<f>."
-                            , "<e><m>}----------------------------------{"
+                            , " <7><m>---------------------<r> <d>ERRO <7><m>---------------------<r>"
+                            , "  <d>Comando com erro<f>: <7>" + cmd
+                            , "  <d>Quem usou<f>: <7>" + sender.getName()
+                            , "  <d>Erro<f>: <7>" + error
+                            , "  <d>O erro se encontra em<f>:"
+                            , "  <8>> " + formated + "<f>."
+                            , " <7><m>---------------------<r> <d>ERRO <7><m>---------------------<r>"
                             , "");
 
-                    logConsoleMessages(
-                            ""
-                            , "<e><m>}----------------------------------{"
-                            , "  <e>| <c>Comando com erro: <7>" + cmd2
-                            , "  <e>| <c>Quem usou: <7>" + sender.getName()
-                            , "  <e>| <c>Erro: <7>" + error2
-                            , "  <e>| <c>O erro se encontra em:"
-                            , "  <e>| <c>» " + errors.toString().substring(0, errors.length() - 5) + "<f>."
-                            , "<e><m>}----------------------------------{"
+                    logConsoleMessages(""
+                            , " <7><m>---------------------<r> <d>ERRO <7><m>---------------------<r>"
+                            , "  <d>Comando com erro<f>: <7>" + cmd
+                            , "  <d>Quem usou<f>: <7>" + sender.getName()
+                            , "  <d>Erro<f>: <7>" + error
+                            , "  <d>O erro se encontra em<f>:"
+                            , "  <8>> " + err + "<f>."
+                            , " <7><m>---------------------<r> <d>ERRO <7><m>---------------------<r>"
                             , "");
 
                 }
@@ -468,88 +662,93 @@ public abstract class DurkCommand implements CommandExecutor {
             return false;
         }
 
-
         public List<String> tabComplete(CommandSender sender, String label, String[] args) {
             try {
-                boolean setValue = false;
-                if (durkCmd.getCommand().equalsIgnoreCase(label))
-                    setValue = true;
-                if (!setValue && durkCmd.getAliases() != null)
-                    for (String aliases : durkCmd.getAliases())
+                boolean setValues = false;
+
+                if (durkCmd.command.equalsIgnoreCase(label))
+                    setValues = true;
+
+                if (!setValues && durkCmd.aliases != null) {
+                    for (String aliases : durkCmd.aliases) {
                         if (aliases.equalsIgnoreCase(label)) {
-                            setValue = true;
+                            setValues = true;
                             break;
                         }
+                    }
+                }
 
-                if (setValue)
+                if (setValues)
                     durkCmd.setValues(label, sender, args);
 
                 List<String> completions = durkCmd.tabComplete();
-                if (completions == null) return new ArrayList<>();
+
+                if (completions == null) return Lists.newArrayList();
+
                 return completions;
-            } catch (Exception e) {
-                e.printStackTrace();
+            } catch (Exception exception) {
+                exception.printStackTrace();
 
                 StringBuilder errors = new StringBuilder();
-                for (StackTraceElement stack : e.getStackTrace()) {
+                for (StackTraceElement stack : exception.getStackTrace()) {
                     String clazz = stack.getClassName();
+
                     if (!clazz.contains("DurkPlugin") && !clazz.contains("DurkCommand")
                             && !clazz.contains("org.bukkit") && !clazz.contains("java")
                             && !clazz.contains("net.minecraft") && !clazz.contains("minecraft")
                             && !clazz.contains("spigot")) {
+
                         clazz = clazz.substring(clazz.lastIndexOf(".") + 1);
-                        errors.append("<7>").append(clazz).append("<f>: <e>").append(stack.getLineNumber()).append(" <7>(<e>").append(stack.getMethodName()).append("<7>)<f>, ");
+
+                        errors.append("<7>").append(clazz).append("<f>: <e>").append(stack.getLineNumber()).append(" <7>(<d>").append(stack.getMethodName()).append("<7>)<f>, ");
                     }
                 }
 
-                String cmd2 = label;
+                String cmd = label;
                 if (args.length != 0)
-                    cmd2 = label + " " + TXT.createString(args, 0);
+                    cmd = label + " " + TXT.createString(args, 0);
 
                 if (errors.toString().equals(""))
-                    errors.append("Indisponivel!");
+                    errors.append("<c>Indisponivel");
 
-                String error2;
-                if (e.getCause() != null)
-                    error2 = e.getCause().getLocalizedMessage();
-                else
-                    error2 = e.getMessage();
+                String error;
+                if (exception.getCause() != null)
+                    error = exception.getCause().getLocalizedMessage();
+                else error = exception.getMessage();
 
-                int i = 0;
-                for (Player on : Bukkit.getServer().getOnlinePlayers())
-                    if (on.hasPermission("29Erros.ADM")) {
-                        i++;
-                        break;
-                    }
+                sender.sendMessage(TXT.parse("<c>Ocorreu um erro ao usar o completor de comando em <7>'" + label + "'<c>!"));
 
-                String warnPlayer;
-                if (i > 0) {
-                    warnPlayer = "<a>Um staff foi avisado! tenha paciencia ate resolvermos este erro!";
-                } else warnPlayer = "<a>Contate um staff urgentemente e tenha paciencia ate resolvermos este erro!";
+                BreakLine breakWord = new BreakLine();
 
-                sender.sendMessage(TXT.parse("<c>Ocorreu um erro ao tentar executar o completor de comando! " + warnPlayer));
+                String err = errors.substring(0, errors.length() - 5);
+                String formated = breakWord.addWordOnBreak("  <8>> ", err).get();
 
                 logMessages("29Erros.ADM"
                         , ""
-                        , "<e><m>}----------------------------------{"
-                        , "  <e>| <c>Tab-Completer com erro: <7>" + cmd2
-                        , "  <e>| <c>Quem usou: <7>" + sender.getName()
-                        , "  <e>| <c>Erro: <7>" + error2
-                        , "  <e>| <c>O erro se encontra em:"
-                        , "  <e>| <c>» " + errors.toString().substring(0, errors.length() - 5) + "<f>."
-                        , "<e><m>}----------------------------------{"
+                        , " <7><m>---------------------<r> <d>ERRO <7><m>---------------------<r>"
+                        , "  <d>Completor com erro<f>: <7>" + cmd
+                        , "  <d>Quem usou<f>: <7>" + sender.getName()
+                        , "  <d>Erro<f>: <7>" + error
+                        , "  <d>O erro se encontra em<f>:"
+                        , "  <8>> " + formated + "<f>."
+                        , " <7><m>---------------------<r> <d>ERRO <7><m>---------------------<r>"
                         , "");
 
                 logConsoleMessages(""
-                        , "<e><m>}----------------------------------{"
-                        , "  <e>| <c>Tab-Completer com erro: <7>" + cmd2
-                        , "  <e>| <c>Quem usou: <7>" + sender.getName()
-                        , "  <e>| <c>Erro: <7>" + error2
-                        , "  <e>| <c>O erro se encontra em:"
-                        , "  <e>| <c>» " + errors.toString().substring(0, errors.length() - 5) + "<f>."
-                        , "<e><m>}----------------------------------{"
+                        , " <7><m>---------------------<r> <d>ERRO <7><m>---------------------<r>"
+                        , "  <d>Completor com erro<f>: <7>" + cmd
+                        , "  <d>Quem usou<f>: <7>" + sender.getName()
+                        , "  <d>Erro<f>: <7>" + error
+                        , "  <d>O erro se encontra em<f>:"
+                        , "  <8>> " + err + "<f>."
+                        , " <7><m>---------------------<r> <d>ERRO <7><m>---------------------<r>"
                         , "");
-                return null;
+
+                List<String> toReturn = Lists.newArrayList();
+
+                for (Player player : Bukkit.getServer().getOnlinePlayers()) toReturn.add(player.getName());
+
+                return toReturn;
             }
         }
     }

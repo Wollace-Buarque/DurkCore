@@ -3,14 +3,6 @@ package dev.cromo29.durkcore.Util;
 import com.google.common.collect.Lists;
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
-
-import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.Base64;
-import java.util.Iterator;
-import java.util.List;
-import java.util.UUID;
-
 import dev.cromo29.durkcore.SpecificUtils.ItemUtil;
 import org.bukkit.Color;
 import org.bukkit.Material;
@@ -22,7 +14,72 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 
+import java.lang.reflect.Field;
+import java.util.Base64;
+import java.util.List;
+import java.util.UUID;
+
 public class MakeItem {
+
+    public static MakeItem getGreenSkull() {
+        return getCustomMakeItemSkullURL(
+                "http://textures.minecraft.net/texture/361e5b333c2a3868bb6a58b6674a2639323815738e77e053977419af3f77");
+    }
+
+    public static MakeItem getGraySkull() {
+        return getCustomMakeItemSkullURL(
+                "http://textures.minecraft.net/texture/f2f085c6b3cb228e5ba81df562c4786762f3c257127e9725c77b7fd301d37");
+    }
+
+    public static MakeItem getYellowSkull() {
+        return getCustomMakeItemSkullURL(
+                "http://textures.minecraft.net/texture/14c4141c1edf3f7e41236bd658c5bc7b5aa7abf7e2a852b647258818acd70d8");
+    }
+
+    public static MakeItem getPurpleSkull() {
+        return getCustomMakeItemSkullURL(
+                "http://textures.minecraft.net/texture/593f67f9f730d42fda8de69565ea55892c5f85d9cae6dd6fcba5d26f1e7238d1");
+    }
+
+    public static MakeItem getPinkSkull() {
+        return getCustomMakeItemSkullURL(
+                "http://textures.minecraft.net/texture/3ef0c5773df560cc3fc73b54b5f08cd69856415ab569a37d6d44f2f423df20");
+    }
+
+    public static MakeItem getOrangeSkull() {
+        return getCustomMakeItemSkullURL(
+                "http://textures.minecraft.net/texture/e79add3e5936a382a8f7fdc37fd6fa96653d5104ebcadb0d4f7e9d4a6efc454");
+    }
+
+    public static MakeItem getBlueSkull() {
+        return getCustomMakeItemSkullURL(
+                "http://textures.minecraft.net/texture/bef7b6829fc48758cb25ab93f28bf794d92ace0161f809a2aadd3bb12b23014");
+    }
+
+    public static MakeItem getDBlueSkull() {
+        return getCustomMakeItemSkullURL(
+                "http://textures.minecraft.net/texture/a2cd272eeb38bf783a98a46fa1e2e8d462d852fbaaedef0dce2c1f717a2a");
+    }
+
+    public static MakeItem getAzureSkull() {
+        return getCustomMakeItemSkullURL(
+                "http://textures.minecraft.net/texture/bfaf7aab1e177ad38e51bfc19ab662149c31953a569a40caa81f7a4932069");
+    }
+
+    public static MakeItem getWhiteSkull() {
+        return getCustomMakeItemSkullURL(
+                "http://textures.minecraft.net/texture/366a5c98928fa5d4b5d5b8efb490155b4dda3956bcaa9371177814532cfc");
+    }
+
+    public static MakeItem getBlackSkull() {
+        return getCustomMakeItemSkullURL(
+                "http://textures.minecraft.net/texture/967a2f218a6e6e38f2b545f6c17733f4ef9bbb288e75402949c052189ee");
+    }
+
+    public static MakeItem getRedSkull() {
+        return getCustomMakeItemSkullURL(
+                "http://textures.minecraft.net/texture/5fde3bfce2d8cb724de8556e5ec21b7f15f584684ab785214add164be7624b");
+    }
 
     private ItemStack ik;
     public static String green_light = "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZDI3Y2E0NmY2YTliYjg5YTI0ZmNhZjRjYzBhY2Y1ZTgyODVhNjZkYjc1MjEzNzhlZDI5MDlhZTQ0OTY5N2YifX19";
@@ -42,35 +99,45 @@ public class MakeItem {
     public static String s_w = "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNjY1N2JkMTg2OGRhNjczNmNjNGM0MzUzOTg5ZTZhNDU3NDM3YmRkZDM5MmM4MmMyNDhkMTQyMDcwYThkZDgzIn19fQ==";
     private static Field profileField;
 
-    public MakeItem(Material material) {
-        ik = new ItemStack(material);
-    }
-
     public MakeItem(Material material, byte data) {
         ik = new ItemStack(material, 1, data);
     }
 
-    public MakeItem addItemFlag(ItemFlag flag) {
-        ItemMeta im = ik.getItemMeta();
-        im.addItemFlags(flag);
-        ik.setItemMeta(im);
-        return this;
+    public MakeItem(Material material) {
+        ik = new ItemStack(material);
     }
 
-    public void setOwner(String owner) {
-        if (ik.getType() == Material.SKULL_ITEM) {
-            SkullMeta skullMeta = (SkullMeta) ik.getItemMeta();
-            skullMeta.setOwner(owner);
-            ik.setItemMeta(skullMeta);
-        }
+    public MakeItem(String owner, String name) {
+        ik = new ItemStack(Material.SKULL_ITEM, 1, (short) 3);
+        SkullMeta skullMeta = (SkullMeta) ik.getItemMeta();
 
+        skullMeta.setDisplayName(name);
+        skullMeta.setOwner(owner);
+
+        ik.setItemMeta(skullMeta);
     }
 
     public MakeItem(String owner) {
         ik = new ItemStack(Material.SKULL_ITEM, 1, (short) 3);
         SkullMeta skullMeta = (SkullMeta) ik.getItemMeta();
+
         skullMeta.setOwner(owner);
+
         ik.setItemMeta(skullMeta);
+    }
+
+    public boolean isPlayerSkull() {
+        return ik.getItemMeta() instanceof SkullMeta;
+    }
+
+    public void setOwner(String owner) {
+        if (ik.getType() == Material.SKULL_ITEM) {
+            SkullMeta skullMeta = (SkullMeta) ik.getItemMeta();
+
+            skullMeta.setOwner(owner);
+
+            ik.setItemMeta(skullMeta);
+        }
     }
 
     public MakeItem setData(int data) {
@@ -78,17 +145,11 @@ public class MakeItem {
         return this;
     }
 
-    public MakeItem(String owner, String name) {
-        ik = new ItemStack(Material.SKULL_ITEM, 1, (short) 3);
-        SkullMeta skullMeta = (SkullMeta) ik.getItemMeta();
-        skullMeta.setDisplayName(name);
-        skullMeta.setOwner(owner);
-        ik.setItemMeta(skullMeta);
-    }
-
     public MakeItem setUnbreakable(boolean unbreakable) {
         ItemMeta meta = ik.getItemMeta();
+
         meta.spigot().setUnbreakable(unbreakable);
+
         ik.setItemMeta(meta);
         return this;
     }
@@ -98,14 +159,34 @@ public class MakeItem {
         return this;
     }
 
+    public MakeItem removeItemFlags(ItemFlag... itemFlags) {
+        ItemMeta meta = ik.getItemMeta();
+
+        meta.removeItemFlags(itemFlags);
+
+        ik.setItemMeta(meta);
+        return this;
+    }
+
+    public MakeItem addItemFlags(ItemFlag... itemFlags) {
+        ItemMeta meta = ik.getItemMeta();
+
+        meta.addItemFlags(itemFlags);
+
+        ik.setItemMeta(meta);
+        return this;
+    }
+
+    public MakeItem hideAttributes() {
+        return removeAttributes();
+    }
+
     public MakeItem removeAttributes() {
         ItemMeta meta = ik.getItemMeta();
-        meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
-        meta.addItemFlags(ItemFlag.HIDE_DESTROYS);
-        meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
-        meta.addItemFlags(ItemFlag.HIDE_PLACED_ON);
-        meta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
-        meta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
+
+        meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES, ItemFlag.HIDE_DESTROYS, ItemFlag.HIDE_ENCHANTS,
+                ItemFlag.HIDE_PLACED_ON, ItemFlag.HIDE_POTION_EFFECTS, ItemFlag.HIDE_UNBREAKABLE);
+
         ik.setItemMeta(meta);
         return this;
     }
@@ -115,6 +196,7 @@ public class MakeItem {
         SkullMeta meta = (SkullMeta) item.getItemMeta();
         GameProfile profile = new GameProfile(UUID.randomUUID(), null);
         byte[] data = Base64.getEncoder().encode(String.format("{textures:{SKIN:{url:\"%s\"}}}", url).getBytes());
+
         profile.getProperties().put("textures", new Property("textures", new String(data)));
 
         try {
@@ -124,10 +206,11 @@ public class MakeItem {
             profileField.setAccessible(true);
             profileField.set(meta, profile);
             item.setItemMeta(meta);
+
             return item;
         } catch (Exception var6) {
             var6.printStackTrace();
-            return null;
+            return new MakeItem("steve").build();
         }
     }
 
@@ -148,15 +231,50 @@ public class MakeItem {
             profileField.setAccessible(true);
             profileField.set(meta, profile);
             item.setItemMeta(meta);
+
             return item;
         } catch (Exception var5) {
             var5.printStackTrace();
-            return null;
+            return new MakeItem("steve").build();
         }
     }
 
     public static MakeItem getCustomMakeItemSkullTexture(String texture) {
         return new MakeItem(getCustomSkullTexture(texture));
+    }
+
+    public static ItemStack getCustomSkull(String url) {
+        ItemStack skull = new ItemStack(Material.SKULL_ITEM, 1, (short) 3);
+
+        if (url == null || url.isEmpty())
+            return skull;
+
+        if (!url.startsWith("http://textures.minecraft.net/texture/"))
+            url = "http://textures.minecraft.net/texture/" + url;
+
+        try {
+            SkullMeta skullMeta = (SkullMeta) skull.getItemMeta();
+            GameProfile profile = new GameProfile(UUID.nameUUIDFromBytes(url.getBytes()), null);
+
+            profile.getProperties().put("textures", new Property("textures", new String(Base64.getEncoder().encode(String.format("{textures:{SKIN:{url:\"%s\"}}}", url).getBytes()))));
+
+            Field profileField = skullMeta.getClass().getDeclaredField("profile");
+
+            profileField.setAccessible(true);
+            profileField.set(skullMeta, profile);
+            skull.setItemMeta(skullMeta);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return skull;
+    }
+
+    public MakeItem of(String url) {
+        return new MakeItem(getCustomSkull(url));
+    }
+
+    public MakeItem setTexture(String url) {
+        return new MakeItem(getCustomSkull(url));
     }
 
     public MakeItem(ItemStack ik) {
@@ -170,19 +288,21 @@ public class MakeItem {
 
     public MakeItem setName(String name) {
         ItemMeta im = ik.getItemMeta();
+
         im.setDisplayName(TXT.parse(name));
+
         ik.setItemMeta(im);
         return this;
     }
 
-    public MakeItem setMaterial(Material m) {
-        ik.setType(m);
+    public MakeItem setMaterial(Material material) {
+        ik.setType(material);
         return this;
     }
 
     @Deprecated
-    public MakeItem setMaterial(int m) {
-        ik.setTypeId(m);
+    public MakeItem setMaterial(int id) {
+        ik.setTypeId(id);
         return this;
     }
 
@@ -191,52 +311,69 @@ public class MakeItem {
     }
 
     public MakeItem setGlow(boolean glow) {
-        MakeItem.Glow ench = new MakeItem.Glow();
-        ItemMeta itemMeta;
+        MakeItem.Glow enchant = new MakeItem.Glow();
+        ItemMeta itemMeta = ik.getItemMeta();
 
-        if (glow) {
-            itemMeta = ik.getItemMeta();
-            itemMeta.addEnchant(ench, 1, true);
-            ik.setItemMeta(itemMeta);
-        } else {
-            itemMeta = ik.getItemMeta();
-            itemMeta.removeEnchant(ench);
-            ik.setItemMeta(itemMeta);
+        if (glow)
+            itemMeta.addEnchant(enchant, 1, true);
+        else itemMeta.removeEnchant(enchant);
+
+        ik.setItemMeta(itemMeta);
+
+        return this;
+    }
+
+    public boolean isLeatherArmor() {
+        return ik.getItemMeta() instanceof LeatherArmorMeta;
+    }
+
+    public MakeItem setLeatherArmorColor(Color color) {
+        try {
+            LeatherArmorMeta meta = (LeatherArmorMeta) ik.getItemMeta();
+
+            meta.setColor(color);
+
+            ik.setItemMeta(meta);
+        } catch (Exception ignored) {
         }
-
         return this;
     }
 
     public MakeItem setColor(Color color) {
-        try {
-            LeatherArmorMeta meta = (LeatherArmorMeta) ik.getItemMeta();
-            meta.setColor(color);
-            ik.setItemMeta(meta);
-        } catch (Exception ignored) {}
+        return setLeatherArmorColor(color);
+    }
 
-        return this;
+    public void clearLore() {
+        ItemMeta im = ik.getItemMeta();
+
+        im.setLore(Lists.newArrayList());
+
+        ik.setItemMeta(im);
+    }
+
+    public List<String> getLore() {
+        ItemMeta im = ik.getItemMeta();
+
+        return im.hasLore() ? im.getLore() : Lists.newArrayList();
     }
 
     public MakeItem setLore(List<String> lore) {
         ItemMeta im = ik.getItemMeta();
-        ArrayList<String> lorer = new ArrayList();
-        Iterator var4 = lore.iterator();
+        List<String> loreList = Lists.newArrayList();
 
-        while (var4.hasNext()) {
-            String r = (String) var4.next();
-            lorer.add(TXT.parse(r));
-        }
+        for (String r : lore) loreList.add(TXT.parse(r));
 
-        im.setLore(lorer);
+        im.setLore(loreList);
+
         ik.setItemMeta(im);
         return this;
     }
 
     public MakeItem addLoreList(String... name) {
-        String[] arrayOfString = name;
-        int j = name.length;
+        String[] arrayOfString;
+        int j = (arrayOfString = name).length;
 
-        for (int i = 0; i < j; ++i) {
+        for (int i = 0; i < j; i++) {
             String s = arrayOfString[i];
             addLore(s);
         }
@@ -246,76 +383,75 @@ public class MakeItem {
 
     public MakeItem addLore(List<String> lore) {
         ItemMeta im = ik.getItemMeta();
-        List<String> lorer = im.getLore() == null ? Lists.newArrayList() : im.getLore();
-        Iterator var4 = lore.iterator();
+        List<String> loreList = im.getLore() == null ? Lists.newArrayList() : im.getLore();
 
-        while (var4.hasNext()) {
-            String r = (String) var4.next();
-            lorer.add(TXT.parse(r));
-        }
+        for (String r : lore)
+            loreList.add(TXT.parse(r));
 
-        im.setLore(lorer);
+        im.setLore(loreList);
+
         ik.setItemMeta(im);
         return this;
     }
 
     public MakeItem addLore(String lore) {
         ItemMeta im = ik.getItemMeta();
-        List<String> lorer = im.getLore() == null ? Lists.newArrayList() : im.getLore();
-        if (im.hasLore()) {
-            lorer = im.getLore();
-        }
+        List<String> loreList = im.getLore() == null ? Lists.newArrayList() : im.getLore();
+
+        if (im.hasLore())
+            loreList = im.getLore();
 
         if (lore.contains("/n")) {
             String[] arrayOfString;
             int j = (arrayOfString = lore.split("/n")).length;
 
-            for (int i = 0; i < j; ++i) {
+            for (int i = 0; i < j; i++) {
                 String x = arrayOfString[i];
-                lorer.add(TXT.parse(x));
+                loreList.add(TXT.parse(x));
             }
-        } else
-            lorer.add(TXT.parse(lore));
 
+        } else loreList.add(TXT.parse(lore));
 
-        im.setLore(lorer);
+        im.setLore(loreList);
+
         ik.setItemMeta(im);
         return this;
     }
 
     public MakeItem remLore(int amount) {
         ItemMeta im = ik.getItemMeta();
-        List<String> lorer = new ArrayList();
-        if (im.hasLore()) {
-            lorer = im.getLore();
-        }
+        List<String> loreLIst = Lists.newArrayList();
 
-        for (int i = 0; i < amount; ++i)
-            if (!lorer.isEmpty())
-                ((List) lorer).remove(lorer.size() - 1);
+        if (im.hasLore())
+            loreLIst = im.getLore();
 
+        for (int i = 0; i < amount; i++)
+            if (!loreLIst.isEmpty())
+                loreLIst.remove(loreLIst.size() - 1);
 
-        im.setLore(lorer);
+        im.setLore(loreLIst);
+
         ik.setItemMeta(im);
         return this;
     }
 
     public MakeItem addLore(String[] lore) {
         ItemMeta im = ik.getItemMeta();
-        List<String> lorer = new ArrayList();
-        if (im.hasLore()) {
-            lorer = im.getLore();
-        }
+        List<String> loreList = Lists.newArrayList();
 
-        String[] arrayOfString = lore;
-        int j = lore.length;
+        if (im.hasLore())
+            loreList = im.getLore();
 
-        for (int i = 0; i < j; ++i) {
+        String[] arrayOfString;
+        int j = (arrayOfString = lore).length;
+
+        for (int i = 0; i < j; i++) {
             String x = arrayOfString[i];
-            lorer.add(TXT.parse(x));
+            loreList.add(TXT.parse(x));
         }
 
-        im.setLore(lorer);
+        im.setLore(loreList);
+
         ik.setItemMeta(im);
         return this;
     }
@@ -337,13 +473,9 @@ public class MakeItem {
                             return ik1.getItemMeta().getLore().equals(ik2.getItemMeta().getLore());
 
                         } else return false;
-
                     } else return false;
-
                 } else return false;
-
             } else return false;
-
         } else return false;
     }
 
@@ -355,16 +487,12 @@ public class MakeItem {
                         if (use_lore) {
                             if (ik1.getItemMeta().hasLore() && ik2.getItemMeta().hasLore()) {
                                 return ik1.getItemMeta().getLore().equals(ik2.getItemMeta().getLore());
+
                             } else return false;
-
                         } else return true;
-
                     } else return false;
-
                 } else return false;
-
             } else return false;
-
         } else return false;
     }
 

@@ -1,23 +1,8 @@
 package dev.cromo29.durkcore.SpecificUtils;
 
 import com.google.common.collect.Lists;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.concurrent.ThreadLocalRandom;
-
 import dev.cromo29.durkcore.Util.TXT;
-import org.bukkit.Bukkit;
-import org.bukkit.Chunk;
-import org.bukkit.Color;
-import org.bukkit.FireworkEffect;
-import org.bukkit.GameMode;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.World;
+import org.bukkit.*;
 import org.bukkit.FireworkEffect.Type;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -27,6 +12,9 @@ import org.bukkit.entity.Firework;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.meta.FireworkMeta;
 import org.bukkit.util.Vector;
+
+import java.util.*;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class LocationUtil {
     public static ThreadLocalRandom random = ThreadLocalRandom.current();
@@ -59,6 +47,7 @@ public class LocationUtil {
             double z = Double.parseDouble(getSplited[3]);
             float ya = Float.parseFloat(getSplited[4]);
             float p = Float.parseFloat(getSplited[5]);
+			
             return new Location(Bukkit.getWorld(w), x, y, z, ya, p);
         } catch (Exception var12) {
             try {
@@ -67,6 +56,7 @@ public class LocationUtil {
                 double x = Double.parseDouble(getSplited[1]);
                 double y = Double.parseDouble(getSplited[2]);
                 double z = Double.parseDouble(getSplited[3]);
+				
                 return new Location(Bukkit.getWorld(w), x, y, z);
             } catch (Exception var11) {
                 return null;
@@ -86,9 +76,9 @@ public class LocationUtil {
                     double dist = (cx - x) * (cx - x) + (cz - z) * (cz - z) + (sphere ? (cy - y) * (cy - y) : 0);
                     if (dist < (double) (radius * radius) && (!hollow || dist >= (double) ((radius - 1) * (radius - 1)))) {
                         Location l = new Location(loc.getWorld(), x, y + plus_y, z);
-                        if (!circleblocks.contains(l)) {
+                      
+					  if (!circleblocks.contains(l))
                             circleblocks.add(l);
-                        }
                     }
                 }
             }
@@ -129,11 +119,11 @@ public class LocationUtil {
 
     public static boolean containsOnlyMaterialInsideLocation(Location corner, Location corner2, Material material) {
         if (corner != null && corner2 != null) {
-            if (corner.getWorld() != corner2.getWorld()) {
+            if (corner.getWorld() != corner2.getWorld())
                 return false;
-            } else if (material == null) {
+            else if (material == null)
                 return false;
-            } else {
+            else {
                 int topBlockX = Math.max(corner.getBlockX(), corner2.getBlockX());
                 int bottomBlockX = Math.min(corner.getBlockX(), corner2.getBlockX());
                 int topBlockY = Math.max(corner.getBlockY(), corner2.getBlockY());
@@ -145,31 +135,29 @@ public class LocationUtil {
                 for (int x = bottomBlockX; x <= topBlockX; ++x) {
                     for (int z = bottomBlockZ; z <= topBlockZ; ++z) {
                         for (int y = bottomBlockY; y <= topBlockY; ++y) {
-                            if ((new Location(w, x, y, z)).getBlock().getType() != material) {
+                            if ((new Location(w, x, y, z)).getBlock().getType() != material)
                                 return false;
-                            }
                         }
                     }
                 }
 
                 return true;
             }
-        } else {
-            return false;
-        }
+        } else return false;
     }
 
     public static boolean containsMaterialInsideLocation(Location corner, Location corner2, Material... material) {
         if (corner != null && corner2 != null) {
-            if (corner.getWorld() != corner2.getWorld()) {
+            if (corner.getWorld() != corner2.getWorld())
                 return false;
-            } else if (material == null) {
+             else if (material == null) 
                 return false;
-            } else {
+             else {
                 List<Material> materials = Lists.newArrayList(material);
-                if (materials.isEmpty()) {
-                    return false;
-                } else {
+				
+                if (materials.isEmpty())
+					return false;
+                 else {
                     int topBlockX = Math.max(corner.getBlockX(), corner2.getBlockX());
                     int bottomBlockX = Math.min(corner.getBlockX(), corner2.getBlockX());
                     int topBlockY = Math.max(corner.getBlockY(), corner2.getBlockY());
@@ -180,9 +168,8 @@ public class LocationUtil {
                     for (int x = bottomBlockX; x <= topBlockX; ++x) {
                         for (int z = bottomBlockZ; z <= topBlockZ; ++z) {
                             for (int y = bottomBlockY; y <= topBlockY; ++y) {
-                                if (materials.contains((new Location(corner.getWorld(), x, y, z)).getBlock().getType())) {
+                                if (materials.contains((new Location(corner.getWorld(), x, y, z)).getBlock().getType()))
                                     return true;
-                                }
                             }
                         }
                     }
@@ -190,9 +177,7 @@ public class LocationUtil {
                     return false;
                 }
             }
-        } else {
-            return false;
-        }
+        } else return false;
     }
 
     public static List<Chunk> getChunkCircle(Chunk chunk, int radius, boolean hollow) {
@@ -203,11 +188,12 @@ public class LocationUtil {
         for (int x = cx - radius; x <= cx + radius; ++x) {
             for (int z = cz - radius; z <= cz + radius; ++z) {
                 double dist = (cx - x) * (cx - x) + (cz - z) * (cz - z);
+				
                 if (dist < (double) (radius * radius) && (!hollow || dist >= (double) ((radius - 1) * (radius - 1)))) {
                     Location l = new Location(chunk.getWorld(), x, 0.0D, z);
-                    if (!chunks.contains(l.getChunk())) {
+                   
+				   if (!chunks.contains(l.getChunk()))
                         chunks.add(l.getChunk());
-                    }
                 }
             }
         }
@@ -221,9 +207,9 @@ public class LocationUtil {
         for (int forX = x - radius; forX <= x + radius; ++forX) {
             for (int forZ = z - radius; forZ <= z + radius; ++forZ) {
                 double dist = (x - forX) * (x - forX) + (z - forZ) * (z - forZ);
-                if (dist < (double) (radius * radius) && (!hollow || dist >= (double) ((radius - 1) * (radius - 1))) && !chunks.contains(forX + "@" + forZ)) {
+				
+                if (dist < (double) (radius * radius) && (!hollow || dist >= (double) ((radius - 1) * (radius - 1))) && !chunks.contains(forX + "@" + forZ))
                     chunks.add(forX + "@" + forZ);
-                }
             }
         }
 
@@ -235,9 +221,8 @@ public class LocationUtil {
 
         for (int loopX = x - radius; loopX <= x + radius; ++loopX) {
             for (int loopZ = z - radius; loopZ <= z + radius; ++loopZ) {
-                if (!chunks.contains(loopX + "@" + loopZ)) {
+                if (!chunks.contains(loopX + "@" + loopZ))
                     chunks.add(loopX + "@" + loopZ);
-                }
             }
         }
 
@@ -251,9 +236,8 @@ public class LocationUtil {
 
         for (int x = chunkX - radius; x <= chunkX + radius; ++x) {
             for (int z = chunkZ - radius; z <= chunkZ + radius; ++z) {
-                if (!chunks.contains(chunk.getWorld().getChunkAt(x, z))) {
+                if (!chunks.contains(chunk.getWorld().getChunkAt(x, z)))
                     chunks.add(chunk.getWorld().getChunkAt(x, z));
-                }
             }
         }
 
@@ -277,17 +261,16 @@ public class LocationUtil {
 
     public static boolean isLocationSafe(Location loc) {
         World world = loc.getWorld();
-        Block teleblock = world.getHighestBlockAt(loc).getRelative(BlockFace.DOWN);
+        Block teleBlock = world.getHighestBlockAt(loc).getRelative(BlockFace.DOWN);
         Block block1 = world.getBlockAt(loc.add(0.0D, 1.0D, 0.0D));
         Block block2 = world.getBlockAt(loc.add(0.0D, 2.0D, 0.0D));
-        if (!block1.isLiquid() && !block2.isLiquid() && !teleblock.isLiquid()) {
-            return teleblock.getType().isSolid() || block1.getType() != Material.AIR || block2.getType() != Material.AIR;
-        } else {
-            return false;
-        }
+		
+        if (!block1.isLiquid() && !block2.isLiquid() && !teleBlock.isLiquid()) 
+            return teleBlock.getType().isSolid() || block1.getType() != Material.AIR || block2.getType() != Material.AIR;
+         else return false;
     }
 
-    public List<Block> getNearbyBlocks(Location location, int radius) {
+    public static List<Block> getNearbyBlocks(Location location, int radius) {
         List<Block> blocks = Lists.newArrayList();
 
         for (int x = location.getBlockX() - radius; x <= location.getBlockX() + radius; ++x) {
@@ -301,18 +284,21 @@ public class LocationUtil {
         return blocks;
     }
 
-    public List<Block> getBlocksAt(Location loc1, Location loc2) {
+    public static List<Block> getBlocksAt(Location loc1, Location loc2) {
         List<Block> blocks = Lists.newArrayList();
-        int topBlockX = Math.max(loc1.getBlockX(), loc2.getBlockX());
-        int bottomBlockX = Math.min(loc1.getBlockX(), loc2.getBlockX());
-        int topBlockY = Math.max(loc1.getBlockY(), loc2.getBlockY());
-        int bottomBlockY = Math.min(loc1.getBlockY(), loc2.getBlockY());
-        int topBlockZ = Math.max(loc1.getBlockZ(), loc2.getBlockZ());
-        int bottomBlockZ = Math.min(loc1.getBlockZ(), loc2.getBlockZ());
 
-        for (int x = bottomBlockX; x <= topBlockX; ++x) {
-            for (int z = bottomBlockZ; z <= topBlockZ; ++z) {
-                for (int y = bottomBlockY; y <= topBlockY; ++y) {
+        int topBlockX = (Math.max(loc1.getBlockX(), loc2.getBlockX()));
+        int bottomBlockX = (Math.min(loc1.getBlockX(), loc2.getBlockX()));
+		
+        int topBlockY = (Math.max(loc1.getBlockY(), loc2.getBlockY()));
+        int bottomBlockY = (Math.min(loc1.getBlockY(), loc2.getBlockY()));
+		
+        int topBlockZ = (Math.max(loc1.getBlockZ(), loc2.getBlockZ()));
+        int bottomBlockZ = (Math.min(loc1.getBlockZ(), loc2.getBlockZ()));
+
+        for (int x = bottomBlockX; x <= topBlockX; x++) {
+            for (int z = bottomBlockZ; z <= topBlockZ; z++) {
+                for (int y = bottomBlockY; y <= topBlockY; y++) {
                     blocks.add(loc1.getWorld().getBlockAt(x, y, z));
                 }
             }
@@ -321,19 +307,22 @@ public class LocationUtil {
         return blocks;
     }
 
-    public int getAmountOfBlocksAt(Location loc1, Location loc2) {
+    public static int getAmountOfBlocksAt(Location loc1, Location loc2) {
         int blocks = 0;
-        int topBlockX = Math.max(loc1.getBlockX(), loc2.getBlockX());
-        int bottomBlockX = Math.min(loc1.getBlockX(), loc2.getBlockX());
-        int topBlockY = Math.max(loc1.getBlockY(), loc2.getBlockY());
-        int bottomBlockY = Math.min(loc1.getBlockY(), loc2.getBlockY());
-        int topBlockZ = Math.max(loc1.getBlockZ(), loc2.getBlockZ());
-        int bottomBlockZ = Math.min(loc1.getBlockZ(), loc2.getBlockZ());
 
-        for (int x = bottomBlockX; x <= topBlockX; ++x) {
-            for (int z = bottomBlockZ; z <= topBlockZ; ++z) {
-                for (int y = bottomBlockY; y <= topBlockY; ++y) {
-                    ++blocks;
+        int topBlockX = (Math.max(loc1.getBlockX(), loc2.getBlockX()));
+        int bottomBlockX = (Math.min(loc1.getBlockX(), loc2.getBlockX()));
+
+        int topBlockY = (Math.max(loc1.getBlockY(), loc2.getBlockY()));
+        int bottomBlockY = (Math.min(loc1.getBlockY(), loc2.getBlockY()));
+
+        int topBlockZ = (Math.max(loc1.getBlockZ(), loc2.getBlockZ()));
+        int bottomBlockZ = (Math.min(loc1.getBlockZ(), loc2.getBlockZ()));
+
+        for (int x = bottomBlockX; x <= topBlockX; x++) {
+            for (int z = bottomBlockZ; z <= topBlockZ; z++) {
+                for (int y = bottomBlockY; y <= topBlockY; y++) {
+                    blocks++;
                 }
             }
         }
@@ -350,6 +339,7 @@ public class LocationUtil {
         int minZ = centerZ - (int) w.getWorldBorder().getSize() / 2;
         int randomX = NumberUtil.getRandom(minX, maxX);
         int randomZ = NumberUtil.getRandom(minZ, maxZ);
+		
         return new Location(w, randomX, 0.0D, randomZ);
     }
 
@@ -360,9 +350,9 @@ public class LocationUtil {
 
         while (var6.hasNext()) {
             Player player = (Player) var6.next();
-            if (player.getLocation().add(0.0D, 0.85D, 0.0D).distanceSquared(location) <= d2) {
+			
+            if (player.getLocation().add(0.0D, 0.85D, 0.0D).distanceSquared(location) <= d2)
                 result.add(player);
-            }
         }
 
         return result;
@@ -374,7 +364,8 @@ public class LocationUtil {
 
         for (double chX = 0.0D - chunkRadius; chX <= chunkRadius; ++chX) {
             for (double chZ = 0.0D - chunkRadius; chZ <= chunkRadius; ++chZ) {
-                int x = (int) location.getX();
+               
+			    int x = (int) location.getX();
                 int y = (int) location.getY();
                 int z = (int) location.getZ();
                 Entity[] var13 = (new Location(location.getWorld(), (double) x + chX * 16.0D, y, (double) z + chZ * 16.0D)).getChunk().getEntities();
@@ -383,9 +374,9 @@ public class LocationUtil {
 
                 for (int var16 = 0; var16 < var15; ++var16) {
                     Entity e = var14[var16];
-                    if (e.getLocation().distance(location) <= radius && e.getLocation().getBlock() != location.getBlock()) {
+					
+                    if (e.getLocation().distance(location) <= radius && e.getLocation().getBlock() != location.getBlock())
                         radiusEntities.add(e);
-                    }
                 }
             }
         }
@@ -402,6 +393,7 @@ public class LocationUtil {
             double angle = (double) i * increment;
             double x = center.getX() + radius * Math.cos(angle);
             double z = center.getZ() + radius * Math.sin(angle);
+			
             locations.add(new Location(world, x, center.getY(), z));
         }
 
@@ -410,33 +402,36 @@ public class LocationUtil {
 
     public static Location lookAt(Location from, Location to, float aiming) {
         if (!(aiming <= 0.0F)) {
+			
             from = from.clone();
             double dx = to.getX() - from.getX();
             double dy = to.getY() - from.getY();
             double dz = to.getZ() - from.getZ();
+			
             if (dx != 0.0D) {
-                if (dx < 0.0D) {
+				
+                if (dx < 0.0D)
                     from.setYaw(4.712389F);
-                } else {
+                else 
                     from.setYaw(1.5707964F);
-                }
 
                 from.setYaw(from.getYaw() - (float) Math.atan(dz / dx));
-            } else if (dz < 0.0D) {
+				
+            } else if (dz < 0.0D)
                 from.setYaw(3.1415927F);
-            }
 
             double dxz = Math.sqrt(Math.pow(dx, 2.0D) + Math.pow(dz, 2.0D));
             from.setPitch((float) (-Math.atan(dy / dxz)));
+			
             float yawAiming = 360.0F - aiming * 360.0F / 100.0F;
-            if (yawAiming > 0.0F) {
+			
+            if (yawAiming > 0.0F)
                 yawAiming = (float) NumberUtil.getRandom((int) yawAiming, (int) (-yawAiming));
-            }
-
+            
             float pitchAiming = 180.0F - aiming * 180.0F / 100.0F;
-            if (pitchAiming > 0.0F) {
+			
+            if (pitchAiming > 0.0F)
                 pitchAiming = (float) NumberUtil.getRandom((int) pitchAiming, (int) (-pitchAiming));
-            }
 
             from.setYaw(-from.getYaw() * 180.0F / 3.1415927F + yawAiming);
             from.setPitch(from.getPitch() * 180.0F / 3.1415927F + pitchAiming);
@@ -448,6 +443,7 @@ public class LocationUtil {
         double x = loc.getX() - player.getLocation().getX();
         double z = loc.getZ() - player.getLocation().getZ();
         double distance = Math.sqrt(Math.pow(x, 2.0D) + Math.pow(z, 2.0D));
+		
         return distance <= radius;
     }
 
@@ -456,6 +452,7 @@ public class LocationUtil {
         double y = loc.getY() - player.getLocation().getY();
         double z = loc.getZ() - player.getLocation().getZ();
         double distance = Math.sqrt(Math.pow(x, 2.0D) + Math.pow(y, 2.0D) + Math.pow(z, 2.0D));
+		
         return distance <= radius;
     }
 
@@ -464,6 +461,7 @@ public class LocationUtil {
         double y = loc.getY() - midpoint.getY();
         double z = loc.getZ() - midpoint.getZ();
         double distance = Math.sqrt(Math.pow(x, 2.0D) + Math.pow(y, 2.0D) + Math.pow(z, 2.0D));
+		
         return distance <= radius;
     }
 
@@ -473,9 +471,13 @@ public class LocationUtil {
         double z = player.getLocation().getZ();
         int randomX = 1 + (int) (Math.random() * (double) (XmaxDistance - 1 + 1));
         int randomZ = 1 + (int) (Math.random() * (double) (ZmaxDistance - 1 + 1));
+		
         x += randomX;
+		
         double y = player.getLocation().clone().add(0.0D, 1.0D, 0.0D).getY();
+		
         z += randomZ;
+		
         return new Location(world, x, y, z);
     }
 
@@ -511,9 +513,8 @@ public class LocationUtil {
                 }
             }
 
-            if (!nearbyMap.contains(cur)) {
+            if (!nearbyMap.contains(cur))
                 nearbyMap.addLast(cur);
-            }
         }
     }
 
@@ -571,26 +572,24 @@ public class LocationUtil {
         FireworkMeta fwm = fw.getFireworkMeta();
         int rt = random.nextInt(4) + 1;
         Type type = Type.BALL;
-        if (rt == 2) {
+		
+        if (rt == 2)
             type = Type.BALL_LARGE;
-        }
 
-        if (rt == 3) {
+        if (rt == 3)
             type = Type.BURST;
-        }
 
-        if (rt == 4) {
+        if (rt == 4) 
             type = Type.CREEPER;
-        }
 
-        if (rt == 5) {
+        if (rt == 5) 
             type = Type.STAR;
-        }
 
         int r1i = random.nextInt(18) + 1;
         int r2i = random.nextInt(18) + 1;
         Color c1 = TXT.getColor(r1i);
         Color c2 = TXT.getColor(r2i);
+		
         FireworkEffect effect = FireworkEffect.builder().flicker(random.nextBoolean()).withColor(c1).withFade(c2).with(type).trail(random.nextBoolean()).build();
         fwm.addEffect(effect);
         fwm.setPower(0);
