@@ -101,8 +101,7 @@ public class AssembleThread extends Thread {
                 }
             }
 
-            if (player.getScoreboard() != scoreboard)
-                player.setScoreboard(scoreboard);
+            if (player.getScoreboard() != scoreboard) player.setScoreboard(scoreboard);
         }
     }
 }

@@ -29,16 +29,18 @@ public class StringUtil {
         String recentColorCode = "";
 
         for (char c : message.toCharArray()) {
-            if (c == '§' || c == '&') {
+            if (c == '§') {
                 previousCode = true;
                 continue;
             } else if (previousCode) {
                 previousCode = false;
                 recentColorCode = "§" + c;
+
                 if (c == 'l' || c == 'L') {
                     isBold = true;
                     continue;
                 } else isBold = false;
+
             } else if (c == ' ') lastSpaceIndex = charIndex;
 
             else {
@@ -46,6 +48,7 @@ public class StringUtil {
                 messagePxSize += isBold ? dFI.getBoldLength() : dFI.getLength();
                 messagePxSize++;
             }
+
             if (messagePxSize >= MAX_PX) {
                 toSendAfter = recentColorCode + message.substring(lastSpaceIndex + 1);
                 message = message.substring(0, lastSpaceIndex + 1);
@@ -87,7 +90,7 @@ public class StringUtil {
         boolean isBold = false;
 
         for (char c : message.toCharArray()) {
-            if (c == '§' || c == '&') {
+            if (c == '§') {
                 previousCode = true;
             } else if (previousCode) {
                 previousCode = false;
@@ -124,7 +127,7 @@ public class StringUtil {
         boolean isBold = false;
 
         for (char c : message.toCharArray()) {
-            if (c == '§' || c == '&') {
+            if (c == '§') {
                 previousCode = true;
             } else if (previousCode) {
                 previousCode = false;

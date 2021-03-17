@@ -45,6 +45,7 @@ public class NumberUtil {
 
     public static int getValueMax(double value, double maxOfValue, int maxValue) {
         float percent = (float) (value / maxOfValue);
+
         return (int) (maxValue * percent);
     }
 
@@ -58,13 +59,15 @@ public class NumberUtil {
         sb.append(TXT.parse(completedColor));
 
         int i;
-        for (i = 0; i < progressBars; ++i)
+        for (i = 0; i < progressBars; ++i) {
             sb.append(symbol);
+        }
 
         sb.append(TXT.parse(notCompletedColor));
 
-        for (i = 0; i < leftOver; ++i)
+        for (i = 0; i < leftOver; ++i) {
             sb.append(symbol);
+        }
 
         return sb.toString();
     }

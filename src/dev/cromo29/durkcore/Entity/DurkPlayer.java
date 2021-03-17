@@ -1,6 +1,7 @@
 package dev.cromo29.durkcore.Entity;
 
 import com.google.common.collect.Lists;
+import dev.cromo29.durkcore.DurkCore;
 import dev.cromo29.durkcore.Inventory.Inv;
 import dev.cromo29.durkcore.SpecificUtils.LocationUtil;
 import dev.cromo29.durkcore.SpecificUtils.PlayerUtil;
@@ -360,7 +361,7 @@ public class DurkPlayer implements Player {
     public boolean containsItem(Material material, String name) {
         if (player.getInventory().contains(material)) {
             for (ItemStack item : getInventory())
-                if (item.hasItemMeta() && item.getItemMeta().getDisplayName().equals(TXT.parse(name)))
+                if (item.hasItemMeta() && item.getItemMeta().getDisplayName().equals(name))
                     return true;
             return false;
         }
@@ -370,25 +371,55 @@ public class DurkPlayer implements Player {
     public boolean containsItem(Material material, String name, String... lore) {
         if (player.getInventory().contains(material)) {
             for (ItemStack item : getInventory())
-                if (item.hasItemMeta() && item.getItemMeta().getDisplayName().equals(TXT.parse(name)) && item.getItemMeta().hasLore()) {
+                if (item.hasItemMeta() && item.getItemMeta().getDisplayName().equals(name) && item.getItemMeta().hasLore()) {
                     List<String> loreList = item.getItemMeta().getLore();
 
-                    for (String text : lore) {
-                        for (String aText : loreList) {
-                            if (text.compareTo(aText) == 0)
-                                return true;
-                        }
-                    }
+                    List<String> checKlore = Arrays.asList(lore.clone());
+
+                    if (checKlore.containsAll(loreList))
+                        return true;
                 }
             return false;
         }
         return false;
     }
 
+    // Verifica se o jogador está se movendo (CONTRANDO COM O MOVIMENTO DOS OLHOS)
+    public boolean isMovingFull(boolean both) {
+        if (player == null) return false;
+
+        if (!DurkCore.durkCore.playersMoving.containsKey(player.getUniqueId())) return false;
+
+        DurkMoving durkMoving = DurkCore.durkCore.playersMoving.get(player.getUniqueId());
+
+        return both ? durkMoving.isBody() && durkMoving.isEyes() : durkMoving.isBody() || durkMoving.isEyes();
+    }
+
+    // Verifica se o jogador está se movendo (IGNORANDO O MOVIMENTO DOS OLHOS)
+    public boolean isMovingBody() {
+        if (player == null) return false;
+
+        if (!DurkCore.durkCore.playersMoving.containsKey(player.getUniqueId())) return false;
+
+        DurkMoving durkMoving = DurkCore.durkCore.playersMoving.get(player.getUniqueId());
+
+        return durkMoving.isBody();
+    }
+
+    // Verifica se o jogador está se movendo o mouse.
+    public boolean isMovingEyes() {
+        if (player == null) return false;
+
+        if (!DurkCore.durkCore.playersMoving.containsKey(player.getUniqueId())) return false;
+
+        DurkMoving durkMoving = DurkCore.durkCore.playersMoving.get(player.getUniqueId());
+
+        return durkMoving.isEyes();
+    }
 
     /*
 
-    CUSTOM METHODS
+    DEFAULT METHODS
 
      */
 
@@ -1620,4 +1651,41 @@ public class DurkPlayer implements Player {
         return player.launchProjectile(projectileClass, velocity);
     }
 
+    /*
+     * DurkMoving class.
+     */
+
+    public static class DurkMoving {
+
+        private Location location;
+        private boolean body, eyes;
+
+        public DurkMoving(Location location) {
+            this.location = location;
+        }
+
+        public Location getLocation() {
+            return location;
+        }
+
+        public void setLocation(Location location) {
+            this.location = location;
+        }
+
+        public boolean isBody() {
+            return body;
+        }
+
+        public void setBody(boolean body) {
+            this.body = body;
+        }
+
+        public boolean isEyes() {
+            return eyes;
+        }
+
+        public void setEyes(boolean eyes) {
+            this.eyes = eyes;
+        }
+    }
 }

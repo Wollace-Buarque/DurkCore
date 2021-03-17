@@ -29,14 +29,12 @@ public class ConfigManager {
 
             file = new File(fileLocation, fileName);
 
-            if (!fileLocation.exists())
-                fileLocation.mkdirs();
+            if (!fileLocation.exists()) fileLocation.mkdirs();
 
-            if (!file.exists())
-                file.createNewFile();
+            if (!file.exists()) file.createNewFile();
 
             load();
-        } catch (Exception var4) {
+        } catch (Exception exception) {
             TXT.print("<c>Nao foi possivel criar o arquivo: " + fileName, "<c>Diretorio: " + this.file.getAbsolutePath());
         }
 
@@ -45,8 +43,7 @@ public class ConfigManager {
     public ConfigManager(DurkPlugin plugin, String fileName) {
         this.fileName = fileName;
 
-        if (!plugin.getDataFolder().exists())
-            plugin.getDataFolder().mkdir();
+        if (!plugin.getDataFolder().exists()) plugin.getDataFolder().mkdir();
 
         file = new File(plugin.getDataFolder(), fileName);
 
@@ -58,8 +55,8 @@ public class ConfigManager {
                 fileConfiguration = YamlConfiguration.loadConfiguration(new InputStreamReader(new FileInputStream(file), StandardCharsets.UTF_8));
 
                 save();
-            } catch (Exception var5) {
-                var5.printStackTrace();
+            } catch (Exception exception) {
+                exception.printStackTrace();
             }
         } else {
             try {
@@ -73,8 +70,7 @@ public class ConfigManager {
     public ConfigManager(JavaPlugin plugin, String fileName) {
         this.fileName = fileName;
 
-        if (!plugin.getDataFolder().exists())
-            plugin.getDataFolder().mkdir();
+        if (!plugin.getDataFolder().exists()) plugin.getDataFolder().mkdir();
 
         file = new File(plugin.getDataFolder(), fileName);
 
@@ -84,9 +80,10 @@ public class ConfigManager {
             try {
                 file.createNewFile();
                 fileConfiguration = YamlConfiguration.loadConfiguration(new InputStreamReader(new FileInputStream(file), StandardCharsets.UTF_8));
+
                 save();
-            } catch (Exception var5) {
-                var5.printStackTrace();
+            } catch (Exception exception) {
+                exception.printStackTrace();
             }
         } else {
             try {
@@ -102,8 +99,8 @@ public class ConfigManager {
             file.deleteOnExit();
 
             return file.delete();
-        } catch (Exception var2) {
-            var2.printStackTrace();
+        } catch (Exception exception) {
+            exception.printStackTrace();
             return false;
         }
     }
@@ -124,7 +121,7 @@ public class ConfigManager {
         try {
             fileConfiguration = YamlConfiguration.loadConfiguration(new InputStreamReader(new FileInputStream(file), StandardCharsets.UTF_8));
             return true;
-        } catch (Exception var2) {
+        } catch (Exception exception) {
             return false;
         }
     }
@@ -133,8 +130,8 @@ public class ConfigManager {
         try {
             fileConfiguration.save(file);
             return true;
-        } catch (Exception var2) {
-            var2.printStackTrace();
+        } catch (Exception exception) {
+            exception.printStackTrace();
             return false;
         }
     }
@@ -146,35 +143,35 @@ public class ConfigManager {
             file = new File(oldFile, fileName);
             fileConfiguration = YamlConfiguration.loadConfiguration(new InputStreamReader(new FileInputStream(file), StandardCharsets.UTF_8));
             return true;
-        } catch (Exception var2) {
-            var2.printStackTrace();
+        } catch (Exception exception) {
+            exception.printStackTrace();
             return false;
         }
     }
 
     public boolean setMap(String mapName, Map map) {
         try {
-            Iterator var3 = map.keySet().iterator();
+            Iterator iterator = map.keySet().iterator();
 
-            while (var3.hasNext()) {
-                Object ob = var3.next();
+            while (iterator.hasNext()) {
+                Object ob = iterator.next();
                 set(mapName + "." + ob, map.get(ob));
             }
 
             return save();
-        } catch (Exception var5) {
-            var5.printStackTrace();
+        } catch (Exception exception) {
+            exception.printStackTrace();
             return false;
         }
     }
 
     public Map<Object, Object> getMap(String mapName) {
-        Map<Object, Object> map = new HashMap();
+        Map<Object, Object> map = new HashMap<>();
         if (contains(mapName)) {
-            Iterator var3 = getConfigurationSection(mapName).iterator();
+            Iterator iterator = getConfigurationSection(mapName).iterator();
 
-            while (var3.hasNext()) {
-                String path = (String) var3.next();
+            while (iterator.hasNext()) {
+                String path = (String) iterator.next();
                 map.put(path, getString(mapName + "." + path));
             }
         }
@@ -185,8 +182,8 @@ public class ConfigManager {
         try {
             fileConfiguration.set(path, key);
             return true;
-        } catch (Exception var4) {
-            var4.printStackTrace();
+        } catch (Exception exception) {
+            exception.printStackTrace();
             return false;
         }
     }
@@ -198,21 +195,20 @@ public class ConfigManager {
             }
 
             if (pathValues != null) {
-                Iterator i = Arrays.asList(pathValues).iterator();
+                Iterator<Object> iterator = Arrays.asList(pathValues).iterator();
 
-                while (i.hasNext()) {
-                    String iPath = (String) i.next();
-                    Object iValue = i.next();
-                    if (!contains(iPath)) {
-                        fileConfiguration.set(iPath, iValue);
-                    }
+                while (iterator.hasNext()) {
+                    String iPath = (String) iterator.next();
+                    Object iValue = iterator.next();
+
+                    if (!contains(iPath)) fileConfiguration.set(iPath, iValue);
                 }
             }
 
             reload();
             return true;
-        } catch (Exception var7) {
-            var7.printStackTrace();
+        } catch (Exception exception) {
+            exception.printStackTrace();
             return false;
         }
     }
@@ -221,8 +217,8 @@ public class ConfigManager {
         try {
             fileConfiguration.set(path, key);
             return true;
-        } catch (Exception var4) {
-            var4.printStackTrace();
+        } catch (Exception exception) {
+            exception.printStackTrace();
             return false;
         }
     }
@@ -231,8 +227,8 @@ public class ConfigManager {
         try {
             fileConfiguration.set(path, ItemUtil.toJson(item));
             return true;
-        } catch (Exception var4) {
-            var4.printStackTrace();
+        } catch (Exception exception) {
+            exception.printStackTrace();
             return false;
         }
     }
@@ -241,8 +237,8 @@ public class ConfigManager {
         try {
             fileConfiguration.set(path, ItemUtil.toString(item));
             return true;
-        } catch (Exception var4) {
-            var4.printStackTrace();
+        } catch (Exception exception) {
+            exception.printStackTrace();
             return false;
         }
     }
@@ -250,8 +246,8 @@ public class ConfigManager {
     public ItemStack getItemStackS(String path) {
         try {
             return ItemUtil.fromString(fileConfiguration.getString(path));
-        } catch (Exception var3) {
-            var3.printStackTrace();
+        } catch (Exception exception) {
+            exception.printStackTrace();
             return null;
         }
     }
@@ -259,8 +255,8 @@ public class ConfigManager {
     public ItemStack getItemStack(String path) {
         try {
             return ItemUtil.fromJson(fileConfiguration.getString(path));
-        } catch (Exception var3) {
-            var3.printStackTrace();
+        } catch (Exception exception) {
+            exception.printStackTrace();
             return null;
         }
     }
@@ -269,8 +265,8 @@ public class ConfigManager {
         try {
             fileConfiguration.set(path, null);
             return true;
-        } catch (Exception var3) {
-            var3.printStackTrace();
+        } catch (Exception exception) {
+            exception.printStackTrace();
             return false;
         }
     }
@@ -278,8 +274,8 @@ public class ConfigManager {
     public Object get(String path) {
         try {
             return fileConfiguration.get(path);
-        } catch (Exception var3) {
-            var3.printStackTrace();
+        } catch (Exception exception) {
+            exception.printStackTrace();
             return null;
         }
     }
@@ -287,8 +283,8 @@ public class ConfigManager {
     public String getString(String path) {
         try {
             return fileConfiguration.getString(path);
-        } catch (Exception var3) {
-            var3.printStackTrace();
+        } catch (Exception exception) {
+            exception.printStackTrace();
             return null;
         }
     }
@@ -296,8 +292,8 @@ public class ConfigManager {
     public int getInt(String path) {
         try {
             return fileConfiguration.getInt(path);
-        } catch (Exception var3) {
-            var3.printStackTrace();
+        } catch (Exception exception) {
+            exception.printStackTrace();
             return 0;
         }
     }
@@ -305,17 +301,17 @@ public class ConfigManager {
     public double getDouble(String path) {
         try {
             return fileConfiguration.getDouble(path);
-        } catch (Exception var3) {
-            var3.printStackTrace();
-            return 0.0D;
+        } catch (Exception exception) {
+            exception.printStackTrace();
+            return 0.0;
         }
     }
 
     public boolean getBoolean(String path) {
         try {
             return fileConfiguration.getBoolean(path);
-        } catch (Exception var3) {
-            var3.printStackTrace();
+        } catch (Exception exception) {
+            exception.printStackTrace();
             return false;
         }
     }
@@ -323,79 +319,74 @@ public class ConfigManager {
     public List<String> getStringList(String path) {
         try {
             return fileConfiguration.getStringList(path);
-        } catch (Exception var3) {
-            var3.printStackTrace();
-            return new ArrayList();
+        } catch (Exception exception) {
+            exception.printStackTrace();
+            return new ArrayList<>();
         }
     }
 
     public Set<String> getConfigurationSection(String path) {
         try {
-            ConfigurationSection toR = fileConfiguration.getConfigurationSection(path);
-            Set<String> to = new HashSet();
+            ConfigurationSection toReturn = fileConfiguration.getConfigurationSection(path);
+            Set<String> sections = new HashSet<>();
 
-            if (toR != null)
-                to = toR.getKeys(false);
+            if (toReturn != null) sections = toReturn.getKeys(false);
 
-            return to;
-        } catch (Exception var4) {
-            var4.printStackTrace();
-            return new HashSet();
+            return sections;
+        } catch (Exception exception) {
+            exception.printStackTrace();
+            return new HashSet<>();
         }
     }
 
     public long getLong(String path) {
         try {
             return fileConfiguration.getLong(path);
-        } catch (Exception var3) {
-            var3.printStackTrace();
+        } catch (Exception exception) {
+            exception.printStackTrace();
             return 0L;
         }
     }
 
     public boolean setLocation(String path, Location loc) {
-        return set(path, loc.getWorld().getName() + "@" + loc.getX() + "@" + loc.getY() + "@" + loc.getZ() + "@" + loc.getYaw() + "@" + loc.getPitch());
+        return set(path, loc.getWorld().getName() + "@" + loc.getX() + "@" + loc.getY() + "@" + loc.getZ()
+                + "@" + loc.getYaw() + "@" + loc.getPitch());
     }
 
     public Location getLocation(String path) {
         try {
             String get = getString(path);
             String[] getSplited = get.split("@");
-            String w = getSplited[0];
+            String world = getSplited[0];
             double x = Double.parseDouble(getSplited[1]);
             double y = Double.parseDouble(getSplited[2]);
             double z = Double.parseDouble(getSplited[3]);
-            float ya = Float.parseFloat(getSplited[4]);
-            float p = Float.parseFloat(getSplited[5]);
-            return new Location(Bukkit.getWorld(w), x, y, z, ya, p);
-        } catch (Exception var13) {
+            float yaw = Float.parseFloat(getSplited[4]);
+            float pitch = Float.parseFloat(getSplited[5]);
+
+            return new Location(Bukkit.getWorld(world), x, y, z, yaw, pitch);
+        } catch (Exception exception) {
             return null;
         }
     }
 
     public boolean setLocationList(String path, List<Location> locs) {
-        List<String> format = new ArrayList();
-        int size = locs.size();
+        List<String> format = new ArrayList<>();
 
-        for (int loop = 0; loop < size; ++loop) {
-            Location loc = locs.get(loop);
-            format.add(serealizeLocationFull(loc));
-        }
+        for (Location location : locs) format.add(serealizeLocationFull(location));
 
         return set(path, format);
     }
 
     public List<Location> getLocationList(String path) {
         try {
-            List<Location> locs = new ArrayList();
+            List<Location> locs = new ArrayList<>();
             List<String> brute = getStringList(path);
-            int size = brute.size();
 
-            for (int loop = 0; loop < size; ++loop)
-                locs.add(unserealizeLocationFull(brute.get(loop)));
+            for (String location : brute) locs.add(unserealizeLocationFull(location));
 
             return locs;
-        } catch (Exception var6) {
+        } catch (Exception exception) {
             return null;
         }
     }
@@ -411,31 +402,34 @@ public class ConfigManager {
     public static Location unserealizeLocation(String s) {
         try {
             String[] getSplited = s.split("@");
-            String w = getSplited[0];
+            String world = getSplited[0];
             double x = Double.parseDouble(getSplited[1]);
             double y = Double.parseDouble(getSplited[2]);
             double z = Double.parseDouble(getSplited[3]);
-            return new Location(Bukkit.getWorld(w), x, y, z);
-        } catch (Exception var9) {
+
+            return new Location(Bukkit.getWorld(world), x, y, z);
+        } catch (Exception exception) {
             return null;
         }
     }
 
     public static String serealizeLocationFull(Location loc) {
-        return loc.getWorld().getName() + "@" + loc.getX() + "@" + loc.getY() + "@" + loc.getZ() + "@" + loc.getYaw() + "@" + loc.getPitch();
+        return loc.getWorld().getName() + "@" + loc.getX() + "@" + loc.getY() + "@" + loc.getZ()
+                + "@" + loc.getYaw() + "@" + loc.getPitch();
     }
 
     public static Location unserealizeLocationFull(String s) {
         try {
             String[] getSplited = s.split("@");
-            String w = getSplited[0];
+            String world = getSplited[0];
             double x = Double.parseDouble(getSplited[1]);
             double y = Double.parseDouble(getSplited[2]);
             double z = Double.parseDouble(getSplited[3]);
-            float ya = Float.parseFloat(getSplited[4]);
-            float p = Float.parseFloat(getSplited[5]);
-            return new Location(Bukkit.getWorld(w), x, y, z, ya, p);
-        } catch (Exception var11) {
+            float yaw = Float.parseFloat(getSplited[4]);
+            float pitch = Float.parseFloat(getSplited[5]);
+
+            return new Location(Bukkit.getWorld(world), x, y, z, yaw, pitch);
+        } catch (Exception exception) {
             return null;
         }
     }

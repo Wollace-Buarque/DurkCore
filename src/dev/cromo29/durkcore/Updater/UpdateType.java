@@ -33,6 +33,7 @@ public enum UpdateType {
     public boolean elapsed() {
         if (elapsed(last, time)) {
             last = System.currentTimeMillis();
+
             return true;
         } else return false;
     }
@@ -45,8 +46,12 @@ public enum UpdateType {
         timeSpent += System.currentTimeMillis() - timeCount;
     }
 
-    public void printAndResetTime() {
-        System.out.println(name() + " in a second: " + timeSpent);
+    public void resetTime(boolean print) {
+
+        if (print) {
+            System.out.println(name() + " in a second: " + timeSpent);
+        }
+
         timeSpent = 0L;
     }
 

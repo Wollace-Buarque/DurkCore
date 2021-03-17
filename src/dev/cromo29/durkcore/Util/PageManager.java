@@ -53,16 +53,17 @@ public class PageManager {
     public int getTotalPages() {
         if (useMap) {
             double v = ((double) map.size() / (double) size);
+
             return (map.size() / size) == 0 ? 1 : (v >= Double.parseDouble(((int) v) + ".1") ? ((int) v) + 1 : (int) v);
         }
 
         double v = ((double) list.size() / (double) size);
+
         return (list.size() / size) == 0 ? 1 : (v >= Double.parseDouble(((int) v) + ".1") ? ((int) v) + 1 : (int) v);
     }
 
     public List<JAction> getPageMapList(int page) {
-        if (page < 1)
-            page = 0;
+        if (page < 1) page = 0;
 
         int size = page == 0 ? 1 : (this.size * page) - this.size;
 
@@ -76,7 +77,7 @@ public class PageManager {
             int loop = 0;
             while (loop < this.size) {
                 String text = (new ArrayList<>(map.keySet())).get(size + loop);
-                PageManagerJson pageManagerJson = map.get(text); // (new ArrayList<>(map.values()).get(size + loop));
+                PageManagerJson pageManagerJson = map.get(text);
 
                 JAction jAction = new JAction();
 
@@ -87,17 +88,14 @@ public class PageManager {
                 if (pageManagerJson != null) {
                     pageManagerJson.setText(text);
 
-                    if (pageManagerJson.getClick() != null
-                            && pageManagerJson.getClickEvent() != null) {
+                    if (pageManagerJson.getClick() != null && pageManagerJson.getClickEvent() != null) {
 
                         if (pageManagerJson.getHoverEvent() == null)
                             jAction.setParseEvent(pageManagerJson.getClick(), pageManagerJson.getClickEvent()).end();
-                        else
-                            jAction.setParseEvent(pageManagerJson.getClick(), pageManagerJson.getClickEvent());
+                        else jAction.setParseEvent(pageManagerJson.getClick(), pageManagerJson.getClickEvent());
                     }
 
-                    if (pageManagerJson.getHover() != null
-                            && pageManagerJson.getHoverEvent() != null)
+                    if (pageManagerJson.getHover() != null && pageManagerJson.getHoverEvent() != null)
                         jAction.setParseEvent(pageManagerJson.getHover(), pageManagerJson.getHoverEvent()).end();
 
                     if (pageManagerJson.getAfterMessage() != null)
@@ -143,20 +141,17 @@ public class PageManager {
             }
         }
 
-        if (order)
-            return ListUtil.invertList(new ArrayList<>(MapUtil.orderByKeyString(fakeReturn).values()));
+        if (order) return ListUtil.invertList(new ArrayList<>(MapUtil.orderByKeyString(fakeReturn).values()));
         else return jActionList;
     }
 
     public String getPage(int page) {
-        if (page < 1)
-            page = 0;
+        if (page < 1) page = 0;
 
         int size = page == 0 ? 1 : (this.size * page) - this.size;
         List<String> values = Lists.newArrayList();
 
-        if (order)
-            Collections.sort(list);
+        if (order) Collections.sort(list);
 
         try {
             int loop = 0;
@@ -179,8 +174,7 @@ public class PageManager {
 
         int length = format.length();
 
-        if (length > 1)
-            format.substring(length - 2, length);
+        if (length > 1) format.substring(length - 2, length);
 
         return format.toString();
     }
@@ -188,15 +182,13 @@ public class PageManager {
     public void sendPage(int page, String next_command, String back_command, CommandSender sender) {
         if (page == 0) page = 1;
 
-        if (page > getTotalPages())
-            page = 1;
+        if (page > getTotalPages()) page = 1;
 
         sender.sendMessage(TXT.parse(" <6><m>---------------------<r> <b>Página: <f>" + page + " <6><m>---------------------<r>"));
 
         if (useMap)
             getPageMapList(page).forEach(jAction -> jAction.send(sender));
-        else
-            sender.sendMessage(TXT.parse(getPage(page)));
+        else sender.sendMessage(TXT.parse(getPage(page)));
 
         JAction json = new JAction();
 
@@ -204,8 +196,7 @@ public class PageManager {
 
         if ((page - 1) < 1)
             json.parseText("<8>[<]");
-        else
-            json.parseText("<e>[<]")
+        else json.parseText("<e>[<]")
                     .setParseEvent("<e>Clique para ir à página anterior.", HoverEvent.Action.SHOW_TEXT)
                     .setEvent("/" + back_command + " " + (page - 1), ClickEvent.Action.RUN_COMMAND).end();
 
@@ -214,8 +205,7 @@ public class PageManager {
 
         if (getTotalPages() - page == 0)
             json.parseText("<8>[>]");
-        else
-            json.parseText("<e>[>]")
+        else json.parseText("<e>[>]")
                     .setParseEvent("<e>Clique para ir à próxima página.", HoverEvent.Action.SHOW_TEXT)
                     .setEvent("/" + next_command + " " + (page + 1), ClickEvent.Action.RUN_COMMAND).end();
 

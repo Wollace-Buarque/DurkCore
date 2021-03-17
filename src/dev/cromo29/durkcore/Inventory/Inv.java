@@ -162,15 +162,15 @@ public class Inv implements InventoryHolder {
         this(size, InventoryType.CHEST, TXT.parse(title));
     }
 
-    public Inv(InventoryType type) {
-        this(type, type.getDefaultTitle());
+    public Inv(InventoryType checkType) {
+        this(checkType, checkType.getDefaultTitle());
     }
 
-    public Inv(InventoryType type, String title) {
-        this(0, type, TXT.parse(title));
+    public Inv(InventoryType checkType, String title) {
+        this(0, checkType, TXT.parse(title));
     }
 
-    private Inv(int size, InventoryType type, String title) {
+    private Inv(int size, InventoryType checkType, String title) {
         itemHandlers = new HashMap<>();
         pages = Lists.newArrayList();
         pagesByKey = Maps.newHashMap();
@@ -178,9 +178,9 @@ public class Inv implements InventoryHolder {
         cancelPlayerInventoryClick = true;
         cancelClick = true;
 
-        if (type == InventoryType.CHEST && size > 0)
+        if (checkType == InventoryType.CHEST && size > 0)
             inventory = Bukkit.createInventory(this, size, TXT.parse(title));
-        else inventory = Bukkit.createInventory(this, Objects.requireNonNull(type, "type"), TXT.parse(title));
+        else inventory = Bukkit.createInventory(this, Objects.requireNonNull(checkType, "checkType"), TXT.parse(title));
 
         if (inventory.getHolder() != this)
             throw new IllegalStateException("Inventory holder is not Inv, found: " + inventory.getHolder());

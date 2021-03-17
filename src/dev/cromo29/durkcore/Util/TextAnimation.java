@@ -1,11 +1,11 @@
 package dev.cromo29.durkcore.Util;
 
 
-import com.google.common.collect.Lists;
-
+import java.util.ArrayList;
 import java.util.List;
 
 public class TextAnimation {
+
     private AnimationType animationType;
 
     public TextAnimation(AnimationType animationType) {
@@ -53,6 +53,7 @@ public class TextAnimation {
     }
 
     private abstract static class AnimationType {
+
         public int position;
         public int framePosition;
         public List<String> frames;
@@ -64,7 +65,7 @@ public class TextAnimation {
         public String originalStr;
 
         private AnimationType() {
-            frames = Lists.newArrayList();
+            frames = new ArrayList<>();
         }
 
         public void addFrame(int times, String frame, Object... args) {
@@ -80,8 +81,7 @@ public class TextAnimation {
         public void setFrame(int framePosition, String frame, Object... args) {
             if (framePosition >= frames.size())
                 addFrame(1, frame, args);
-             else
-                frames.set(framePosition, TXT.parse(frame, args));
+             else frames.set(framePosition, TXT.parse(frame, args));
         }
 
         public void removeFrame(int framePosition) {
@@ -110,6 +110,7 @@ public class TextAnimation {
     }
 
     public static class ColorScrollForward extends AnimationType {
+
         public ColorScrollForward(String text, String textColor, String colorBefore, String colorMid, String colorAfter) {
             this.originalStr = text;
             this.str = text;
@@ -128,7 +129,7 @@ public class TextAnimation {
         @Override
         public String next() {
             if (position == str.length()) {
-                ++position;
+                position++;
                 return textColor + str.substring(0, str.length() - 1) + colorBefore + str.substring(str.length() - 1);
             }
 
@@ -143,29 +144,33 @@ public class TextAnimation {
                     }
                     framePosition = 0;
                 }
-                ++position;
-                return colorAfter + str.substring(0, 1) + textColor + str.substring(1);
+
+                position++;
+                return colorAfter + str.charAt(0) + textColor + str.substring(1);
             }
 
             if (position == 0) {
                 String one = str.substring(0, 1);
                 String two = colorMid + one;
-                String fin = two + colorAfter + str.substring(1, 2) + textColor + str.substring(2);
-                ++position;
+                String fin = two + colorAfter + str.charAt(1) + textColor + str.substring(2);
+
+                position++;
                 return fin;
             }
 
             String one = str.substring(0, position);
             String two = str.substring(position + 1);
-            String three = colorMid + str.substring(position, position + 1);
+            String three = colorMid + str.charAt(position);
+
             int m = one.length();
             int l = two.length();
-            String first = (m <= 1) ? (colorBefore + one) : (one.substring(0, one.length() - 1) + colorBefore + one.substring(one.length() - 1));
-            String second = (l <= 1) ? (colorAfter + two) : (colorAfter + two.substring(0, 1) + textColor + two.substring(1));
-            String fin2 = textColor + first + three + second;
 
-            ++position;
-            return fin2;
+            String first = (m <= 1) ? (colorBefore + one) : (one.substring(0, one.length() - 1) + colorBefore + one.substring(one.length() - 1));
+            String second = (l <= 1) ? (colorAfter + two) : (colorAfter + two.charAt(0) + textColor + two.substring(1));
+            String fin = textColor + first + three + second;
+
+            position++;
+            return fin;
         }
     }
 
@@ -193,52 +198,58 @@ public class TextAnimation {
             if (position >= str.length()) {
                 if (!frames.isEmpty()) {
                     if (framePosition < frames.size()) {
-                        ++framePosition;
+                        framePosition++;
                         return frames.get(framePosition - 1);
                     }
                     framePosition = 0;
                 }
-                --position;
+                position--;
                 return textColor + str.substring(0, str.length() - 1) + colorBefore + str.substring(str.length() - 1);
             }
 
             if (position == str.length() - 1) {
                 String one = colorBefore + str.substring(str.length() - 1);
-                String two = colorMid + str.substring(str.length() - 2, str.length() - 1);
+                String two = colorMid + str.charAt(str.length() - 2);
                 String fin = textColor + str.substring(0, str.length() - 2) + two + one;
-                --position;
+
+                position--;
                 return fin;
             }
 
             if (position == 1) {
-                String fin2 = colorBefore + str.substring(0, 1) + colorMid + str.substring(1, 2) + colorAfter + str.substring(2, 3) + textColor + str.substring(3);
-                --position;
-                return fin2;
+                String fin = colorBefore + str.charAt(0) + colorMid + str.charAt(1) + colorAfter + str.charAt(2) + textColor + str.substring(3);
+
+                position--;
+                return fin;
             }
 
             if (position == 0) {
-                String fin2 = colorMid + str.substring(0, 1) + colorAfter + str.substring(1, 2) + textColor + str.substring(2);
-                --position;
-                return fin2;
+                String fin = colorMid + str.charAt(0) + colorAfter + str.charAt(1) + textColor + str.substring(2);
+
+                position--;
+                return fin;
             }
 
             if (position == -1) {
-                String fin2 = colorAfter + str.substring(0, 1) + textColor + str.substring(1);
-                --position;
-                return fin2;
+                String fin = colorAfter + str.charAt(0) + textColor + str.substring(1);
+
+                position--;
+                return fin;
             }
 
             String one = str.substring(0, position);
             String two = str.substring(position + 1);
-            String three = colorMid + str.substring(position, position + 1);
+            String three = colorMid + str.charAt(position);
+
             int m = one.length();
             int l = two.length();
-            String first = (m <= 1) ? (colorBefore + one) : (one.substring(0, one.length() - 1) + colorBefore + one.substring(one.length() - 1));
-            String second = (l <= 1) ? (colorAfter + two) : (colorAfter + two.substring(0, 1) + textColor + two.substring(1));
-            String fin3 = this.textColor + first + three + second;
 
-            --position;
-            return fin3;
+            String first = (m <= 1) ? (colorBefore + one) : (one.substring(0, one.length() - 1) + colorBefore + one.substring(one.length() - 1));
+            String second = (l <= 1) ? (colorAfter + two) : (colorAfter + two.charAt(0) + textColor + two.substring(1));
+            String fin = textColor + first + three + second;
+
+            position--;
+            return fin;
         }
     }
 
@@ -261,7 +272,7 @@ public class TextAnimation {
         @Override
         public String next() {
             if (position == str.length()) {
-                ++position;
+                position++;
                 return colorBefore + str;
             }
 
@@ -271,34 +282,37 @@ public class TextAnimation {
             if (position <= -1) {
                 if (!frames.isEmpty()) {
                     if (framePosition < frames.size()) {
-                        ++framePosition;
+                        framePosition++;
                         return frames.get(framePosition - 1);
                     }
                     framePosition = 0;
                 }
-                ++position;
-                return colorAfter + str.substring(0, 1) + textColor + str.substring(1);
+                position++;
+                return colorAfter + str.charAt(0) + textColor + str.substring(1);
             }
 
             if (position == 0) {
                 String one = str.substring(0, 1);
                 String two = colorMid + one;
-                String fin = two + colorAfter + str.substring(1, 2) + textColor + str.substring(2);
-                ++position;
+                String fin = two + colorAfter + str.charAt(1) + textColor + str.substring(2);
+
+                position++;
                 return fin;
             }
 
             String one = str.substring(0, position);
             String two = str.substring(position + 1);
-            String three = colorMid + str.substring(position, position + 1);
+            String three = colorMid + str.charAt(position);
+
             int m = one.length();
             int l = two.length();
-            String first = (m <= 1) ? one : (one.substring(0, one.length() - 1) + one.substring(one.length() - 1));
-            String second = (l <= 1) ? (colorAfter + two) : (colorAfter + two.substring(0, 1) + textColor + two.substring(1));
-            String fin2 = colorBefore + first + three + second;
 
-            ++position;
-            return fin2;
+            String first = (m <= 1) ? one : (one.substring(0, one.length() - 1) + one.substring(one.length() - 1));
+            String second = (l <= 1) ? (colorAfter + two) : (colorAfter + two.charAt(0) + textColor + two.substring(1));
+            String fin = colorBefore + first + three + second;
+
+            position++;
+            return fin;
         }
     }
 
@@ -331,59 +345,65 @@ public class TextAnimation {
                     }
                     framePosition = 0;
                 }
-                --position;
+                position--;
                 return textColor + str.substring(0, str.length() - 1) + colorBefore + str.substring(str.length() - 1);
             }
 
             if (position == str.length() - 1) {
                 String one = colorBefore + str.substring(str.length() - 1);
-                String two = colorMid + str.substring(str.length() - 2, str.length() - 1);
+                String two = colorMid + str.charAt(str.length() - 2);
                 String fin = textColor + str.substring(0, str.length() - 2) + two + one;
-                --position;
+
+                position--;
                 return fin;
             }
 
             if (position == 1) {
-                String fin2 = colorBefore + str.substring(0, 1) + colorMid + str.substring(1, 2) + colorAfter + str.substring(2);
-                --position;
-                return fin2;
+                String fin = colorBefore + str.charAt(0) + colorMid + str.charAt(1) + colorAfter + str.substring(2);
+
+                position--;
+                return fin;
             }
             if (position == 0) {
-                String fin2 = colorMid + str.substring(0, 1) + colorAfter + str.substring(1);
-                --position;
-                return fin2;
+                String fin = colorMid + str.charAt(0) + colorAfter + str.substring(1);
+
+                position--;
+                return fin;
             }
 
             if (position == -1) {
-                String fin2 = colorAfter + str;
-                --position;
-                return fin2;
+                String fin = colorAfter + str;
+
+                position--;
+                return fin;
             }
 
             String one = str.substring(0, position);
             String two = str.substring(position + 1);
-            String three = colorMid + str.substring(position, position + 1);
+            String three = colorMid + str.charAt(position);
+
             int m = one.length();
             int l = two.length();
+
             String first = (m <= 1) ? (colorBefore + one) : (one.substring(0, one.length() - 1) + colorBefore + one.substring(one.length() - 1));
             String second = (l <= 1) ? (colorAfter + two) : (colorAfter + two);
-            String fin3 = textColor + first + three + second;
+            String fin = textColor + first + three + second;
 
-            --position;
-            return fin3;
+            position--;
+            return fin;
         }
     }
 
     public static class ColorBlink extends AnimationType {
         public ColorBlink(int blinks, int blinkTime, String text, String firstColor, String secondColor, boolean endWithFirstColor) {
             framePosition = 0;
+
             for (int i = 0; i < blinks; ++i) {
                 addFrame(blinkTime, firstColor + text);
                 addFrame(blinkTime, secondColor + text);
             }
 
-            if (endWithFirstColor)
-                addFrame(blinks, firstColor + text);
+            if (endWithFirstColor) addFrame(blinks, firstColor + text);
         }
 
         @Override
@@ -393,11 +413,10 @@ public class TextAnimation {
 
         @Override
         public String next() {
-            if (framePosition >= frames.size())
-                framePosition = 0;
 
-            if (framePosition < frames.size())
-                ++framePosition;
+            if (framePosition >= frames.size()) framePosition = 0;
+
+            if (framePosition < frames.size()) framePosition++;
 
             return frames.get(framePosition - 1);
         }
@@ -426,11 +445,9 @@ public class TextAnimation {
 
         @Override
         public String next() {
-            if (fillColorForward.hasNext())
-                return fillColorForward.next();
+            if (fillColorForward.hasNext()) return fillColorForward.next();
 
-            if (colorBlink.hasNext())
-                return colorBlink.next();
+            if (colorBlink.hasNext()) return colorBlink.next();
 
             colorBlink.next();
             return fillColorForward.next();

@@ -6,83 +6,125 @@ import java.util.concurrent.TimeUnit;
 
 public class TimeFormat {
 
-    public static String getTime(long milisegundos) {
+    public static String getTime(long milliseconds, boolean showSeconds) {
         Calendar calendar = Calendar.getInstance();
-        calendar.setTimeInMillis(milisegundos);
+        calendar.setTimeInMillis(milliseconds);
 
-        SimpleDateFormat formatador = new SimpleDateFormat("dd/MM/yyyy # HH:mm");
+        String format = showSeconds ? "dd/MM/yyyy @ HH:mm:ss" : "dd/MM/yyyy @ HH:mm";
 
-        return formatador.format(calendar.getTime()).replace("#", "às");
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(format);
+
+        return simpleDateFormat.format(calendar.getTime()).replace("@", "às");
     }
 
-    public static String format(long time) {
+    public static String getTime(long milliseconds) {
+        return getTime(milliseconds, false);
+    }
 
-        long dias = TimeUnit.MILLISECONDS.toDays(time);
-        long anos = dias / 365;
-        dias %= 365;
-        long meses = dias / 30;
-        dias %= 30;
-        long semanas = dias / 7;
-        dias %= 7;
+    public static String format(long milliseconds) {
 
-        long horas = TimeUnit.MILLISECONDS.toHours(time)
-                - TimeUnit.DAYS.toHours(TimeUnit.MILLISECONDS.toDays(time));
-        long minutos = TimeUnit.MILLISECONDS.toMinutes(time)
-                - TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(time));
-        long segundos = TimeUnit.MILLISECONDS.toSeconds(time)
-                - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(time));
+        long days = TimeUnit.MILLISECONDS.toDays(milliseconds);
+
+        long years = days / 365;
+        days %= 365;
+
+        long months = days / 30;
+        days %= 30;
+
+        long weeks = days / 7;
+        days %= 7;
+
+        long hours = TimeUnit.MILLISECONDS.toHours(milliseconds) - TimeUnit.DAYS.toHours(TimeUnit.MILLISECONDS.toDays(milliseconds));
+
+        long minutes = TimeUnit.MILLISECONDS.toMinutes(milliseconds)
+                - TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(milliseconds));
+
+        long seconds = TimeUnit.MILLISECONDS.toSeconds(milliseconds)
+                - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(milliseconds));
 
         StringBuilder sb = new StringBuilder();
 
-        if (anos > 0) sb.append(anos).append(anos == 1 ? " ano" : " anos");
-        if (meses > 0)
-            sb.append(anos > 0 ? (semanas > 0 ? ", " : " e ") : "").append(meses).append(meses == 1 ? " mês" : " meses");
-        if (semanas > 0)
-            sb.append(anos > 0 || meses > 0 ? (dias > 0 ? ", " : " e ") : "").append(semanas).append(semanas == 1 ? " semana" : " semanas");
-        if (dias > 0)
-            sb.append(anos > 0 || meses > 0 || semanas > 0 ? (horas > 0 ? ", " : " e ") : "").append(dias).append(dias == 1 ? " dia" : " dias");
-        if (horas > 0)
-            sb.append(anos > 0 || meses > 0 || semanas > 0 || dias > 0 ? (minutos > 0 ? ", " : " e ") : "").append(horas).append(horas == 1 ? " hora" : " horas");
-        if (minutos > 0)
-            sb.append(anos > 0 || meses > 0 || semanas > 0 || dias > 0 || horas > 0 ? (segundos > 0 ? ", " : " e ") : "").append(minutos).append(minutos == 1 ? " minuto" : " minutos");
-        if (segundos > 0)
-            sb.append(anos > 0 || meses > 0 || semanas > 0 || dias > 0 || horas > 0 || minutos > 0 ? " e " : (sb.length() > 0 ? ", " : "")).append(segundos).append(segundos == 1 ? " segundo" : " segundos");
+        if (years > 0) {
+            sb.append(years).append(years == 1 ? " ano" : " anos");
+        }
+
+        if (months > 0) {
+            sb.append(years > 0 ? (weeks > 0 ? ", " : " e ") : "").append(months).append(months == 1 ? " mês" : " meses");
+        }
+
+        if (weeks > 0) {
+            sb.append(years > 0 || months > 0 ? (days > 0 ? ", " : " e ") : "").append(weeks).append(weeks == 1 ? " semana" : " semanas");
+        }
+
+        if (days > 0) {
+            sb.append(years > 0 || months > 0 || weeks > 0 ? (hours > 0 ? ", " : " e ") : "").append(days).append(days == 1 ? " dia" : " dias");
+        }
+
+        if (hours > 0) {
+            sb.append(years > 0 || months > 0 || weeks > 0 || days > 0 ? (minutes > 0 ? ", " : " e ") : "").append(hours).append(hours == 1 ? " hora" : " horas");
+        }
+
+        if (minutes > 0) {
+            sb.append(years > 0 || months > 0 || weeks > 0 || days > 0 || hours > 0 ? (seconds > 0 ? ", " : " e ") : "").append(minutes).append(minutes == 1 ? " minuto" : " minutos");
+        }
+
+        if (seconds > 0) {
+            sb.append(years > 0 || months > 0 || weeks > 0 || days > 0 || hours > 0 || minutes > 0 ? " e " : (sb.length() > 0 ? ", " : "")).append(seconds).append(seconds == 1 ? " segundo" : " segundos");
+        }
 
         return sb.toString().isEmpty() ? "agora" : sb.toString();
     }
 
     public static String formatSimplified(long time) {
 
-        long dias = TimeUnit.MILLISECONDS.toDays(time);
-        long anos = dias / 365;
-        dias %= 365;
-        long meses = dias / 30;
-        dias %= 30;
-        long semanas = dias / 7;
-        dias %= 7;
+        long days = TimeUnit.MILLISECONDS.toDays(time);
 
-        long horas = TimeUnit.MILLISECONDS.toHours(time)
-                - TimeUnit.DAYS.toHours(TimeUnit.MILLISECONDS.toDays(time));
-        long minutos = TimeUnit.MILLISECONDS.toMinutes(time)
+        long years = days / 365;
+        days %= 365;
+
+        long months = days / 30;
+        days %= 30;
+
+        long weeks = days / 7;
+        days %= 7;
+
+        long hours = TimeUnit.MILLISECONDS.toHours(time) - TimeUnit.DAYS.toHours(TimeUnit.MILLISECONDS.toDays(time));
+
+        long minutes = TimeUnit.MILLISECONDS.toMinutes(time)
                 - TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(time));
-        long segundos = TimeUnit.MILLISECONDS.toSeconds(time)
+
+        long seconds = TimeUnit.MILLISECONDS.toSeconds(time)
                 - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(time));
 
         StringBuilder sb = new StringBuilder();
 
-        if (anos > 0) sb.append(anos).append("a");
-        if (meses > 0)
-            sb.append(" ").append(meses).append("m");
-        if (semanas > 0)
-            sb.append(" ").append(semanas).append("se");
-        if (dias > 0)
-            sb.append(" ").append(dias).append("d");
-        if (horas > 0)
-            sb.append(" ").append(horas).append("h");
-        if (minutos > 0)
-            sb.append(" ").append(minutos).append("m");
-        if (segundos > 0)
-            sb.append(" ").append(segundos).append("s");
+        if (years > 0) {
+            sb.append(years).append("a");
+        }
+
+        if (months > 0) {
+            sb.append(" ").append(months).append("m");
+        }
+
+        if (weeks > 0) {
+            sb.append(" ").append(weeks).append("se");
+        }
+
+        if (days > 0) {
+            sb.append(" ").append(days).append("d");
+        }
+
+        if (hours > 0) {
+            sb.append(" ").append(hours).append("h");
+        }
+
+        if (minutes > 0) {
+            sb.append(" ").append(minutes).append("m");
+        }
+
+        if (seconds > 0) {
+            sb.append(" ").append(seconds).append("s");
+        }
 
         return sb.toString().isEmpty() ? "agora" : sb.toString();
     }

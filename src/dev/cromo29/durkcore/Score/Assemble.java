@@ -17,19 +17,22 @@ public class Assemble {
 	AssembleThread thread;
     AssembleTitleThread titleThread;
 	AssembleListener listeners;
+
 	public long scoreUpdateTick = 20;
     public long titleUpdateTick = 20;
 	boolean hook = false;
 	public boolean shouldShowForPlayerOnJoin = true;
     public AssembleStyle assembleStyle = AssembleStyle.MODERN;
 
-    public void removeScoreFrom(Player p) {
-        p.setScoreboard(Bukkit.getScoreboardManager().getMainScoreboard());
-        boards.remove(p.getUniqueId());
+    public void removeScoreFrom(Player player) {
+        player.setScoreboard(Bukkit.getScoreboardManager().getMainScoreboard());
+
+        boards.remove(player.getUniqueId());
     }
-    public void showScoreFor(Player p) {
-        if (boards.containsKey(p.getUniqueId())) return;
-        boards.put(p.getUniqueId(), new AssembleBoard(p, this));
+    public void showScoreFor(Player player) {
+        if (boards.containsKey(player.getUniqueId())) return;
+
+        boards.put(player.getUniqueId(), new AssembleBoard(player, this));
     }
 
 	public Assemble(JavaPlugin plugin, AssembleAdapter adapter) {

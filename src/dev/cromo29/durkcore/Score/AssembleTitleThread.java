@@ -20,14 +20,14 @@ public class AssembleTitleThread extends Thread {
             //Tick
             try {
                 tick();
-            } catch (NullPointerException e) {
-                e.printStackTrace();
+            } catch (NullPointerException exception) {
+                exception.printStackTrace();
             }
             //Thread Sleep
             try {
                 sleep(assemble.titleUpdateTick * 50);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+            } catch (InterruptedException exception) {
+                exception.printStackTrace();
             }
         }
     }
@@ -52,12 +52,11 @@ public class AssembleTitleThread extends Thread {
             // Update the title if needed
             if (!objective.getDisplayName().equals(title)) {
                 if (title.length() > 32) title = title.substring(0, 32);
+
                 objective.setDisplayName(title);
             }
 
-            if (player.getScoreboard() != scoreboard)
-                player.setScoreboard(scoreboard);
-
+            if (player.getScoreboard() != scoreboard) player.setScoreboard(scoreboard);
         }
     }
 

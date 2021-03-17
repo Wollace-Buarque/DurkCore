@@ -31,12 +31,13 @@ public class BreakLine {
         boolean isBold = false;
         int charIndex = 0;
         int lastSpaceIndex = 0;
-        String toSendAfter = null;
+
+        String breakedMessage = null;
         String recentColorCode = "";
 
         for (char c : message.toCharArray()) {
 
-            if (c == '§' || c == '&') {
+            if (c == '§') {
                 previousCode = true;
                 continue;
             } else if (previousCode) {
@@ -60,7 +61,7 @@ public class BreakLine {
             int MAX_PX = 320;
 
             if (messagePxSize >= MAX_PX) {
-                toSendAfter = "\n" + word + recentColorCode + message.substring(lastSpaceIndex + 1);
+                breakedMessage = "\n" + word + recentColorCode + message.substring(lastSpaceIndex + 1);
                 message = message.substring(0, lastSpaceIndex + 1);
                 break;
             }
@@ -69,7 +70,7 @@ public class BreakLine {
 
         this.message.add(message);
 
-        if (toSendAfter != null) addWordOnBreak(word, toSendAfter);
+        if (breakedMessage != null) addWordOnBreak(word, breakedMessage);
 
         return this;
     }

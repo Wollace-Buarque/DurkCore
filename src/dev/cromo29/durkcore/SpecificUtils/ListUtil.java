@@ -3,16 +3,28 @@ package dev.cromo29.durkcore.SpecificUtils;
 import com.google.common.collect.Lists;
 import dev.cromo29.durkcore.Util.TXT;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 public class ListUtil {
 
+    public static List<String> getColorizedStringList(List<String> stringList, Object... replacers) {
+        List<String> toReturn = new ArrayList<>();
+
+        for (String text : stringList) {
+            toReturn.add(replace(TXT.parse(text), replacers));
+        }
+
+        return toReturn;
+    }
+
     public static List<String> getColorizedStringList(List<String> stringList) {
-        for (int i = 0; i < stringList.size() - 1; i++) stringList.set(i, TXT.parse(stringList.get(i)));
-        return stringList;
+        List<String> toReturn = new ArrayList<>();
+
+        for (String text : stringList) {
+            toReturn.add(TXT.parse(text));
+        }
+
+        return toReturn;
     }
 
     public static List<String> getColorizedStringList(String... strings) {
@@ -21,39 +33,60 @@ public class ListUtil {
         List<String> colorizedList = Lists.newArrayList();
         Iterator<String> loop = Arrays.asList(strings).iterator();
 
-        while (loop.hasNext()) colorizedList.add(TXT.parse(loop.next()));
+        while (loop.hasNext()) {
+            colorizedList.add(TXT.parse(loop.next()));
+        }
 
         return colorizedList;
     }
 
     public static <T> List<T> invertList(List<T> toInvert) {
         Collections.reverse(toInvert);
+
         return toInvert;
     }
 
     @SafeVarargs
     public static <T> List<T> getList(T... args) {
-        List<T> l = Lists.newArrayList();
+        List<T> toReturn = Lists.newArrayList();
 
-        if (args == null) return l;
+        if (args == null) {
+            return toReturn;
+        }
 
-        Collections.addAll(l, args);
+        Collections.addAll(toReturn, args);
 
-        return l;
+        return toReturn;
     }
 
     public static List<String> getStringList(String... args) {
-        List<String> l = Lists.newArrayList();
+        List<String> toReturn = Lists.newArrayList();
 
-        if (args == null) return l;
+        if (args == null) {
+            return toReturn;
+        }
 
-        for (String arg : args)
-            l.add(TXT.parse(arg));
+        for (String arg : args) {
+            toReturn.add(TXT.parse(arg));
+        }
 
-        return l;
+        return toReturn;
     }
 
     public static String[] getStringArray(String... args) {
         return getStringList(args).toArray(new String[]{});
     }
+
+    private  static String replace(String text, Object... replace) {
+        Iterator<Object> iter = Arrays.asList(replace).iterator();
+
+        while (iter.hasNext()) {
+            String key = iter.next() + "";
+            String iterValue = iter.next() + "";
+
+            text = text.replace(key, iterValue);
+        }
+        return text;
+    }
+
 }

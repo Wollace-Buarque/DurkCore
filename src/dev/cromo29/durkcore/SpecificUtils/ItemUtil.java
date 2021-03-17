@@ -48,9 +48,7 @@ public class ItemUtil {
                 : Material.getMaterial(data.toUpperCase());
 
         // Throw exception if the material provided was wrong
-        if (material == null) {
-            throw new IllegalArgumentException("Invalid material " + data);
-        }
+        if (material == null) throw new IllegalArgumentException("Invalid material " + data);
 
         int amount;
         try {
@@ -62,8 +60,7 @@ public class ItemUtil {
         ItemMeta meta = item.getItemMeta();
 
         // No meta data was provided, we can return here
-        if (split.length < 3)
-            return item;
+        if (split.length < 3) return item;
 
         // Go through all the item meta specified
         for (int i = 2; i < split.length; i++) {
@@ -132,8 +129,10 @@ public class ItemUtil {
             Constructor<?> nbtTagCompoundConstructor = nbtTagCompoundClass.getConstructor();
             Object nbtTagCompound = nbtTagCompoundConstructor.newInstance();
             Object nmsItemStack = getObfuscationClass("inventory.CraftItemStack").getMethod("asNMSCopy", ItemStack.class).invoke(null, itemStack);
+
             getNMSClass("ItemStack").getMethod("save", nbtTagCompoundClass).invoke(nmsItemStack, nbtTagCompound);
             outputStream = new ByteArrayOutputStream();
+
             getNMSClass("NBTCompressedStreamTools").getMethod("a", nbtTagCompoundClass, OutputStream.class).invoke(null, nbtTagCompound, outputStream);
         } catch (Exception ignored) {
         }
@@ -153,6 +152,7 @@ public class ItemUtil {
         try {
             nbtTagCompound = getNMSClass("NBTCompressedStreamTools").getMethod("a", InputStream.class).invoke(null, inputStream);
             Object craftItemStack = nmsItemStackClass.getMethod("createStack", nbtTagCompoundClass).invoke(null, nbtTagCompound);
+
             itemStack = (ItemStack) getObfuscationClass("inventory.CraftItemStack").getMethod("asBukkitCopy", nmsItemStackClass).invoke(null, craftItemStack);
         } catch (Exception ignored) {
         }
@@ -167,8 +167,8 @@ public class ItemUtil {
 
         try {
             nmsClass = Class.forName(classLocation);
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
+        } catch (ClassNotFoundException exception) {
+            exception.printStackTrace();
         }
         return nmsClass;
     }
@@ -180,8 +180,8 @@ public class ItemUtil {
         Class<?> nmsClass = null;
         try {
             nmsClass = Class.forName(classLocation);
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
+        } catch (ClassNotFoundException exception) {
+            exception.printStackTrace();
         }
         return nmsClass;
     }
@@ -275,8 +275,8 @@ public class ItemUtil {
             json.put("enchantments", enchantmentMap);
 
             return json.build();
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (Exception exception) {
+            exception.printStackTrace();
             return null;
         }
 
@@ -288,13 +288,13 @@ public class ItemUtil {
 
             Map<String, Object> jsonMap = new JsonBuilder(itemJson).getCurrentMap();
 
-            Material type = Material.valueOf(jsonMap.get("material").toString());
+            Material stopType = Material.valueOf(jsonMap.get("material").toString());
             int amount = Double.valueOf(jsonMap.get("amount").toString()).intValue();
             short durability = Double.valueOf(jsonMap.get("durability").toString()).shortValue();
 
             MetaType metaType = MetaType.valueOf(jsonMap.get("metaType").toString());
 
-            ItemStack makeItem = new ItemStack(type, amount, durability);
+            ItemStack makeItem = new ItemStack(stopType, amount, durability);
 
             if (jsonMap.containsKey("lore")) {
 
@@ -376,12 +376,12 @@ public class ItemUtil {
 
                 ((Map<String, String>) jsonMap.get("enchantments")).forEach((ench, level) -> makeItem.addUnsafeEnchantment(Enchantment.getByName(ench), Double.valueOf(level).intValue()));
 
-                if (!jsonMap.get("displayName").equals(type.name()))
+                if (!jsonMap.get("displayName").equals(stopType.name()))
                     meta.setDisplayName(jsonMap.get("displayName").toString());
 
                 try {
                     meta.spigot().setUnbreakable(Boolean.valueOf(jsonMap.get("unbreakable").toString()));
-                } catch (Exception e) {
+                } catch (Exception ignored) {
                 }
                 makeItem.setItemMeta(meta);
 
@@ -389,8 +389,8 @@ public class ItemUtil {
 
             return makeItem;
 
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (Exception exception) {
+            exception.printStackTrace();
             return null;
         }
     }
@@ -436,15 +436,19 @@ public class ItemUtil {
     public static boolean isDiamondTool(Material material) {
         return material.name().contains("DIAMOND_") && isTool(material);
     }
+
     public static boolean isIronTool(Material material) {
         return material.name().contains("IRON_") && isTool(material);
     }
+
     public static boolean isStoneTool(Material material) {
         return material.name().contains("STONE_") && isTool(material);
     }
+
     public static boolean isGoldenTool(Material material) {
         return material.name().contains("GOLD_") && isTool(material);
     }
+
     public static boolean isWoodenTool(Material material) {
         return material.name().contains("WOOD_") && isTool(material);
     }
@@ -461,18 +465,23 @@ public class ItemUtil {
     public static boolean isDiamondArmor(Material material) {
         return material.name().contains("DIAMOND_") && isArmor(material);
     }
+
     public static boolean isIronArmor(Material material) {
         return material.name().contains("IRON_") && isArmor(material);
     }
+
     public static boolean isStoneArmor(Material material) {
         return material.name().contains("STONE_") && isArmor(material);
     }
+
     public static boolean isChainmailArmor(Material material) {
         return material.name().contains("CHAINMAIL_") && isArmor(material);
     }
+
     public static boolean isGoldenArmor(Material material) {
         return material.name().contains("GOLD_") && isArmor(material);
     }
+
     public static boolean isLeatherArmor(Material material) {
         return material.name().contains("LEATHER_") && isArmor(material);
     }
@@ -582,8 +591,8 @@ public class ItemUtil {
             setNBTTagCompound.invoke(CraftItemStack, NBTTagCompound);
 
             return (ItemStack) asCraftMirror.invoke(null, CraftItemStack);
-        } catch (Throwable e) {
-            e.printStackTrace();
+        } catch (Throwable throwable) {
+            throwable.printStackTrace();
             return null;
         }
     }
@@ -615,8 +624,8 @@ public class ItemUtil {
             }
 
             return null;
-        } catch (Throwable e) {
-            e.printStackTrace();
+        } catch (Throwable throwable) {
+            throwable.printStackTrace();
             return null;
         }
     }
@@ -633,9 +642,10 @@ public class ItemUtil {
 
             setString.invoke(NBTTagCompound, key, value);
             setNBTTagCompound.invoke(CraftItemStack, NBTTagCompound);
+
             return (ItemStack) asCraftMirror.invoke(null, CraftItemStack);
-        } catch (Throwable e) {
-            e.printStackTrace();
+        } catch (Throwable throwable) {
+            throwable.printStackTrace();
             return null;
         }
     }
@@ -651,8 +661,8 @@ public class ItemUtil {
             else return false;
 
             return (boolean) getBoolean.invoke(NBTTagCompound, "Unbreakable");
-        } catch (Throwable e) {
-            e.printStackTrace();
+        } catch (Throwable throwable) {
+            throwable.printStackTrace();
             return false;
         }
     }
@@ -672,9 +682,10 @@ public class ItemUtil {
 
             setBoolean.invoke(NBTTagCompound, "Unbreakable", bool);
             setNBTTagCompound.invoke(CraftItemStack, NBTTagCompound);
+
             return (ItemStack) asCraftMirror.invoke(null, CraftItemStack);
-        } catch (Throwable e) {
-            e.printStackTrace();
+        } catch (Throwable throwable) {
+            throwable.printStackTrace();
             return null;
         }
     }
@@ -696,8 +707,8 @@ public class ItemUtil {
             }
 
             return cost;
-        } catch (Throwable e) {
-            e.printStackTrace();
+        } catch (Throwable throwable) {
+            throwable.printStackTrace();
             return 40;
         }
     }
@@ -708,8 +719,8 @@ public class ItemUtil {
             setRepairCost.invoke(CraftItemStack, cost);
 
             return (ItemStack) asBukkitCopy.invoke(null, CraftItemStack);
-        } catch (Throwable e) {
-            e.printStackTrace();
+        } catch (Throwable throwable) {
+            throwable.printStackTrace();
             return item;
         }
     }
@@ -719,8 +730,8 @@ public class ItemUtil {
 
             craftMagicNumbers$getItem = RU.getMethod(RU.getBukkitClass("util.CraftMagicNumbers"), "getItem", Material.class);
 
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (Exception exception) {
+            exception.printStackTrace();
         }
         try {
 
@@ -765,6 +776,7 @@ public class ItemUtil {
             addNBTBaseTag = NBTTagListClass.getDeclaredMethod("add", NBTBaseClass);
             createTag = NBTBaseClass.getDeclaredMethod("createTag", byte.class);
             createTag.setAccessible(true);
+
         } catch (Throwable ignored) {
         }
     }

@@ -14,13 +14,12 @@ public class Updater implements Runnable {
 
     @Override
     public void run() {
-        UpdateType[] types;
-        int typesAmount = (types = UpdateType.class.getEnumConstants()).length;
 
-        for (int loop = 0; loop < typesAmount; ++loop) {
-            UpdateType type = types[loop];
+        for (UpdateType updateType : UpdateType.values()) {
 
-            if (type.elapsed()) plugin.getServer().getPluginManager().callEvent(new UpdaterEvent(type));
+            if (updateType.elapsed()) {
+                plugin.getServer().getPluginManager().callEvent(new UpdaterEvent(updateType));
+            }
         }
     }
 }

@@ -25,10 +25,12 @@ public class MapUtil {
     public static <V, K> Map<V, K> invertMap(Map<K, V> toInvert) {
         Map<V, K> out = new HashMap(toInvert.size());
         Iterator var2 = toInvert.entrySet().iterator();
+
         while(var2.hasNext()) {
             Map.Entry<K, V> entry = (Map.Entry)var2.next();
             out.put(entry.getValue(), entry.getKey());
         }
+
         return out;
     }
 

@@ -9,13 +9,13 @@ import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 import org.bukkit.inventory.Inventory;
 
-public class PlayerOpenChest extends Event implements Cancellable {
+public class PlayerOpenChestEvent extends Event implements Cancellable {
 
     private Player player;
     private Chest chest;
     private Block block;
 
-    public PlayerOpenChest(Player player, Chest chest, Block block) {
+    public PlayerOpenChestEvent(Player player, Chest chest, Block block) {
         this.player = player;
         this.chest = chest;
         this.block = block;

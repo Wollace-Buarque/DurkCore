@@ -59,23 +59,22 @@ public class MySQL {
         } catch (Exception ignored) {
         }
 
-        String connectionURL = "jdbc:mysql://"
-                + this.host + ":" + this.port;
+        String connectionURL = "jdbc:mysql://" + this.host + ":" + this.port;
 
         if (db != null) connectionURL = connectionURL + "/" + this.db + "?autoReconnect=true";
 
         try {
             Class.forName("com.mysql.jdbc.Driver");
             c = DriverManager.getConnection(connectionURL, this.user, this.pass);
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (Exception exception) {
+            exception.printStackTrace();
             return false;
         }
 
         try {
             ps = getConnection().createStatement();
-        } catch (SQLException e) {
-            e.printStackTrace();
+        } catch (SQLException exception) {
+            exception.printStackTrace();
         }
         return true;
     }
@@ -115,11 +114,12 @@ public class MySQL {
 
             if (doUpdate) {
                 ps.executeUpdate(query);
+
                 return null;
             } else return ps.executeQuery(query);
 
-        } catch (SQLException e) {
-            e.printStackTrace();
+        } catch (SQLException exception) {
+            exception.printStackTrace();
             return null;
         }
     }
@@ -147,11 +147,12 @@ public class MySQL {
             if (doUpdate) {
                 preparedStatement.executeUpdate();
                 preparedStatement.close();
+
                 return null;
             } else return preparedStatement.executeQuery();
 
-        } catch (SQLException e) {
-            e.printStackTrace();
+        } catch (SQLException exception) {
+            exception.printStackTrace();
             return null;
         }
     }
@@ -182,8 +183,8 @@ public class MySQL {
 
         try {
             return getConnection().prepareStatement(query);
-        } catch (SQLException e) {
-            e.printStackTrace();
+        } catch (SQLException exception) {
+            exception.printStackTrace();
             return null;
         }
     }
@@ -191,8 +192,21 @@ public class MySQL {
     public void close(PreparedStatement ps) {
         try {
             ps.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
+        } catch (SQLException exception) {
+            exception.printStackTrace();
+        }
+    }
+
+    public void closeConnection() {
+        try {
+            if (c != null && c.isClosed()) return;
+        } catch (SQLException ignored) {
+        }
+
+        try {
+            c.close();
+        } catch (SQLException exception) {
+            exception.printStackTrace();
         }
     }
 }

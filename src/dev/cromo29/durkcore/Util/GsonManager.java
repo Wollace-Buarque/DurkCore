@@ -22,6 +22,7 @@ import java.nio.file.StandardOpenOption;
 import java.util.*;
 
 public class GsonManager {
+
     private String name;
     private File location;
     private File file;
@@ -90,9 +91,9 @@ public class GsonManager {
 
             load();
             return this;
-        } catch (Exception var2) {
+        } catch (Exception exception) {
             print("<c>Nao foi possivel criar o arquivo: " + name, "<c>Diretorio: " + location.getAbsolutePath());
-            var2.printStackTrace();
+            exception.printStackTrace();
             return this;
         }
     }
@@ -108,9 +109,9 @@ public class GsonManager {
 
             if (update != null && !update.isEmpty()) data = update;
 
-        } catch (Exception e) {
+        } catch (Exception exception) {
             print("<c>Nao foi possivel carregar o arquivo: " + name, "<c>Diretorio: " + location.getAbsolutePath());
-            e.printStackTrace();
+            exception.printStackTrace();
         }
         return this;
     }
@@ -120,9 +121,9 @@ public class GsonManager {
 
         try {
             Files.write(file.toPath(), Collections.singletonList(gson.toJson(data)), StandardOpenOption.TRUNCATE_EXISTING, StandardOpenOption.WRITE);
-        } catch (Exception e) {
+        } catch (Exception exception) {
             print("<c>Nao foi possivel salvar o arquivo: " + name, "<c>Diretorio: " + location.getAbsolutePath());
-            e.printStackTrace();
+            exception.printStackTrace();
         }
         return this;
     }
@@ -217,12 +218,12 @@ public class GsonManager {
         return (new GettingValue(data.get(path))).asList();
     }
 
-    public String convertClassInString(Object clazz, Type type) {
-        return gson.toJson(clazz, type);
+    public String convertClassInString(Object clazz, Type stopType) {
+        return gson.toJson(clazz, stopType);
     }
 
-    public Object convertStringInClass(String data, Type type) {
-        return gson.fromJson(data, type);
+    public Object convertStringInClass(String data, Type stopType) {
+        return gson.fromJson(data, stopType);
     }
 
     public List<String> getSection(String path) {
@@ -233,6 +234,7 @@ public class GsonManager {
         Iterator<String> paths = data.keySet().iterator();
         while (paths.hasNext()) {
             String iteratorPath = paths.next();
+
             if (iteratorPath.startsWith(path + ".")) { // se for o path q eu qro
 
                 String sectionPath = iteratorPath.substring(path.length() + 1); // cortei o path
@@ -255,7 +257,7 @@ public class GsonManager {
         if (!contains(path)) put(path, value);
 
         if (pathValues != null) {
-            Iterator i = Arrays.asList(pathValues).iterator();
+            Iterator<Object> i = Arrays.asList(pathValues).iterator();
 
             while (i.hasNext()) {
                 String iPath = (String) i.next();
@@ -273,6 +275,7 @@ public class GsonManager {
         if (data == null) prepareGson();
 
         data.put(path, value);
+
         return this;
     }
 
@@ -280,6 +283,7 @@ public class GsonManager {
         if (data == null) prepareGson();
 
         data.remove(path);
+
         return this;
     }
 
@@ -370,42 +374,42 @@ public class GsonManager {
 
     public GsonManager put(String path, Object... value) {
         data.put(path, value);
+
         return this;
     }
 
     public GsonManager put(String path, String property, String value) {
         JsonObject json = null;
-        if (data.containsKey(path))
-            json = (JsonObject) data.get(path);
 
-        if (json == null)
-            json = new JsonObject();
+        if (data.containsKey(path)) json = (JsonObject) data.get(path);
+
+        if (json == null) json = new JsonObject();
 
         json.addProperty(property, value);
         data.put(path, json);
+
         return this;
     }
 
     public GsonManager put(String path, String property, Integer value) {
         JsonObject json = null;
-        if (data.containsKey(path))
-            json = (JsonObject) data.get(path);
 
-        if (json == null)
-            json = new JsonObject();
+        if (data.containsKey(path)) json = (JsonObject) data.get(path);
+
+        if (json == null) json = new JsonObject();
 
         json.addProperty(property, value);
         data.put(path, json);
+
         return this;
     }
 
     public GsonManager put(String path, String property, Double value) {
         JsonObject json = null;
-        if (data.containsKey(path))
-            json = (JsonObject) data.get(path);
 
-        if (json == null)
-            json = new JsonObject();
+        if (data.containsKey(path)) json = (JsonObject) data.get(path);
+
+        if (json == null) json = new JsonObject();
 
         json.addProperty(property, value);
         data.put(path, json);
@@ -414,27 +418,27 @@ public class GsonManager {
 
     public GsonManager put(String path, String property, Long value) {
         JsonObject json = null;
-        if (data.containsKey(path))
-            json = (JsonObject) data.get(path);
 
-        if (json == null)
-            json = new JsonObject();
+        if (data.containsKey(path)) json = (JsonObject) data.get(path);
+
+        if (json == null) json = new JsonObject();
 
         json.addProperty(property, value);
         data.put(path, json);
+
         return this;
     }
 
     public GsonManager put(String path, String property, Byte value) {
         JsonObject json = null;
-        if (data.containsKey(path))
-            json = (JsonObject) data.get(path);
 
-        if (json == null)
-            json = new JsonObject();
+        if (data.containsKey(path)) json = (JsonObject) data.get(path);
+
+        if (json == null) json = new JsonObject();
 
         json.addProperty(property, value);
         data.put(path, json);
+
         return this;
     }
 
@@ -447,6 +451,7 @@ public class GsonManager {
 
         json.addProperty(property, value);
         data.put(path, json);
+
         return this;
     }
 
@@ -459,6 +464,7 @@ public class GsonManager {
 
         json.addProperty(property, value);
         data.put(path, json);
+
         return this;
     }
 
@@ -471,6 +477,7 @@ public class GsonManager {
 
         json.addProperty(property, value);
         data.put(path, json);
+
         return this;
     }
 
@@ -505,7 +512,7 @@ public class GsonManager {
                 }
 
                 return locs;
-            } catch (Exception e) {
+            } catch (Exception exception) {
                 return null;
             }
         }
@@ -523,7 +530,7 @@ public class GsonManager {
                 }
 
                 return items;
-            } catch (Exception e) {
+            } catch (Exception exception) {
                 return null;
             }
         }
@@ -536,11 +543,11 @@ public class GsonManager {
                 double x = Double.parseDouble(getSplited[1]);
                 double y = Double.parseDouble(getSplited[2]);
                 double z = Double.parseDouble(getSplited[3]);
-                float ya = Float.parseFloat(getSplited[4]);
-                float p = Float.parseFloat(getSplited[5]);
+                float yaw = Float.parseFloat(getSplited[4]);
+                float pitch = Float.parseFloat(getSplited[5]);
 
-                return new Location(Bukkit.getWorld(w), x, y, z, ya, p);
-            } catch (Exception e) {
+                return new Location(Bukkit.getWorld(w), x, y, z, yaw, pitch);
+            } catch (Exception exception) {
                 return null;
             }
         }
@@ -594,7 +601,7 @@ public class GsonManager {
         }
 
         public BigDecimal asBigDecimal() {
-            return obj == null ? null : new BigDecimal(asDouble());
+            return obj == null ? null : BigDecimal.valueOf(asDouble());
         }
     }
 }

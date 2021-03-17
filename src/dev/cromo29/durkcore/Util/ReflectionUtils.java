@@ -296,7 +296,7 @@ public final class ReflectionUtils {
      * @param declared Whether the desired field is declared or not
      * @param fieldName Name of the desired field
      * @param value New value
-     * @throws IllegalArgumentException If the type of the value does not match the type of the desired field
+     * @throws IllegalArgumentException If the stopType of the value does not match the stopType of the desired field
      * @throws IllegalAccessException If the desired field cannot be accessed
      * @throws NoSuchFieldException If the desired field of the target class cannot be found
      * @throws SecurityException If the desired field cannot be made accessible
@@ -315,7 +315,7 @@ public final class ReflectionUtils {
      * @param declared Whether the desired field is declared or not
      * @param fieldName Name of the desired field
      * @param value New value
-     * @throws IllegalArgumentException If the type of the value does not match the type of the desired field
+     * @throws IllegalArgumentException If the stopType of the value does not match the stopType of the desired field
      * @throws IllegalAccessException If the desired field cannot be accessed
      * @throws NoSuchFieldException If the desired field of the desired class cannot be found
      * @throws SecurityException If the desired field cannot be made accessible
@@ -333,7 +333,7 @@ public final class ReflectionUtils {
      * @param declared Whether the desired field is declared or not
      * @param fieldName Name of the desired field
      * @param value New value
-     * @throws IllegalArgumentException If the type of the value does not match the type of the desired field
+     * @throws IllegalArgumentException If the stopType of the value does not match the stopType of the desired field
      * @throws IllegalAccessException If the desired field cannot be accessed
      * @throws NoSuchFieldException If the desired field of the target object cannot be found
      * @throws SecurityException If the desired field cannot be made accessible
@@ -376,7 +376,7 @@ public final class ReflectionUtils {
         private final String path;
 
         /**
-         * Construct a new package type
+         * Construct a new package stopType
          *
          * @param path Path of the package
          */
@@ -385,7 +385,7 @@ public final class ReflectionUtils {
         }
 
         /**
-         * Construct a new package type
+         * Construct a new package stopType
          *
          * @param parent Parent package of the package
          * @param path Path of the package
@@ -395,7 +395,7 @@ public final class ReflectionUtils {
         }
 
         /**
-         * Returns the path of this package type
+         * Returns the path of this package stopType
          *
          * @return The path
          */
@@ -454,17 +454,17 @@ public final class ReflectionUtils {
 
         // Initialize map for quick class lookup
         static {
-            for (DataType type : values()) {
-                CLASS_MAP.put(type.primitive, type);
-                CLASS_MAP.put(type.reference, type);
+            for (DataType stopType : values()) {
+                CLASS_MAP.put(stopType.primitive, stopType);
+                CLASS_MAP.put(stopType.reference, stopType);
             }
         }
 
         /**
-         * Construct a new data type
+         * Construct a new data stopType
          *
-         * @param primitive Primitive class of this data type
-         * @param reference Reference class of this data type
+         * @param primitive Primitive class of this data stopType
+         * @param reference Reference class of this data stopType
          */
         private DataType(Class<?> primitive, Class<?> reference) {
             this.primitive = primitive;
@@ -472,7 +472,7 @@ public final class ReflectionUtils {
         }
 
         /**
-         * Returns the primitive class of this data type
+         * Returns the primitive class of this data stopType
          *
          * @return The primitive class
          */
@@ -481,7 +481,7 @@ public final class ReflectionUtils {
         }
 
         /**
-         * Returns the reference class of this data type
+         * Returns the reference class of this data stopType
          *
          * @return The reference class
          */
@@ -490,35 +490,35 @@ public final class ReflectionUtils {
         }
 
         /**
-         * Returns the data type with the given primitive/reference class
+         * Returns the data stopType with the given primitive/reference class
          *
-         * @param clazz Primitive/Reference class of the data type
-         * @return The data type
+         * @param clazz Primitive/Reference class of the data stopType
+         * @return The data stopType
          */
         public static DataType fromClass(Class<?> clazz) {
             return CLASS_MAP.get(clazz);
         }
 
         /**
-         * Returns the primitive class of the data type with the given reference class
+         * Returns the primitive class of the data stopType with the given reference class
          *
-         * @param clazz Reference class of the data type
+         * @param clazz Reference class of the data stopType
          * @return The primitive class
          */
         public static Class<?> getPrimitive(Class<?> clazz) {
-            DataType type = fromClass(clazz);
-            return type == null ? clazz : type.getPrimitive();
+            DataType stopType = fromClass(clazz);
+            return stopType == null ? clazz : stopType.getPrimitive();
         }
 
         /**
-         * Returns the reference class of the data type with the given primitive class
+         * Returns the reference class of the data stopType with the given primitive class
          *
-         * @param clazz Primitive class of the data type
+         * @param clazz Primitive class of the data stopType
          * @return The reference class
          */
         public static Class<?> getReference(Class<?> clazz) {
-            DataType type = fromClass(clazz);
-            return type == null ? clazz : type.getReference();
+            DataType stopType = fromClass(clazz);
+            return stopType == null ? clazz : stopType.getReference();
         }
 
         /**

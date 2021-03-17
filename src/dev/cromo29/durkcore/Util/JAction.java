@@ -11,9 +11,7 @@ import org.bukkit.inventory.ItemStack;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class JAction {
 
@@ -37,7 +35,6 @@ public class JAction {
 
         } catch (Exception ignored) {
         }
-
     }
 
     public JAction setItem(String text, ItemStack item) {
@@ -58,6 +55,7 @@ public class JAction {
 
             if (parse) parseText(text);
             else text(text);
+
             textBuilder.event(new HoverEvent(HoverEvent.Action.SHOW_ITEM, new ComponentBuilder(nbtTagCompound.toString()).create()));
 
         } catch (Exception exception) {
@@ -88,8 +86,8 @@ public class JAction {
 
         textBuilder = new CustomComponentBuilder(textBuilder, TextComponent.fromLegacyText(message));
 
-        if (retention)     //TODO: Para detectar se não é pra pegar o evento do texto atrás
-            textBuilder.append("", ComponentBuilder.FormatRetention.NONE);
+        //TODO: Para detectar se não é pra pegar o evento do texto atrás
+        if (retention) textBuilder.append("", ComponentBuilder.FormatRetention.NONE);
 
         return this;
     }
@@ -165,8 +163,7 @@ public class JAction {
     public JAction delete() {   //TODO: Para deletar a linha atual
         if (modifyID == 0)
             return delete(id);
-        else
-            return delete(modifyID);
+        else return delete(modifyID);
 
     }
 

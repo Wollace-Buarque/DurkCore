@@ -1,6 +1,5 @@
 package dev.cromo29.durkcore.Util;
 
-import com.google.common.collect.Lists;
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
 import dev.cromo29.durkcore.SpecificUtils.ItemUtil;
@@ -14,7 +13,10 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
 import java.util.UUID;
@@ -281,7 +283,7 @@ public class MakeItem {
         this.ik = ik.clone();
     }
 
-    public MakeItem setAmout(int amount) {
+    public MakeItem setAmount(int amount) {
         ik.setAmount(amount);
         return this;
     }
@@ -346,7 +348,7 @@ public class MakeItem {
     public void clearLore() {
         ItemMeta im = ik.getItemMeta();
 
-        im.setLore(Lists.newArrayList());
+        im.setLore(new ArrayList<>());
 
         ik.setItemMeta(im);
     }
@@ -354,14 +356,14 @@ public class MakeItem {
     public List<String> getLore() {
         ItemMeta im = ik.getItemMeta();
 
-        return im.hasLore() ? im.getLore() : Lists.newArrayList();
+        return im.hasLore() ? im.getLore() : new ArrayList<>();
     }
 
     public MakeItem setLore(List<String> lore) {
         ItemMeta im = ik.getItemMeta();
-        List<String> loreList = Lists.newArrayList();
+        List<String> loreList = new ArrayList<>();
 
-        for (String r : lore) loreList.add(TXT.parse(r));
+        for (String text : lore) loreList.add(TXT.parse(text));
 
         im.setLore(loreList);
 
@@ -370,23 +372,17 @@ public class MakeItem {
     }
 
     public MakeItem addLoreList(String... name) {
-        String[] arrayOfString;
-        int j = (arrayOfString = name).length;
-
-        for (int i = 0; i < j; i++) {
-            String s = arrayOfString[i];
-            addLore(s);
-        }
+        for (String text : name) addLore(text);
 
         return this;
     }
 
     public MakeItem addLore(List<String> lore) {
         ItemMeta im = ik.getItemMeta();
-        List<String> loreList = im.getLore() == null ? Lists.newArrayList() : im.getLore();
+        List<String> loreList = im.getLore() == null ? new ArrayList<>() : im.getLore();
 
-        for (String r : lore)
-            loreList.add(TXT.parse(r));
+        for (String text : lore)
+            loreList.add(TXT.parse(text));
 
         im.setLore(loreList);
 
@@ -396,7 +392,7 @@ public class MakeItem {
 
     public MakeItem addLore(String lore) {
         ItemMeta im = ik.getItemMeta();
-        List<String> loreList = im.getLore() == null ? Lists.newArrayList() : im.getLore();
+        List<String> loreList = im.getLore() == null ? new ArrayList<>() : im.getLore();
 
         if (im.hasLore())
             loreList = im.getLore();
@@ -420,7 +416,7 @@ public class MakeItem {
 
     public MakeItem remLore(int amount) {
         ItemMeta im = ik.getItemMeta();
-        List<String> loreLIst = Lists.newArrayList();
+        List<String> loreLIst = new ArrayList<>();
 
         if (im.hasLore())
             loreLIst = im.getLore();
@@ -437,23 +433,55 @@ public class MakeItem {
 
     public MakeItem addLore(String[] lore) {
         ItemMeta im = ik.getItemMeta();
-        List<String> loreList = Lists.newArrayList();
+        List<String> loreList = new ArrayList<>();
 
         if (im.hasLore())
             loreList = im.getLore();
 
-        String[] arrayOfString;
-        int j = (arrayOfString = lore).length;
-
-        for (int i = 0; i < j; i++) {
-            String x = arrayOfString[i];
-            loreList.add(TXT.parse(x));
-        }
+        for (String text : lore)
+            loreList.add(TXT.parse(text));
 
         im.setLore(loreList);
 
         ik.setItemMeta(im);
         return this;
+    }
+
+    /**
+     * créditos a: https://github.com/TheMFjulio/MFLib/blob/master/src/main/java/com/mateus/mflib/util/ItemBuilder.java
+     */
+    public MakeItem setNBTTag(String key, String value) {
+        try {
+            Object nmsCopy = NMSReflect.getCraftBukkitClass("inventory", "CraftItemStack").getMethod("asNMSCopy", ItemStack.class).invoke(null, ik);
+            Object nbtTagCompound = NMSReflect.getNMSClass("NBTTagCompound").getConstructor().newInstance();
+            boolean b = nmsCopy.getClass().getMethod("getTag").invoke(nmsCopy) != null;
+            Object nbtTag = b ? nmsCopy.getClass().getMethod("getTag").invoke(nmsCopy) : nbtTagCompound;
+            Constructor nbsString = NMSReflect.getNMSClass("NBTTagString").getConstructor(String.class);
+            nbtTag.getClass().getMethod("set", String.class, NMSReflect.getNMSClass("NBTBase"))
+                    .invoke(nbtTag, key, nbsString.newInstance(value));
+            nmsCopy.getClass().getMethod("setTag", NMSReflect.getNMSClass("NBTTagCompound")).invoke(nmsCopy, nbtTag);
+            this.ik = (ItemStack) NMSReflect.getCraftBukkitClass("inventory", "CraftItemStack").getMethod("asBukkitCopy", NMSReflect.getNMSClass("ItemStack"))
+                    .invoke(null, nmsCopy);
+        } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException | InstantiationException e) {
+            e.printStackTrace();
+        }
+        return this;
+    }
+
+    /**
+     * créditos a: https://github.com/TheMFjulio/MFLib/blob/master/src/main/java/com/mateus/mflib/util/NBTGetter.java
+     */
+    public static String getNBTTag(ItemStack item, String key) {
+        try {
+            Object nmsCopy = NMSReflect.getCraftBukkitClass("inventory", "CraftItemStack").getMethod("asNMSCopy", ItemStack.class).invoke(null, item);
+            if (nmsCopy.getClass().getMethod("getTag").invoke(nmsCopy) != null) {
+                Object tagCompound = nmsCopy.getClass().getMethod("getTag").invoke(nmsCopy);
+                return (String) tagCompound.getClass().getMethod("getString", String.class).invoke(tagCompound, key);
+            }
+        } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     public ItemStack build() {

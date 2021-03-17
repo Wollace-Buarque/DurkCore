@@ -68,16 +68,6 @@ public class TXT {
         print(parse(message, s));
     }
 
-    private static Object[] fix(Object... obs) {
-        List<Object> toFix = new ArrayList<>();
-
-        for (Object o : obs)
-            toFix.add(parse(o + ""));
-
-        obs = toFix.toArray();
-        return obs;
-    }
-
     public static String createString(Object[] args, int start) {
         return createString(args, start, " ");
     }
@@ -101,8 +91,9 @@ public class TXT {
             string.append(prefix);
             string.append(args[x]);
 
-            if (x != args.length - 1)
+            if (x != args.length - 1) {
                 string.append(suffix);
+            }
 
         }
         return string.toString();
@@ -121,8 +112,9 @@ public class TXT {
     public String[] getList(String... values) {
         List<String> list = new ArrayList<>();
 
-        for (String s : values)
+        for (String s : values) {
             list.add(parse(s));
+        }
 
         return list.toArray(new String[0]);
     }
@@ -134,7 +126,7 @@ public class TXT {
             try {
                 Integer.parseInt(toCheck);
                 return true;
-            } catch (Exception var3) {
+            } catch (Exception exception) {
                 return false;
             }
         }
@@ -147,7 +139,7 @@ public class TXT {
             try {
                 Double.parseDouble(toCheck);
                 return true;
-            } catch (Exception var3) {
+            } catch (Exception exception) {
                 return false;
             }
         }
@@ -157,7 +149,7 @@ public class TXT {
         try {
             Boolean.parseBoolean(toCheck);
             return true;
-        } catch (Exception var3) {
+        } catch (Exception exception) {
             return false;
         }
     }
@@ -170,6 +162,7 @@ public class TXT {
         for (ItemStack item : cont)
             if (item != null && item.getType() != Material.AIR)
                 i++;
+
         return 36 - i;
     }
 
@@ -227,6 +220,7 @@ public class TXT {
 
                 if (i < 0) {
                     cancel();
+
                     return;
                 }
 
@@ -241,8 +235,9 @@ public class TXT {
         StringBuffer ret = new StringBuffer();
         Matcher matcher = parsePattern.matcher(string);
 
-        while (matcher.find())
+        while (matcher.find()) {
             matcher.appendReplacement(ret, colors.get(matcher.group(0)));
+        }
 
         matcher.appendTail(ret);
         return ret.toString();
@@ -254,8 +249,9 @@ public class TXT {
         StringBuffer ret = new StringBuffer();
         Matcher matcher = unparsePattern.matcher(string);
 
-        while (matcher.find())
+        while (matcher.find()) {
             matcher.appendReplacement(ret, "");
+        }
 
         matcher.appendTail(ret);
         return ret.toString();
@@ -266,17 +262,21 @@ public class TXT {
     }
 
     public static void sendMessages(CommandSender sender, String... msgs) {
-        for (String value : msgs) sender.sendMessage(parse(value));
+        for (String value : msgs) {
+            sender.sendMessage(parse(value));
+        }
     }
 
-    public String replace(String text, Object toReplace, Object value, Object... replace) {
+    public static String replace(String text, Object toReplace, Object value, Object... replace) {
 
         text = text.replace(toReplace + "", value + "");
 
         Iterator<Object> iter = Arrays.asList(replace).iterator();
+
         while (iter.hasNext()) {
             String key = iter.next() + "";
             String iterValue = iter.next() + "";
+
             text = text.replace(key, iterValue);
         }
         return text;
@@ -284,14 +284,15 @@ public class TXT {
 
     public static boolean endsWith(String string, String endsWith, boolean ignoreCase) {
         if (string != null && endsWith != null) {
+
             if (endsWith.length() > string.length())
                 return false;
             else {
                 String substring = string.substring(string.length() - endsWith.length());
+
                 return ignoreCase ? substring.equalsIgnoreCase(endsWith) : substring.equals(endsWith);
             }
-        } else
-            return false;
+        } else return false;
     }
 
     public static int getMiddleSlot(Inventory inv) {
@@ -308,12 +309,13 @@ public class TXT {
         FireworkMeta fwm = fw.getFireworkMeta();
         Random r = new Random();
         int rt = r.nextInt(4) + 1;
-        FireworkEffect.Type type = FireworkEffect.Type.BALL;
 
-        if (rt == 2) type = FireworkEffect.Type.BALL_LARGE;
-        if (rt == 3) type = FireworkEffect.Type.BURST;
-        if (rt == 4) type = FireworkEffect.Type.CREEPER;
-        if (rt == 5) type = FireworkEffect.Type.STAR;
+        FireworkEffect.Type stopType = FireworkEffect.Type.BALL;
+
+        if (rt == 2) stopType = FireworkEffect.Type.BALL_LARGE;
+        if (rt == 3) stopType = FireworkEffect.Type.BURST;
+        if (rt == 4) stopType = FireworkEffect.Type.CREEPER;
+        if (rt == 5) stopType = FireworkEffect.Type.STAR;
 
         int r1i = r.nextInt(18) + 1;
         int r2i = r.nextInt(18) + 1;
@@ -321,7 +323,14 @@ public class TXT {
         Color c1 = getColor(r1i);
         Color c2 = getColor(r2i);
 
-        FireworkEffect effect = FireworkEffect.builder().flicker(r.nextBoolean()).withColor(c1).withFade(c2).with(type).trail(r.nextBoolean()).build();
+        FireworkEffect effect = FireworkEffect.builder()
+                .flicker(r.nextBoolean())
+                .withColor(c1)
+                .withFade(c2)
+                .with(stopType)
+                .trail(r.nextBoolean())
+                .build();
+
         fwm.addEffect(effect);
         fwm.setPower(2);
         fw.setFireworkMeta(fwm);
@@ -329,43 +338,36 @@ public class TXT {
 
     public static Color getColor(int i) {
         Color c = null;
-        if (i == 1)
-            c = Color.AQUA;
-        if (i == 2)
-            c = Color.BLACK;
-        if (i == 3)
-            c = Color.BLUE;
-        if (i == 4)
-            c = Color.FUCHSIA;
-        if (i == 5)
-            c = Color.GRAY;
-        if (i == 6)
-            c = Color.GREEN;
-        if (i == 7)
-            c = Color.LIME;
-        if (i == 8)
-            c = Color.MAROON;
-        if (i == 9)
-            c = Color.NAVY;
-        if (i == 10)
-            c = Color.OLIVE;
-        if (i == 11)
-            c = Color.ORANGE;
-        if (i == 12)
-            c = Color.PURPLE;
-        if (i == 13)
-            c = Color.RED;
-        if (i == 14)
-            c = Color.SILVER;
-        if (i == 15)
-            c = Color.TEAL;
-        if (i == 16)
-            c = Color.WHITE;
-        if (i == 17)
-            c = Color.YELLOW;
-        if (i == 18)
-            c = Color.fromBGR(9, 255, 0);
+
+        if (i == 1) c = Color.AQUA;
+        if (i == 2) c = Color.BLACK;
+        if (i == 3) c = Color.BLUE;
+        if (i == 4) c = Color.FUCHSIA;
+        if (i == 5) c = Color.GRAY;
+        if (i == 6) c = Color.GREEN;
+        if (i == 7) c = Color.LIME;
+        if (i == 8) c = Color.MAROON;
+        if (i == 9) c = Color.NAVY;
+        if (i == 10) c = Color.OLIVE;
+        if (i == 11) c = Color.ORANGE;
+        if (i == 12) c = Color.PURPLE;
+        if (i == 13) c = Color.RED;
+        if (i == 14) c = Color.SILVER;
+        if (i == 15) c = Color.TEAL;
+        if (i == 16) c = Color.WHITE;
+        if (i == 17) c = Color.YELLOW;
+        if (i == 18) c = Color.fromBGR(9, 255, 0);
+
         return c;
+    }
+
+    private static Object[] fix(Object... obs) {
+        List<Object> toFix = new ArrayList<>();
+
+        for (Object o : obs) toFix.add(parse(o + ""));
+
+        obs = toFix.toArray();
+        return obs;
     }
 
     static {
@@ -387,8 +389,6 @@ public class TXT {
         colors.put("<plus>", "✚");
         colors.put("<crosshair>", "✛");
         colors.put("<zap>", "⚡");
-        colors.put("<->", "»");
-        colors.put("<-->", "«");
         colors.put("<star inside ball>", "✪");
         colors.put("<star>", "⭑");
         colors.put("<cube>", "■");
@@ -423,64 +423,28 @@ public class TXT {
         colors.put("<smile>", "☺");
         colors.put("<full smile face>", "☻");
         colors.put("<full smile>", "☻");
-        colors.put("<black>", "§0");
-        colors.put("<preto>", "§0");
+
         colors.put("<0>", "§0");
-        colors.put("<dark blue>", "§1");
-        colors.put("<azul escuro>", "§1");
         colors.put("<1>", "§1");
-        colors.put("<dark green>", "§2");
-        colors.put("<verde escuro>", "§2");
         colors.put("<2>", "§2");
-        colors.put("<dark aqua>", "§3");
-        colors.put("<aqua escuro>", "§3");
         colors.put("<3>", "§3");
-        colors.put("<dark red>", "§4");
-        colors.put("<vermelho escuro>", "§4");
         colors.put("<4>", "§4");
-        colors.put("<dark purple>", "§5");
-        colors.put("<roxo escuro>", "§5");
         colors.put("<5>", "§5");
-        colors.put("<gold>", "§6");
-        colors.put("<ouro>", "§6");
         colors.put("<6>", "§6");
-        colors.put("<gray>", "§7");
-        colors.put("<cinza>", "§7");
         colors.put("<7>", "§7");
-        colors.put("<dark gray>", "§8");
-        colors.put("<cinza escuro>", "§8");
         colors.put("<8>", "§8");
-        colors.put("<blue>", "§9");
-        colors.put("<azul>", "§9");
         colors.put("<9>", "§9");
-        colors.put("<green>", "§a");
-        colors.put("<verde>", "§a");
         colors.put("<a>", "§a");
-        colors.put("<aqua>", "§b");
         colors.put("<b>", "§b");
-        colors.put("<red>", "§c");
-        colors.put("<vermlho>", "§c");
         colors.put("<c>", "§c");
-        colors.put("<rose>", "§d");
-        colors.put("<rosa>", "§d");
         colors.put("<d>", "§d");
-        colors.put("<yellow>", "§e");
-        colors.put("<amarelo>", "§e");
         colors.put("<e>", "§e");
-        colors.put("<white>", "§f");
-        colors.put("<branco>", "§f");
         colors.put("<f>", "§f");
-        colors.put("<bold>", "§l");
         colors.put("<l>", "§l");
-        colors.put("<italic>", "§o");
         colors.put("<o>", "§o");
-        colors.put("<underline>", "§n");
         colors.put("<n>", "§n");
-        colors.put("<strike>", "§m");
         colors.put("<m>", "§m");
-        colors.put("<magic>", "§k");
         colors.put("<k>", "§k");
-        colors.put("<reset>", "§r");
         colors.put("<r>", "§r");
 
         for (int i = 48; i <= 122; ++i) {
@@ -491,14 +455,15 @@ public class TXT {
             colors.put(("§" + c).toUpperCase(), ("§" + c).toUpperCase());
             colors.put(("&" + c).toUpperCase(), ("§" + c).toUpperCase());
 
-            if (i == 57)
+            if (i == 57) {
                 i = 96;
-
+            }
         }
 
         unparse.addAll(colors.values());
 
         StringBuilder patternStringBuilder = new StringBuilder();
+
         for (String find : colors.keySet()) {
             patternStringBuilder.append('(');
             patternStringBuilder.append(Pattern.quote(find));
@@ -507,7 +472,9 @@ public class TXT {
 
         String patternString = patternStringBuilder.toString();
         patternString = patternString.substring(0, patternString.length() - 1);
+
         parsePattern = Pattern.compile(patternString);
+
         StringBuilder unpatternStringBuilder = new StringBuilder();
 
         for (String find2 : unparse) {
@@ -518,6 +485,7 @@ public class TXT {
 
         String unpatternString = unpatternStringBuilder.toString();
         unpatternString = unpatternString.substring(0, unpatternString.length() - 1);
+
         unparsePattern = Pattern.compile(unpatternString);
     }
 }

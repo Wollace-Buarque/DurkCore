@@ -21,8 +21,7 @@ public final class VaultAPI {
     /**
      * Pega o prefixo no primeiro grupo do jogador
      *
-     * @param player
-     *            Jogador
+     * @param player Jogador
      * @return Prefixo do grupo
      */
     @SuppressWarnings("deprecation")
@@ -122,9 +121,8 @@ public final class VaultAPI {
 
         RegisteredServiceProvider<Chat> chatProvider = Bukkit.getServer().getServicesManager()
                 .getRegistration(net.milkbowl.vault.chat.Chat.class);
-        if (chatProvider != null) {
-            chat = chatProvider.getProvider();
-        }
+
+        if (chatProvider != null) chat = chatProvider.getProvider();
 
         return (chat != null);
     }

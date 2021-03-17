@@ -41,8 +41,8 @@ public class RU {
     public static RuntimeException asRuntimeException(Throwable t) {
         if (t instanceof RuntimeException)
             return (RuntimeException) t;
-       else
-            return t instanceof InvocationTargetException ? asRuntimeException(t.getCause()) : new IllegalStateException(t.getClass().getSimpleName() + ": " + t.getMessage());
+        else return t instanceof InvocationTargetException ? asRuntimeException(t.getCause()) :
+                new IllegalStateException(t.getClass().getSimpleName() + ": " + t.getMessage());
 
     }
 
@@ -54,17 +54,17 @@ public class RU {
         return getNMSClass("Packet");
     }
 
-    public static Object getHandle(Player p) throws Exception {
-        return getMethod(getCraftPlayer(), "getHandle").invoke(p);
+    public static Object getHandle(Player player) throws Exception {
+        return getMethod(getCraftPlayer(), "getHandle").invoke(player);
     }
 
-    public static Object getConnection(Player p) throws Exception {
-        Object handle = getHandle(p);
+    public static Object getConnection(Player player) throws Exception {
+        Object handle = getHandle(player);
         return handle.getClass().getField("playerConnection").get(handle);
     }
 
-    public static void sendPacket(Player p, Object packet) throws Exception {
-        Object connection = getConnection(p);
+    public static void sendPacket(Player player, Object packet) throws Exception {
+        Object connection = getConnection(player);
         connection.getClass().getMethod("sendPacket", getPacket()).invoke(connection, packet);
     }
 
@@ -79,6 +79,7 @@ public class RU {
     public static Constructor<?> getConstructor(Class<?> clazz, Class<?>... args) throws Exception {
         Constructor<?> c = clazz.getConstructor(args);
         c.setAccessible(true);
+
         return c;
     }
 
@@ -90,9 +91,8 @@ public class RU {
 
         for (int var6 = 0; var6 < var5; ++var6) {
             Enum<?> e = var4[var6];
-            if (e.name().equalsIgnoreCase(constant)) {
-                return e;
-            }
+
+            if (e.name().equalsIgnoreCase(constant)) return e;
         }
 
         throw new Exception("Enum constant not found " + constant);
@@ -106,29 +106,28 @@ public class RU {
 
         for (int var7 = 0; var7 < var6; ++var7) {
             Enum<?> e = var5[var7];
-            if (e.name().equalsIgnoreCase(constant)) {
-                return e;
-            }
+
+            if (e.name().equalsIgnoreCase(constant)) return e;
         }
 
         throw new Exception("Enum constant not found " + constant);
     }
 
     public static Field getField(Class<?> clazz, String fname) throws Exception {
-        Field f;
+        Field field;
 
         try {
-            f = clazz.getDeclaredField(fname);
+            field = clazz.getDeclaredField(fname);
         } catch (Exception var4) {
-            f = clazz.getField(fname);
+            field = clazz.getField(fname);
         }
 
-        setFieldAccessible(f);
-        return f;
+        setFieldAccessible(field);
+        return field;
     }
 
     public static Object getFirstObject(Class<?> clazz, Class<?> objclass, Object instance) throws Exception {
-        Field f = null;
+        Field field = null;
         Field[] var4 = clazz.getDeclaredFields();
         int var5 = var4.length;
 
@@ -137,51 +136,49 @@ public class RU {
         for (var6 = 0; var6 < var5; ++var6) {
             fi = var4[var6];
             if (fi.getType().equals(objclass)) {
-                f = fi;
+                field = fi;
                 break;
             }
         }
 
-        if (f == null) {
+        if (field == null) {
             var4 = clazz.getFields();
             var5 = var4.length;
 
             for (var6 = 0; var6 < var5; ++var6) {
                 fi = var4[var6];
                 if (fi.getType().equals(objclass)) {
-                    f = fi;
+                    field = fi;
                     break;
                 }
             }
         }
 
-        setFieldAccessible(f);
-        return f.get(instance);
+        setFieldAccessible(field);
+        return field.get(instance);
     }
 
     public static Method getMethod(Class<?> clazz, String mname) throws Exception {
-        Method m = null;
+        Method method;
 
         try {
-            m = clazz.getDeclaredMethod(mname);
+            method = clazz.getDeclaredMethod(mname);
         } catch (Exception var6) {
             try {
-                m = clazz.getMethod(mname);
+                method = clazz.getMethod(mname);
             } catch (Exception var5) {
-                return m;
+                return null;
             }
         }
 
-        m.setAccessible(true);
-        return m;
+        method.setAccessible(true);
+        return method;
     }
 
     public static <T> Field getField(Class<?> target, String name, Class<T> fieldType, int index) {
-        Field[] var4 = target.getDeclaredFields();
-        int var5 = var4.length;
+        Field[] declaredFields = target.getDeclaredFields();
 
-        for (int var6 = 0; var6 < var5; ++var6) {
-            Field field = var4[var6];
+        for (Field field : declaredFields) {
             if ((name == null || field.getName().equals(name)) && fieldType.isAssignableFrom(field.getType()) && index-- <= 0) {
                 field.setAccessible(true);
                 return field;
@@ -191,29 +188,44 @@ public class RU {
         if (target.getSuperclass() != null) {
             return getField(target.getSuperclass(), name, fieldType, index);
         } else {
-            throw new IllegalArgumentException("Cannot find field with type " + fieldType);
+            throw new IllegalArgumentException("Cannot find field with stopType " + fieldType);
         }
     }
 
     public static Method getMethod(Class<?> clazz, String mname, Class<?>... args) throws Exception {
-        Method m = null;
+        Method method;
 
         try {
-            m = clazz.getDeclaredMethod(mname, args);
+            method = clazz.getDeclaredMethod(mname, args);
         } catch (Exception var7) {
             try {
-                m = clazz.getMethod(mname, args);
+                method = clazz.getMethod(mname, args);
             } catch (Exception var6) {
-                return m;
+                return null;
             }
         }
 
-        m.setAccessible(true);
-        return m;
+        method.setAccessible(true);
+        return method;
     }
 
     public static String getServerVersion() {
         return serverVersion;
+    }
+
+    public synchronized static Class<?> getOBCClass(String obcClassName) {
+
+        String clazzName = "org.bukkit.craftbukkit." + serverVersion + obcClassName;
+        Class<?> clazz;
+
+        try {
+            clazz = Class.forName(clazzName);
+        } catch (Throwable throwable) {
+            throwable.printStackTrace();
+            return null;
+        }
+
+        return clazz;
     }
 
     public static Class<?> getNMSClass(String clazz) throws Exception {
@@ -252,11 +264,13 @@ public class RU {
         return getMethod(obj.getClass(), method).invoke(obj, initargs);
     }
 
-    public static void setFieldAccessible(Field f) throws Exception {
-        f.setAccessible(true);
+    public static void setFieldAccessible(Field field) throws Exception {
+        field.setAccessible(true);
+
         Field modifiers = Field.class.getDeclaredField("modifiers");
+
         modifiers.setAccessible(true);
-        modifiers.setInt(f, f.getModifiers() & -17);
+        modifiers.setInt(field, field.getModifiers() & -17);
     }
 
     public static void setObject(Class<?> clazz, Object obj, String fname, Object value) throws Exception {
@@ -270,10 +284,13 @@ public class RU {
     static {
         try {
             Class.forName("org.bukkit.Bukkit");
+
             FIELD_DOT_MODIFIERS = Field.class.getDeclaredField("modifiers");
             FIELD_DOT_MODIFIERS.setAccessible(true);
-            setObject(RU.class, null, "serverVersion", Bukkit.getServer().getClass().getPackage().getName().substring(Bukkit.getServer().getClass().getPackage().getName().lastIndexOf(46) + 1));
-        } catch (Exception var1) {
+
+            setObject(RU.class, null, "serverVersion", Bukkit.getServer().getClass().getPackage().getName()
+                    .substring(Bukkit.getServer().getClass().getPackage().getName().lastIndexOf(46) + 1));
+        } catch (Exception ignored) {
         }
 
     }

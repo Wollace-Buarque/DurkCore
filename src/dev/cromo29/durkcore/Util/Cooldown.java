@@ -16,15 +16,15 @@ public class Cooldown {
     }
 
     public static String getDate() {
-        Date now = new Date();
         SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy @ HH:mm:ss");
-        return format.format(now).replace("@", "às");
+
+        return format.format(new Date()).replace("@", "às");
     }
 
     public static String getDateSimplified() {
-        Date now = new Date();
         SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
-        return format.format(now);
+
+        return format.format(new Date());
     }
 
     public static String getDate(Long time) {
@@ -33,16 +33,23 @@ public class Cooldown {
         } else {
             long anos = time / 31104000L;
             time = time - anos * 31104000L;
+
             long meses = time / 2592000L;
             time = time - meses * 2592000L;
+
             long dias = time / 86400L;
             time = time - dias * 86400L;
+
             long horas = time / 3600L;
             time = time - horas * 3600L;
+
             long minutos = time / 60L;
             time = time - minutos * 60L;
+
             long segundos = time;
-            return format(dias) + "/" + format(meses) + "/" + format(anos) + " às " + format(horas) + ":" + format(minutos) + ":" + format(segundos);
+
+            return format(dias) + "/" + format(meses) + "/" + format(anos) + " às " + format(horas)
+                    + ":" + format(minutos) + ":" + format(segundos);
         }
     }
 
@@ -52,15 +59,21 @@ public class Cooldown {
         } else {
             long anos = time / 31104000L;
             time -= anos * 31104000L;
+
             long meses = time / 2592000L;
             time -= meses * 2592000L;
+
             long dias = time / 86400L;
             time -= dias * 86400L;
+
             long horas = time / 3600L;
             time -= horas * 3600L;
+
             long minutos = time / 60L;
             time -= minutos * 60L;
+
             StringBuilder sb = new StringBuilder();
+
             if (anos > 0L) {
                 sb.append(", ").append(anos).append(" ").append(anos == 1L ? "ano" : "anos");
             }
@@ -92,9 +105,10 @@ public class Cooldown {
     public static long getCurrentTime() {
         try {
             long seconds = 0L;
-            Date now = new Date();
+
             SimpleDateFormat format = new SimpleDateFormat("HH:mm:ss:dd:MM:yyyy");
-            String[] dates = format.format(now).split(":");
+            String[] dates = format.format(new Date()).split(":");
+
             if (Long.parseLong(dates[0]) > 0L) {
                 seconds += 3600L * Long.parseLong(dates[0]);
             }
@@ -120,13 +134,13 @@ public class Cooldown {
             }
 
             return seconds;
-        } catch (Exception var5) {
+        } catch (Exception exception) {
             return 0L;
         }
     }
 
     public static long getDateType(long time, Cooldown.Time t) {
-        switch(t) {
+        switch (t) {
             case YEAR:
                 return 31104000L * time;
             case MONTH:
@@ -148,53 +162,73 @@ public class Cooldown {
         } else {
             long anos = time / 31104000L;
             time -= anos * 31104000L;
+
             long meses = time / 2592000L;
             time -= meses * 2592000L;
+
             long dias = time / 86400L;
             time -= dias * 86400L;
+
             long horas = time / 3600L;
             time -= horas * 3600L;
+
             long minutos = time / 60L;
             time -= minutos * 60L;
-            return new int[]{NumberUtil.toInt(anos), NumberUtil.toInt(meses), NumberUtil.toInt(dias), NumberUtil.toInt(horas), NumberUtil.toInt(minutos), NumberUtil.toInt(time)};
+
+            return new int[]{NumberUtil.toInt(anos), NumberUtil.toInt(meses), NumberUtil.toInt(dias),
+                    NumberUtil.toInt(horas), NumberUtil.toInt(minutos), NumberUtil.toInt(time)};
         }
     }
 
     public static int[] getTimeInt() {
         long time = getCurrentTime();
+
         if (time == 0L) {
             return new int[]{0, 0, 0, 0, 0, 0};
         } else {
             long anos = time / 31104000L;
             time -= anos * 31104000L;
+
             long meses = time / 2592000L;
             time -= meses * 2592000L;
+
             long dias = time / 86400L;
             time -= dias * 86400L;
+
             long horas = time / 3600L;
             time -= horas * 3600L;
+
             long minutos = time / 60L;
             time -= minutos * 60L;
-            return new int[]{NumberUtil.toInt(anos), NumberUtil.toInt(meses), NumberUtil.toInt(dias), NumberUtil.toInt(horas), NumberUtil.toInt(minutos), NumberUtil.toInt(time)};
+
+            return new int[]{NumberUtil.toInt(anos), NumberUtil.toInt(meses), NumberUtil.toInt(dias),
+                    NumberUtil.toInt(horas), NumberUtil.toInt(minutos), NumberUtil.toInt(time)};
         }
     }
 
     public static String getTimeStringSimplified() {
         long time = getCurrentTime();
+
         if (time == 0L) {
             return "0";
         } else {
             long anos = time / 31104000L;
             time -= anos * 31104000L;
+
             long meses = time / 2592000L;
             time -= meses * 2592000L;
+
             long dias = time / 86400L;
             time -= dias * 86400L;
+
             long horas = time / 3600L;
             time -= horas * 3600L;
+
             long minutos = time / 60L;
             time -= minutos * 60L;
+
             StringBuilder sb = new StringBuilder();
+
             if (anos > 0L) {
                 sb.append(anos).append("a");
             }
@@ -229,15 +263,21 @@ public class Cooldown {
         } else {
             long anos = time / 31104000L;
             time -= anos * 31104000L;
+
             long meses = time / 2592000L;
             time -= meses * 2592000L;
+
             long dias = time / 86400L;
             time -= dias * 86400L;
+
             long horas = time / 3600L;
             time -= horas * 3600L;
+
             long minutos = time / 60L;
             time -= minutos * 60L;
+
             StringBuilder sb = new StringBuilder();
+
             if (anos > 0L) {
                 sb.append(anos).append("a");
             }
@@ -269,7 +309,7 @@ public class Cooldown {
     public static int getTimeInt(int[] i, Cooldown.Time t) {
         try {
             return t == Cooldown.Time.YEAR ? i[0] : (t == Cooldown.Time.MONTH ? i[1] : (t == Cooldown.Time.DAY ? i[2] : (t == Cooldown.Time.HOUR ? i[3] : (t == Cooldown.Time.MINUTE ? i[4] : (t == Cooldown.Time.SECOND ? i[5] : 0)))));
-        } catch (Exception var3) {
+        } catch (Exception exception) {
             return 0;
         }
     }
@@ -280,7 +320,7 @@ public class Cooldown {
         YEAR,
         HOUR,
         MINUTE,
-        SECOND;
+        SECOND
 
     }
 }

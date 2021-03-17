@@ -75,10 +75,12 @@ public class SectionBuilder<T> {
                         objects.add(section.get(parameter));
                     }
                 }
+
                 T object = constructor.newInstance(objects.toArray());
                 toReturn.add(object);
-            } catch (Exception e) {
-                e.printStackTrace();
+
+            } catch (Exception exception) {
+                exception.printStackTrace();
             }
         }
         return toReturn;
@@ -95,18 +97,23 @@ public class SectionBuilder<T> {
         public ItemStack supply(Object object) {
             ConfigurationSection section = (ConfigurationSection) object;
             Material material = Material.valueOf(section.getString("Material"));
+
             int data = !section.isSet("Data") ? 0 : section.getInt("Data");
             int amount = !section.isSet("Quantidade") ? 1 : section.getInt("Quantidade");
+
             String name = !section.isSet("Nome") ? null : TXT.parse(section.getString("Nome"));
             List<String> lore = !section.isSet("Lore") ? null : section.getStringList("Lore").stream().map(TXT::parse).collect(Collectors.toList());
             HashMap<Enchantment, Integer> enchants = !section.isSet("Enchants") ? null : (HashMap<Enchantment, Integer>) section.getStringList("Enchants").stream().collect(Collectors.toMap(string -> Enchantment.getByName(string.split(":")[0]), string -> Integer.parseInt(string.split(":")[1].trim())));
             ItemStack itemStack = new ItemStack(material, amount, (byte) data);
             ItemMeta itemMeta = itemStack.getItemMeta();
+
             if (name != null) itemMeta.setDisplayName(name);
             if (lore != null) itemMeta.setLore(lore);
             if (enchants != null)
                 enchants.forEach((enchantment, integer) -> itemMeta.addEnchant(enchantment, integer, true));
+
             itemStack.setItemMeta(itemMeta);
+
             return itemStack;
         }
     }
@@ -130,6 +137,7 @@ public class SectionBuilder<T> {
         @Override
         public List<A> supply(Object object) {
             ConfigurationSection section = (ConfigurationSection) object;
+
             return section.getKeys(false).stream().map(section::getConfigurationSection).map(adapter::supply).map(o -> (A) o).collect(Collectors.toList());
         }
     }

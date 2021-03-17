@@ -49,6 +49,7 @@ public class PlayerUtil {
         try {
             Object handle = RU.getHandle(player);
             Object playerAbilities = handle.getClass().getField("abilities").get(handle);
+
             return (boolean) FieldUtils.readField(playerAbilities, "mayBuild");
         } catch (Exception ignored) {
         }
@@ -68,9 +69,10 @@ public class PlayerUtil {
         try {
             Object handle = RU.getHandle(player);
             Object playerAbilities = handle.getClass().getField("abilities").get(handle);
+
             return (boolean) FieldUtils.readField(playerAbilities, "isInvulnerable");
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (Exception exception) {
+            exception.printStackTrace();
         }
         return false;
     }
@@ -80,8 +82,8 @@ public class PlayerUtil {
             Object handle = RU.getHandle(player);
             Object playerAbilities = handle.getClass().getField("abilities").get(handle);
             RU.setObject(playerAbilities, "isInvulnerable", isInvulnerable);
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (Exception exception) {
+            exception.printStackTrace();
         }
     }
 
@@ -89,6 +91,7 @@ public class PlayerUtil {
         try {
             Object handle = RU.getHandle(player);
             Object playerAbilities = handle.getClass().getField("abilities").get(handle);
+
             return (float) FieldUtils.readField(playerAbilities, "walkSpeed");
         } catch (Exception ignored) {
         }
@@ -108,6 +111,7 @@ public class PlayerUtil {
         try {
             Object handle = RU.getHandle(player);
             Object playerAbilities = handle.getClass().getField("abilities").get(handle);
+
             return (float) FieldUtils.readField(playerAbilities, "flySpeed");
         } catch (Exception ignored) {
         }
@@ -127,6 +131,7 @@ public class PlayerUtil {
         try {
             Object handle = RU.getHandle(player);
             Object playerAbilities = handle.getClass().getField("abilities").get(handle);
+
             return (boolean) FieldUtils.readField(playerAbilities, "isFlying");
         } catch (Exception ignored) {
         }
@@ -137,6 +142,7 @@ public class PlayerUtil {
         try {
             Object handle = RU.getHandle(player);
             Object playerAbilities = handle.getClass().getField("abilities").get(handle);
+
             return (boolean) FieldUtils.readField(playerAbilities, "canInstantlyBuild");
         } catch (Exception ignored) {
         }
@@ -156,6 +162,7 @@ public class PlayerUtil {
         try {
             Object handle = RU.getHandle(player);
             Object playerAbilities = handle.getClass().getField("abilities").get(handle);
+
             return (boolean) FieldUtils.readField(playerAbilities, "canFly");
         } catch (Exception ignored) {
         }
@@ -200,6 +207,7 @@ public class PlayerUtil {
             inventory.clear(slot);
         } else {
             item.setAmount(finalAmount);
+
             inventory.setItem(slot, item);
         }
     }
@@ -208,6 +216,7 @@ public class PlayerUtil {
         ItemStack singleItem = item.clone();
         int amount = item.getAmount();
         singleItem.setAmount(1);
+
         int stackAmount = item.getAmount();
         int stackSize = singleItem.getMaxStackSize();
         int stacks = amount * stackAmount / stackSize;
@@ -215,6 +224,7 @@ public class PlayerUtil {
 
         if (stacks != 0) {
             singleItem.setAmount(stackSize);
+
             IntStream.range(0, stacks).forEach((i) -> {
                 insert(player, singleItem.clone(), dropExcess);
             });
@@ -222,6 +232,7 @@ public class PlayerUtil {
 
         if (left != 0) {
             singleItem.setAmount(left);
+
             insert(player, singleItem.clone(), dropExcess);
         }
 
@@ -248,20 +259,18 @@ public class PlayerUtil {
                 player.getWorld().dropItemNaturally(player.getLocation(), itemLeft);
             });
 
-            if (playsound)
-                player.playSound(player.getLocation(), Sound.CHICKEN_EGG_POP, 0.800000011920929f, 1.0f);
+            if (playsound) player.playSound(player.getLocation(), Sound.CHICKEN_EGG_POP, 0.800000011920929f, 1.0f);
 
         }
 
     }
-	
-	public enum CardinalDirection { NORTH, EAST, SOUTH, WEST }
+
+    public enum CardinalDirection {NORTH, EAST, SOUTH, WEST}
 
     public static CardinalDirection getCardinalDirection(Player player) {
         double rotation = (player.getLocation().getYaw() - 90) % 360;
-        if (rotation < 0) {
-            rotation += 360.0;
-        }
+
+        if (rotation < 0) rotation += 360.0;
 
         if (0 <= rotation && rotation < 45) {
 
@@ -311,6 +320,7 @@ public class PlayerUtil {
             Class<?> iChatBaseComponent = RU.getNMSClass("IChatBaseComponent");
             Class<?> enumTitleAction = RU.getNMSClass("PacketPlayOutTitle$EnumTitleAction");
             Class<?> packetPlayOutTitle = RU.getNMSClass("PacketPlayOutTitle");
+
             packetPlayOutTitleConstructor = RU.getConstructor(packetPlayOutTitle, enumTitleAction, iChatBaseComponent);
             packetPlayOutTitleTimesConstructor =
                     RU.getConstructor(packetPlayOutTitle, enumTitleAction, iChatBaseComponent, int.class, int.class, int.class);
@@ -322,8 +332,9 @@ public class PlayerUtil {
             tabHeaderField.setAccessible(true);
             tabFooterField = packetPlayOutPlayerListHeaderFooter.getDeclaredFields()[1];
             tabFooterField.setAccessible(true);
-        } catch (Exception e) {
-            e.printStackTrace();
+
+        } catch (Exception exception) {
+            exception.printStackTrace();
         }
     }
 
@@ -334,14 +345,17 @@ public class PlayerUtil {
     public static void sendTablist(Player player, List<String> header, List<String> footer) {
         StringBuilder headerString = new StringBuilder();
         StringBuilder footerString = new StringBuilder();
+
         for (String s : header) {
             if (headerString.length() == 0) headerString.append(s.equals("") ? " " : s);
             else headerString.append("\n").append(s.equals("") ? " " : s);
         }
+
         for (String s : footer) {
             if (footerString.length() == 0) footerString.append(s.equals("") ? " " : s);
             else footerString.append("\n").append(s.equals("") ? " " : s);
         }
+
         sendTablist(player, headerString.toString(), footerString.toString());
     }
 
@@ -357,21 +371,23 @@ public class PlayerUtil {
             Object packet = packetPlayOutPlayerListHeaderFooter.newInstance();
             tabHeaderField.set(packet, tabHeader);
             tabFooterField.set(packet, tabFooter);
+
             RU.sendPacket(player, packet);
-        } catch (Exception e) {
-            e.printStackTrace();
+
+        } catch (Exception exception) {
+            exception.printStackTrace();
         }
     }
-	
+
     public static boolean isValidNickname(String nick) {
         return nick.matches("^\\w{3,16}$");
     }
 
     public static int getPing(Player player) {
         try {
-            return RU.getHandle(player).getClass().getDeclaredField("ping").getInt(player);
-        } catch (Exception e) {
-            return 0;
+            return RU.getHandle(player).getClass().getDeclaredField("ping").getInt(RU.getHandle(player));
+        } catch (Exception exception) {
+            return -1;
         }
     }
 
@@ -385,16 +401,15 @@ public class PlayerUtil {
         double dx = to.getX() - from.getX();
         double dy = to.getY() - from.getY();
         double dz = to.getZ() - from.getZ();
+
         if (dx != 0.0D) {
 
-            if (dx < 0.0D)
-                from.setYaw(4.712389F);
-            else
-                from.setYaw(1.5707964F);
+            if (dx < 0.0D) from.setYaw(4.712389F);
+            else from.setYaw(1.5707964F);
 
             from.setYaw(from.getYaw() - (float) Math.atan(dz / dx));
-        } else if (dz < 0.0D)
-            from.setYaw(3.1415927F);
+
+        } else if (dz < 0.0D) from.setYaw(3.1415927F);
 
         double dxz = Math.sqrt(Math.pow(dx, 2.0D) + Math.pow(dz, 2.0D));
 
@@ -419,9 +434,8 @@ public class PlayerUtil {
 
         for (Entity target : targets) {
             if (targetTypes != null) {
-                if (!targetTypes.contains(target.getType())) {
-                    continue;
-                }
+
+                if (!targetTypes.contains(target.getType())) continue;
             }
 
             org.bukkit.util.Vector planePoint = target.getLocation().toVector();
@@ -437,9 +451,8 @@ public class PlayerUtil {
             double z = linePoint.getZ() + lineDirection.getZ() * t;
 
             org.bukkit.util.Vector intersection = new org.bukkit.util.Vector(x, y, z);
-            if (intersection.distanceSquared(planePoint) < Math.pow(targetOffset, 2)) {
-                return target;
-            }
+
+            if (intersection.distanceSquared(planePoint) < Math.pow(targetOffset, 2)) return target;
         }
 
         return null;
