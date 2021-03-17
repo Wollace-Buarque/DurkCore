@@ -107,12 +107,8 @@ public abstract class DurkCommand implements Listener {
         return Bukkit.getPlayer(name);
     }
 
-    public Player getPlayer(int i) {
+    public Player getPlayerAt(int i) {
         return Bukkit.getPlayer(argAt(i));
-    }
-
-    public Player getPlayerAt(String args) {
-        return Bukkit.getPlayer(args);
     }
 
     public Player getPlayerExact(String name) {
@@ -128,12 +124,8 @@ public abstract class DurkCommand implements Listener {
         return Bukkit.getOfflinePlayer(name);
     }
 
-    public OfflinePlayer getOfflinePlayer(int i) {
+    public OfflinePlayer getOfflinePlayerAt(int i) {
         return Bukkit.getOfflinePlayer(argAt(i));
-    }
-
-    public OfflinePlayer getOfflinePlayerAt(String args) {
-        return Bukkit.getOfflinePlayer(args);
     }
 
 
@@ -158,9 +150,10 @@ public abstract class DurkCommand implements Listener {
         return Boolean.parseBoolean(asBoolean);
     }
 
-    public String getArgsAfter(int start) {
-        return TXT.createString(getArgs(), start);
+    public String getArgs(int start) {
+        return TXT.createString(args, start);
     }
+
 
     @SafeVarargs
     public final <T> List<T> getList(T... values) {
@@ -169,6 +162,10 @@ public abstract class DurkCommand implements Listener {
 
     public List<String> getStringList(String... strings) {
         return ListUtil.getStringList(strings);
+    }
+
+    public String[] getStringArray(String... strings) {
+        return ListUtil.getStringArray(strings);
     }
 
 
@@ -211,6 +208,13 @@ public abstract class DurkCommand implements Listener {
 
     public void sendMessage(String message, Object... args) {
         sendMessage(String.format(message, args));
+    }
+
+    public void sendTitle(String title, String subtitle, int fadeIn, int stay, int fadeOut) {
+        if (isPlayer()) TXT.sendTitle(asPlayer(), title, subtitle, fadeIn, stay, fadeOut);
+    }
+    public void sendTitle(Player player, String title, String subtitle, int fadeIn, int stay, int fadeOut) {
+        TXT.sendTitle(player, title, subtitle, fadeIn, stay, fadeOut);
     }
 
     public void sendActionBar(Player player, String actionBar) {
@@ -260,14 +264,6 @@ public abstract class DurkCommand implements Listener {
     }
 
 
-    public boolean isArgsLength(int i) {
-        return args.length == i;
-    }
-
-    public int argsLength() {
-        return args.length;
-    }
-
     public String lastArg() {
         return argAt(argsLength() - 1);
     }
@@ -276,6 +272,13 @@ public abstract class DurkCommand implements Listener {
         return args[i];
     }
 
+    public int argsLength() {
+        return args.length;
+    }
+
+    public boolean isArgsLength(int i) {
+        return args.length == i;
+    }
 
     public boolean isArgsAt(int i, String s) {
         return args[i].equals(s);
@@ -365,12 +368,15 @@ public abstract class DurkCommand implements Listener {
     }
 
     public void playSound(Sound sound, double volume, double distortion) {
-        if (isPlayer())
-        player.playSound(player.getLocation(), sound, (float) volume, (float) distortion);
+        if (isPlayer()) playSound(asPlayer(), sound, volume, distortion);
     }
 
     public void spawnEntity(Player player, EntityType entityType) {
         player.getWorld().spawnEntity(player.getLocation(), entityType);
+    }
+
+    public void spawnEntity(Location location, EntityType entityType) {
+        location.getWorld().spawnEntity(location, entityType);
     }
 
 
@@ -397,7 +403,9 @@ public abstract class DurkCommand implements Listener {
 
 
     public boolean isCommandPerformed(boolean ignoreCase, String cmd, String... orCmds) {
+
         if (ignoreCase) {
+
             if (performedCommand.equalsIgnoreCase(cmd)) return true;
 
             if (orCmds != null && orCmds.length > 0) {
@@ -408,6 +416,7 @@ public abstract class DurkCommand implements Listener {
             }
 
         } else {
+
             if (performedCommand.equals(cmd)) return true;
 
             if (orCmds != null && orCmds.length > 0) {
@@ -415,51 +424,47 @@ public abstract class DurkCommand implements Listener {
                     if (orCmd.equals(performedCommand)) return true;
                 }
             }
+
         }
+
         return false;
     }
 
     public boolean isValidLong(String toCheck) {
-        if (toCheck.equalsIgnoreCase("nan"))
+        if (toCheck.equalsIgnoreCase("nan")) return false;
+
+        try {
+            Long.parseLong(toCheck);
+            return true;
+        } catch (Exception ignored) {
             return false;
-        else {
-            try {
-                Long.parseLong(toCheck);
-                return true;
-            } catch (Exception ignored) {
-                return false;
-            }
         }
     }
 
     public boolean isValidInt(String toCheck) {
-        if (toCheck.equalsIgnoreCase("nan"))
+        if (toCheck.equalsIgnoreCase("nan")) return false;
+
+        try {
+            Integer.parseInt(toCheck);
+            return true;
+        } catch (Exception ignored) {
             return false;
-        else {
-            try {
-                Integer.parseInt(toCheck);
-                return true;
-            } catch (Exception ignored) {
-                return false;
-            }
         }
     }
 
     public boolean isValidDouble(String toCheck) {
-        if (toCheck.equalsIgnoreCase("nan"))
+        if (toCheck.equalsIgnoreCase("nan")) return false;
+
+        try {
+            Double.parseDouble(toCheck);
+            return true;
+        } catch (Exception ignored) {
             return false;
-        else {
-            try {
-                Double.parseDouble(toCheck);
-                return true;
-            } catch (Exception ignored) {
-                return false;
-            }
         }
     }
 
     public boolean isValidBoolean(String toCheck) {
-       return toCheck != null && toCheck.equalsIgnoreCase("true");
+        return toCheck != null && toCheck.equalsIgnoreCase("true");
     }
 
     public <T extends Enum<T>> T tryEnumValueOf(Class<T> enm, String enumName) {
@@ -520,7 +525,7 @@ public abstract class DurkCommand implements Listener {
     }
 
 
-    public void log(String text, String... ss) {
+    public void log(String text, Object... ss) {
         plugin.log(text, ss);
     }
 
@@ -543,6 +548,7 @@ public abstract class DurkCommand implements Listener {
                 toRet.add(possibleTabComplete);
 
         }
+
         return toRet;
     }
 
@@ -550,8 +556,10 @@ public abstract class DurkCommand implements Listener {
         List<String> toRet = new ArrayList<>();
 
         for (Player player : possiblePlayersTabComplete) {
+
             if (currentArg.equals("")) toRet.add(player.getName());
             else if (player.getName().toLowerCase().startsWith(currentArg.toLowerCase())) toRet.add(player.getName());
+
         }
 
         return toRet;
