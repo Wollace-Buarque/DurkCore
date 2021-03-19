@@ -257,6 +257,7 @@ public class DurkCore extends DurkPlugin {
 
     @EventHandler
     public void onInventoryClose(InventoryCloseEvent event) {
+
         if (event.getInventory().getHolder() instanceof Inv) {
             Inv inv = (Inv) event.getInventory().getHolder();
 
