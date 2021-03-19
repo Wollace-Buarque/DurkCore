@@ -1,7 +1,5 @@
 package dev.cromo29.durkcore;
 
-import com.google.common.collect.Maps;
-import com.google.common.collect.Sets;
 import dev.cromo29.durkcore.API.DurkPlugin;
 import dev.cromo29.durkcore.Commands.Plugins;
 import dev.cromo29.durkcore.Entity.DurkPlayer;
@@ -29,9 +27,7 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 public class DurkCore extends DurkPlugin {
 
@@ -67,7 +63,7 @@ public class DurkCore extends DurkPlugin {
         prevPlayersOnGround.remove(player.getUniqueId());
     }
 
-    public Map<UUID, DurkPlayer.DurkMoving> playersMoving = Maps.newHashMap();
+    public Map<UUID, DurkPlayer.DurkMoving> playersMoving = new HashMap<>();
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onMoveEvent(PlayerMoveEvent event) {
@@ -131,7 +127,7 @@ public class DurkCore extends DurkPlugin {
 
     }
 
-    private Set<UUID> prevPlayersOnGround = Sets.newHashSet();
+    private Set<UUID> prevPlayersOnGround = new HashSet<>();
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onMove(PlayerMoveEvent event) {

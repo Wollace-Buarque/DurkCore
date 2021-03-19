@@ -17,7 +17,7 @@ public class ParticleMaker {
     private static ThreadLocalRandom threadLocalRandom = ThreadLocalRandom.current();
 
     private static void warnNotSupported() {
-        sender.sendMessage(TXT.parse("<c>Particula nao suportada!"));
+        TXT.sendMessages(sender, "<c>Particula nao suportada!");
     }
 
     public static void sendParticle(ParticleEffect effect, Location location, Color color, int amount, boolean normalLocation) {
