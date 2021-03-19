@@ -1,15 +1,15 @@
 package dev.cromo29.durkcore.SpecificUtils;
 
-import com.google.common.collect.Lists;
-
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 
 public class GsonUtil {
+
     public static List<String> getJsonFileNamesInsideFolder(String folderPath) {
-        List<String> fileNames = Lists.newArrayList();
+        List<String> fileNames = new ArrayList<>();
         File folder = new File(folderPath);
 
         if (folder.exists())
@@ -20,7 +20,7 @@ public class GsonUtil {
     }
 
     public static List<String> getYAMLFileNamesInsideFolder(String folderPath) {
-        List<String> fileNames = Lists.newArrayList();
+        List<String> fileNames = new ArrayList<>();
         File folder = new File(folderPath);
 
         if (folder.exists())

@@ -34,11 +34,11 @@ public class AssembleBoard {
 	}
 
 	private void setup(Player player) {
+
 		// Register new scoreboard if needed
 		if (assemble.hook || !(player.getScoreboard() == Bukkit.getScoreboardManager().getMainScoreboard()))
 			scoreboard = player.getScoreboard();
-		 else
-			scoreboard = Bukkit.getScoreboardManager().getNewScoreboard();
+		 else scoreboard = Bukkit.getScoreboardManager().getNewScoreboard();
 
 
 		// Setup sidebar objective
@@ -63,23 +63,20 @@ public class AssembleBoard {
 	}
 
 	public AssembleBoardEntry getEntryAtPosition(int pos) {
-		if (pos >= entries.size())
-			return null;
-		 else
-			return entries.get(pos);
+
+		if (pos >= entries.size()) return null;
+		 else return entries.get(pos);
 
 	}
 
 	public String getUniqueIdentifier(String text) {
 		String identifier = getRandomChatColor() + ChatColor.WHITE;
 
-		while (identifiers.contains(identifier))
-			identifier = identifier + getRandomChatColor() + ChatColor.WHITE;
+		while (identifiers.contains(identifier)) identifier = identifier + getRandomChatColor() + ChatColor.WHITE;
 
 
 		// This is rare, but just in case, make the method recursive
-		if (identifier.length() > 16)
-			return getUniqueIdentifier(text);
+		if (identifier.length() > 16) return getUniqueIdentifier(text);
 
 
 		// Add our identifier to the list so there are no duplicates
@@ -93,4 +90,7 @@ public class AssembleBoard {
 		return ChatColor.values()[ThreadLocalRandom.current().nextInt(ChatColor.values().length)].toString();
 	}
 
+	public Scoreboard getScoreboard() {
+		return scoreboard;
+	}
 }

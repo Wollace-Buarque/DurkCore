@@ -20,10 +20,7 @@ public enum UpdateType {
     FASTEST(125L),
     TICK(49L);
 
-    private long time;
-    private long last;
-    private long timeSpent;
-    private long timeCount;
+    private long time, last, timeSpent, timeCount;
 
     UpdateType(long time) {
         this.time = time;
@@ -48,9 +45,7 @@ public enum UpdateType {
 
     public void resetTime(boolean print) {
 
-        if (print) {
-            System.out.println(name() + " in a second: " + timeSpent);
-        }
+        if (print) System.out.println(name() + " in a second: " + timeSpent);
 
         timeSpent = 0L;
     }

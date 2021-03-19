@@ -1,17 +1,16 @@
 package dev.cromo29.durkcore.SpecificUtils;
 
-import com.google.common.collect.Lists;
 import dev.cromo29.durkcore.Util.TXT;
 
 import java.util.*;
 
 public class ListUtil {
 
-    public static List<String> getColorizedStringList(List<String> stringList, Object... replacers) {
+    public static List<String> getColorizedStringList(List<String> stringList, Object... args) {
         List<String> toReturn = new ArrayList<>();
 
         for (String text : stringList) {
-            toReturn.add(replace(TXT.parse(text), replacers));
+            toReturn.add(replace(TXT.parse(text), args));
         }
 
         return toReturn;
@@ -28,9 +27,9 @@ public class ListUtil {
     }
 
     public static List<String> getColorizedStringList(String... strings) {
-        if (strings == null || strings.length == 0) return Lists.newArrayList();
+        if (strings == null || strings.length == 0) return new ArrayList<>();
 
-        List<String> colorizedList = Lists.newArrayList();
+        List<String> colorizedList = new ArrayList<>();
         Iterator<String> loop = Arrays.asList(strings).iterator();
 
         while (loop.hasNext()) {
@@ -48,7 +47,7 @@ public class ListUtil {
 
     @SafeVarargs
     public static <T> List<T> getList(T... args) {
-        List<T> toReturn = Lists.newArrayList();
+        List<T> toReturn = new ArrayList<>();
 
         if (args == null) {
             return toReturn;
@@ -60,7 +59,7 @@ public class ListUtil {
     }
 
     public static List<String> getStringList(String... args) {
-        List<String> toReturn = Lists.newArrayList();
+        List<String> toReturn = new ArrayList<>();
 
         if (args == null) {
             return toReturn;
@@ -73,16 +72,20 @@ public class ListUtil {
         return toReturn;
     }
 
+    public static String[] getStringArray(List<String> args) {
+        return args.toArray(new String[]{});
+    }
+
     public static String[] getStringArray(String... args) {
         return getStringList(args).toArray(new String[]{});
     }
 
-    private  static String replace(String text, Object... replace) {
-        Iterator<Object> iter = Arrays.asList(replace).iterator();
+    private static String replace(String text, Object... args) {
+        Iterator<Object> iterator = Arrays.asList(args).iterator();
 
-        while (iter.hasNext()) {
-            String key = iter.next() + "";
-            String iterValue = iter.next() + "";
+        while (iterator.hasNext()) {
+            String key = iterator.next() + "";
+            String iterValue = iterator.next() + "";
 
             text = text.replace(key, iterValue);
         }

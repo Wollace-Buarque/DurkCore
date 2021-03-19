@@ -1,7 +1,5 @@
 package dev.cromo29.durkcore.SpecificUtils;
 
-import com.google.common.collect.Lists;
-import dev.cromo29.durkcore.Util.TXT;
 import org.bukkit.*;
 import org.bukkit.FireworkEffect.Type;
 import org.bukkit.block.Block;
@@ -17,10 +15,8 @@ import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class LocationUtil {
-    public static ThreadLocalRandom random = ThreadLocalRandom.current();
 
-    public LocationUtil() {
-    }
+    public static ThreadLocalRandom random = ThreadLocalRandom.current();
 
     public static String locationToString(Location location) {
         return location.getWorld().getName() + ", " + location.getBlockX() + ", " + location.getBlockY() + ", " + location.getBlockZ();
@@ -67,7 +63,7 @@ public class LocationUtil {
     }
 
     public static List<Location> getSphere(Location loc, int radius, boolean hollow, boolean sphere, int plus_y) {
-        List<Location> circleblocks = Lists.newArrayList();
+        List<Location> circleblocks = new ArrayList<>();
         int cx = loc.getBlockX();
         int cy = loc.getBlockY();
         int cz = loc.getBlockZ();
@@ -153,7 +149,7 @@ public class LocationUtil {
             if (corner.getWorld() != corner2.getWorld()) return false;
             else if (material == null) return false;
             else {
-                List<Material> materials = Lists.newArrayList(material);
+                List<Material> materials = Arrays.asList(material);
 
                 if (!materials.isEmpty()) {
                     int topBlockX = Math.max(corner.getBlockX(), corner2.getBlockX());
@@ -179,7 +175,7 @@ public class LocationUtil {
     }
 
     public static List<Chunk> getChunkCircle(Chunk chunk, int radius, boolean hollow) {
-        List<Chunk> chunks = Lists.newArrayList();
+        List<Chunk> chunks = new ArrayList<>();
         int cx = chunk.getX();
         int cz = chunk.getZ();
 
@@ -201,7 +197,7 @@ public class LocationUtil {
     }
 
     public static List<String> getChunkCircleXZ(int x, int z, int radius, boolean hollow) {
-        List<String> chunks = Lists.newArrayList();
+        List<String> chunks = new ArrayList<>();
 
         for (int forX = x - radius; forX <= x + radius; ++forX) {
             for (int forZ = z - radius; forZ <= z + radius; ++forZ) {
@@ -265,11 +261,11 @@ public class LocationUtil {
         return blocks;
     }
 
-    public static boolean isLocationSafe(Location loc) {
-        World world = loc.getWorld();
-        Block teleBlock = world.getHighestBlockAt(loc).getRelative(BlockFace.DOWN);
-        Block block1 = world.getBlockAt(loc.add(0.0, 1.0, 0.0));
-        Block block2 = world.getBlockAt(loc.add(0.0, 2.0, 0.0));
+    public static boolean isLocationSafe(Location location) {
+        World world = location.getWorld();
+        Block teleBlock = world.getHighestBlockAt(location).getRelative(BlockFace.DOWN);
+        Block block1 = world.getBlockAt(location.add(0.0, 1.0, 0.0));
+        Block block2 = world.getBlockAt(location.add(0.0, 2.0, 0.0));
 
         if (!block1.isLiquid() && !block2.isLiquid() && !teleBlock.isLiquid())
             return teleBlock.getType().isSolid() || block1.getType() != Material.AIR || block2.getType() != Material.AIR;
@@ -277,7 +273,7 @@ public class LocationUtil {
     }
 
     public static List<Block> getNearbyBlocks(Location location, int radius) {
-        List<Block> blocks = Lists.newArrayList();
+        List<Block> blocks = new ArrayList<>();
 
         for (int x = location.getBlockX() - radius; x <= location.getBlockX() + radius; ++x) {
             for (int y = location.getBlockY() - radius; y <= location.getBlockY() + radius; ++y) {
@@ -291,7 +287,7 @@ public class LocationUtil {
     }
 
     public static List<Block> getBlocksAt(Location loc1, Location loc2) {
-        List<Block> blocks = Lists.newArrayList();
+        List<Block> blocks = new ArrayList<>();
 
         int topBlockX = (Math.max(loc1.getBlockX(), loc2.getBlockX()));
         int bottomBlockX = (Math.min(loc1.getBlockX(), loc2.getBlockX()));
@@ -350,14 +346,15 @@ public class LocationUtil {
     }
 
     public static List<Player> getClosestPlayersFromLocation(Location location, double distance) {
-        List<Player> result = Lists.newArrayList();
-        double d2 = distance * distance;
-        Iterator var6 = location.getWorld().getPlayers().iterator();
+        List<Player> result = new ArrayList<>();
 
-        while (var6.hasNext()) {
-            Player player = (Player) var6.next();
+        double squaredDistance = distance * distance;
+        Iterator<Player> playerIterator = location.getWorld().getPlayers().iterator();
 
-            if (player.getLocation().add(0.0, 0.85, 0.0).distanceSquared(location) <= d2) {
+        while (playerIterator.hasNext()) {
+            Player player = playerIterator.next();
+
+            if (player.getLocation().add(0.0, 0.85, 0.0).distanceSquared(location) <= squaredDistance) {
                 result.add(player);
             }
         }
@@ -367,7 +364,7 @@ public class LocationUtil {
 
     public static List<Entity> getClosestEntitiesFromLocation(Location location, double radius) {
         double chunkRadius = radius < 16.0 ? 1.0 : (radius - radius % 16.0) / 16.0;
-        List<Entity> radiusEntities = Lists.newArrayList();
+        List<Entity> radiusEntities = new ArrayList<>();
 
         for (double chX = 0.0D - chunkRadius; chX <= chunkRadius; ++chX) {
             for (double chZ = 0.0D - chunkRadius; chZ <= chunkRadius; ++chZ) {
@@ -394,7 +391,7 @@ public class LocationUtil {
     public static List<Location> getParticleCircle(Location center, double radius, int amount) {
         World world = center.getWorld();
         double increment = 6.283185307179586D / (double) amount;
-        List<Location> locations = Lists.newArrayList();
+        List<Location> locations = new ArrayList<>();
 
         for (int i = 0; i < amount; ++i) {
             double angle = (double) i * increment;
@@ -408,6 +405,7 @@ public class LocationUtil {
     }
 
     public static Location lookAt(Location from, Location to, float aiming) {
+
         if (!(aiming <= 0.0F)) {
 
             from = from.clone();
@@ -417,8 +415,7 @@ public class LocationUtil {
 
             if (dx != 0.0) {
 
-                if (dx < 0.0)
-                    from.setYaw(4.712389F);
+                if (dx < 0.0) from.setYaw(4.712389F);
                 else from.setYaw(1.5707964F);
 
                 from.setYaw(from.getYaw() - (float) Math.atan(dz / dx));
@@ -494,7 +491,7 @@ public class LocationUtil {
     }
 
     public static LinkedList<Player> getNearby(Location location, double maxDist) {
-        LinkedList<Player> nearbyMap = Lists.newLinkedList();
+        LinkedList<Player> nearbyMap = new LinkedList<>();
         Iterator<Player> iterator = location.getWorld().getPlayers().iterator();
 
         while (true) {
@@ -565,6 +562,7 @@ public class LocationUtil {
                 } while (ignore != null && ignore.contains(player));
 
                 distance = offset(player.getLocation(), location);
+
             } while (best != null && distance >= bestDist);
 
             best = player;
@@ -580,33 +578,59 @@ public class LocationUtil {
         return a.subtract(b).length();
     }
 
-    public static void detonateRandomFirework(Location loc) {
-        Firework fw = (Firework) loc.getWorld().spawnEntity(loc, EntityType.FIREWORK);
-        FireworkMeta fwm = fw.getFireworkMeta();
-        int rt = random.nextInt(4) + 1;
-        Type stopType = Type.BALL;
+    public static void detonateRandomFirework(Location location) {
 
-        if (rt == 2) stopType = Type.BALL_LARGE;
-        if (rt == 3) stopType = Type.BURST;
-        if (rt == 4) stopType = Type.CREEPER;
-        if (rt == 5) stopType = Type.STAR;
+        Firework firework = (Firework) location.getWorld().spawnEntity(location, EntityType.FIREWORK);
+        FireworkMeta fireworkMeta = firework.getFireworkMeta();
 
-        int r1i = random.nextInt(18) + 1;
-        int r2i = random.nextInt(18) + 1;
-        Color c1 = TXT.getColor(r1i);
-        Color c2 = TXT.getColor(r2i);
+        int typeRandom = random.nextInt(4) + 1;
+        Type type = Type.BALL;
+
+        if (typeRandom == 2) type = Type.BALL_LARGE;
+        if (typeRandom == 3) type = Type.BURST;
+        if (typeRandom == 4) type = Type.CREEPER;
+        if (typeRandom == 5) type = Type.STAR;
+
+        int firstRandom = random.nextInt(18) + 1;
+        int secondRandom = random.nextInt(18) + 1;
+        Color firstColor = getColor(firstRandom);
+        Color secondColor = getColor(secondRandom);
 
         FireworkEffect effect = FireworkEffect.builder()
                 .flicker(random.nextBoolean())
-                .withColor(c1)
-                .withFade(c2)
-                .with(stopType)
+                .withColor(firstColor)
+                .withFade(secondColor)
+                .with(type)
                 .trail(random.nextBoolean())
                 .build();
 
-        fwm.addEffect(effect);
-        fwm.setPower(0);
-        fw.setFireworkMeta(fwm);
-        fw.detonate();
+        fireworkMeta.addEffect(effect);
+        fireworkMeta.setPower(0);
+        firework.setFireworkMeta(fireworkMeta);
+        firework.detonate();
+    }
+
+    private static Color getColor(int index) {
+        Color color = null;
+
+        if (index == 1) color = Color.AQUA;
+        if (index == 2) color = Color.BLACK;
+        if (index == 3) color = Color.BLUE;
+        if (index == 4) color = Color.FUCHSIA;
+        if (index == 5) color = Color.GRAY;
+        if (index == 6) color = Color.GREEN;
+        if (index == 7) color = Color.LIME;
+        if (index == 8) color = Color.MAROON;
+        if (index == 9) color = Color.NAVY;
+        if (index == 10) color = Color.OLIVE;
+        if (index == 11) color = Color.ORANGE;
+        if (index == 12) color = Color.PURPLE;
+        if (index == 13) color = Color.RED;
+        if (index == 14) color = Color.SILVER;
+        if (index == 15) color = Color.TEAL;
+        if (index == 16) color = Color.WHITE;
+        if (index == 17) color = Color.YELLOW;
+
+        return color;
     }
 }

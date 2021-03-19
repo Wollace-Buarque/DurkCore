@@ -54,61 +54,53 @@ public class NumberUtil {
         float percent = (float) current / (float) max;
         int progressBars = (int) ((float) totalBars * percent);
         int leftOver = totalBars - progressBars;
-        StringBuilder sb = new StringBuilder();
+        StringBuilder stringBuilder = new StringBuilder();
 
-        sb.append(TXT.parse(completedColor));
+        stringBuilder.append(TXT.parse(completedColor));
 
-        int i;
-        for (i = 0; i < progressBars; ++i) {
-            sb.append(symbol);
-        }
+        int index;
+        for (index = 0; index < progressBars; ++index) stringBuilder.append(symbol);
 
-        sb.append(TXT.parse(notCompletedColor));
+        stringBuilder.append(TXT.parse(notCompletedColor));
 
-        for (i = 0; i < leftOver; ++i) {
-            sb.append(symbol);
-        }
+        for (index = 0; index < leftOver; ++index) stringBuilder.append(symbol);
 
-        return sb.toString();
+        return stringBuilder.toString();
     }
 
     public static boolean isValidInt(String toCheck) {
-        if (toCheck.equalsIgnoreCase("nan")) {
+        if (toCheck.equalsIgnoreCase("nan")) return false;
+
+        try {
+            Integer.parseInt(toCheck);
+            return true;
+        } catch (Exception ignored) {
             return false;
-        } else {
-            try {
-                Integer.parseInt(toCheck);
-                return true;
-            } catch (Exception ignored) {
-                return false;
-            }
         }
     }
 
     public static boolean isValidDouble(String toCheck) {
-        if (toCheck.equalsIgnoreCase("nan")) {
+        if (toCheck.equalsIgnoreCase("nan")) return false;
+
+        try {
+            Double.parseDouble(toCheck);
+            return true;
+        } catch (Exception ignored) {
             return false;
-        } else {
-            try {
-                Double.parseDouble(toCheck);
-                return true;
-            } catch (Exception ignored) {
-                return false;
-            }
         }
     }
 
-    public static int getInt(String s) {
+    public static int getInt(String toCheck) {
         try {
-            return Integer.parseInt(s);
+            return Integer.parseInt(toCheck);
         } catch (Exception ignored) {
             return 0;
         }
     }
 
-    public static double getDouble(String s) {
+    public static double getDouble(String toCheck) {
         try {
-            return Double.parseDouble(s);
+            return Double.parseDouble(toCheck);
         } catch (Exception ignored) {
             return 0.0D;
         }
@@ -189,8 +181,8 @@ public class NumberUtil {
     }
 
     public static String formatNumberSimple(double s, char spacer) {
-        DecimalFormat f = new DecimalFormat("###,###");
-        return f.format(s).replace(",", spacer + "");
+        DecimalFormat decimalFormat = new DecimalFormat("###,###");
+        return decimalFormat.format(s).replace(",", spacer + "");
     }
 
     public static String formatNumber(double s) {
@@ -198,8 +190,9 @@ public class NumberUtil {
     }
 
     public static String formatNumber(double s, char spacer, char decimalSpacer) {
-        DecimalFormat f = new DecimalFormat("###,###.##");
-        String formated = f.format(s).replace(",", "@")
+        DecimalFormat decimalFormat = new DecimalFormat("###,###.##");
+        String formated = decimalFormat.format(s)
+                .replace(",", "@")
                 .replace(".", "#");
 
         return formated.replace("#", spacer + "").replace("@", decimalSpacer + "");
@@ -210,24 +203,11 @@ public class NumberUtil {
     }
 
     public static String hologramMessageFormatDouble(double value) {
-        NumberFormat nf = NumberFormat.getInstance();
-        nf.setMaximumFractionDigits(2);
-        nf.setMinimumFractionDigits(2);
-        return nf.format(value);
-    }
 
-    public static String formatMoney(double money) {
-        int monao = (int) money;
+        NumberFormat numberFormat = NumberFormat.getInstance();
+        numberFormat.setMaximumFractionDigits(2);
+        numberFormat.setMinimumFractionDigits(2);
 
-        if (money >= 1000000000)
-            return new DecimalFormat("0.00B").format(money * 1.0D / 100000000.0D);
-        else if (money >= 1000000)
-            return new DecimalFormat("0.00M").format(money * 1.0D / 1000000D);
-        else if (money >= 1000)
-            return new DecimalFormat("0.00k").format(money * 1.0D / 1000D);
-        else if (money >= 1)
-            return monao + ".0";
-        else
-            return "0";
+        return numberFormat.format(value);
     }
 }

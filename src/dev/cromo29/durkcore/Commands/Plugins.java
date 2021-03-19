@@ -75,7 +75,7 @@ public class Plugins extends DurkCommand {
 
     @Override
     public String getPermission() {
-        return "29DurkCore.ADM";
+        return "29DurkCore.*";
     }
 
     @Override

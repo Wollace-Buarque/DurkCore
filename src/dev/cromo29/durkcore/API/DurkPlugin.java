@@ -98,6 +98,7 @@ public abstract class DurkPlugin extends JavaPlugin implements Listener {
         this.onStartPost();
 
         if (!isEnabled()) return;
+
         this.getServer().getPluginManager().registerEvents(this, this);
     }
 

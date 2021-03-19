@@ -46,10 +46,6 @@ public class DurkPlayer implements Player {
         return new DurkPlayer(player);
     }
 
-    public static DurkPlayer getOf(Player player) {
-        return new DurkPlayer(player);
-    }
-
     public static DurkPlayer of(Player player) {
         return new DurkPlayer(player);
     }
@@ -60,26 +56,6 @@ public class DurkPlayer implements Player {
 
     public static DurkPlayer get(Player player) {
         return new DurkPlayer(player);
-    }
-
-    public static DurkPlayer fromName(String playerName) {
-        return new DurkPlayer(playerName);
-    }
-
-    public static DurkPlayer getOf(String playerName) {
-        return new DurkPlayer(playerName);
-    }
-
-    public static DurkPlayer of(String playerName) {
-        return new DurkPlayer(playerName);
-    }
-
-    public static DurkPlayer by(String playerName) {
-        return new DurkPlayer(playerName);
-    }
-
-    public static DurkPlayer get(String playerName) {
-        return new DurkPlayer(playerName);
     }
 
     /*
@@ -245,15 +221,15 @@ public class DurkPlayer implements Player {
     }
 
     public void sendTitle(String title, String subtitle, int fadeIn, int stay, int fadeOut) {
-        TXT.sendTitle(player, title, subtitle, fadeIn, stay, fadeOut);
+        PlayerUtil.sendTitle(player, title, subtitle, fadeIn, stay, fadeOut);
     }
 
     public void sendActionBar(String actionBar) {
-        TXT.sendActionBar(player, actionBar);
+        PlayerUtil.sendActionBar(player, actionBar);
     }
 
     public void sendTimedActionBar(String actionBar, int stayInSeconds) {
-        TXT.sendActionBar(player, actionBar, stayInSeconds);
+        PlayerUtil.sendTimedActionBar(player, actionBar, stayInSeconds);
     }
 
     public void sendTablist(String header, String footer) {
@@ -338,19 +314,25 @@ public class DurkPlayer implements Player {
         return getInventory().getBoots();
     }
 
-    public boolean isHidden() {
-        boolean canSee = true;
+    public boolean isEmptyInventory(boolean armor) {
+        for (ItemStack item : getInventory().getContents()) {
 
-        for (Player player : Bukkit.getServer().getOnlinePlayers())
-            canSee = player.canSee(this.player);
+            if (item != null && item.getType() != Material.AIR) return false;
+        }
 
-        return canSee;
+        if (!armor) return true;
+
+        return getHelmet() == null
+                && getChestplate() == null
+                && getLeggings() == null
+                && getBoots() == null;
     }
 
     public boolean isEmptyInventory() {
-        for (ItemStack item : getInventory().getContents())
+        for (ItemStack item : getInventory().getContents()) {
             if (item != null && item.getType() != Material.AIR)
                 return false;
+        }
 
         return getHelmet() == null
                 && getChestplate() == null
@@ -359,28 +341,29 @@ public class DurkPlayer implements Player {
     }
 
     public boolean containsItem(Material material, String name) {
-        if (player.getInventory().contains(material)) {
-            for (ItemStack item : getInventory())
-                if (item.hasItemMeta() && item.getItemMeta().getDisplayName().equals(name))
-                    return true;
-            return false;
+        if (player.getInventory().contains(material)) return false;
+
+        for (ItemStack item : getInventory()) {
+
+            if (item.hasItemMeta() && item.getItemMeta().getDisplayName().equals(name)) return true;
         }
+
         return false;
     }
 
     public boolean containsItem(Material material, String name, String... lore) {
-        if (player.getInventory().contains(material)) {
-            for (ItemStack item : getInventory())
-                if (item.hasItemMeta() && item.getItemMeta().getDisplayName().equals(name) && item.getItemMeta().hasLore()) {
-                    List<String> loreList = item.getItemMeta().getLore();
+        if (player.getInventory().contains(material)) return false;
 
-                    List<String> checKlore = Arrays.asList(lore.clone());
+        for (ItemStack item : getInventory()) {
+            if (item.hasItemMeta() && item.getItemMeta().getDisplayName().equals(name) && item.getItemMeta().hasLore()) {
 
-                    if (checKlore.containsAll(loreList))
-                        return true;
-                }
-            return false;
+                List<String> loreList = item.getItemMeta().getLore();
+                List<String> checkLore = Arrays.asList(lore.clone());
+
+                if (checkLore.containsAll(loreList)) return true;
+            }
         }
+
         return false;
     }
 
@@ -416,6 +399,7 @@ public class DurkPlayer implements Player {
 
         return durkMoving.isEyes();
     }
+
 
     /*
 

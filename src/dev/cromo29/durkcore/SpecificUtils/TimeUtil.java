@@ -1,24 +1,9 @@
 package dev.cromo29.durkcore.SpecificUtils;
 
-
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.GregorianCalendar;
 
 public class TimeUtil {
-
-    public static String getDate() {
-        SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy # HH:mm:ss");
-
-        return format.format(new Date()).replace("#", "às");
-    }
-
-    public static String getDateSimplified() {
-        SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
-
-        return format.format(new Date());
-    }
 
     public static String getCurrentTime() {
         return formatFull(System.currentTimeMillis());
@@ -40,7 +25,7 @@ public class TimeUtil {
         long seconds = getTimeToFormat(time, Time.SECOND);
         // long milliseconds = getTimeToFormat(time, Time.MILLIS);
 
-        StringBuilder sb = new StringBuilder();
+        StringBuilder stringBuilder = new StringBuilder();
 
         // 1 ano, 1 mes, 1 semana, 1 dia, 1 hora, 1 minuto, 1 segundo e 1 milissegundo - done
         // 1 ano, 1 mes, 1 semana, 1 dia, 1 hora, 1 minuto e 1 segundo - done
@@ -53,39 +38,39 @@ public class TimeUtil {
         // Milissegundo removed
 
         if (years > 0)
-            sb.append(years).append(years == 1 ? " ano" : " anos");
+            stringBuilder.append(years).append(years == 1 ? " ano" : " anos");
 
         if (months > 0)
-            sb.append(
+            stringBuilder.append(
                     years > 0 ? ", " : ""
             ).append(months).append(months == 1 ? " mês" : " meses");
 
         if (weeks > 0)
-            sb.append(
+            stringBuilder.append(
                     months > 0 ? (days > 0 && hours < 1 && minutes < 1 ? " e " : ", ") : ""
             ).append(weeks).append(weeks == 1 ? " semana" : " semanas");
 
         if (days > 0)
-            sb.append(
+            stringBuilder.append(
                     weeks > 0 ? (hours > 0 || minutes > 0 || seconds > 0 ? ", " : " e ") : ""
             ).append(days).append(days == 1 ? " dia" : " dias");
 
         if (hours > 0)
-            sb.append(
+            stringBuilder.append(
                     days > 0 ? (minutes < 1 ? " e " : ", ") : ""
             ).append(hours).append(hours == 1 ? " hora" : " horas");
 
         if (minutes > 0)
-            sb.append(
-                    days > 0 || hours > 0 ? (seconds > 0 ? ", " : " e ") : (sb.length() > 0 ? ", " : "")
+            stringBuilder.append(
+                    days > 0 || hours > 0 ? (seconds > 0 ? ", " : " e ") : (stringBuilder.length() > 0 ? ", " : "")
             ).append(minutes).append(minutes == 1 ? " minuto" : " minutos");
 
         if (seconds > 0)
-            sb.append(
-                    (days > 0 || hours > 0 || minutes > 0) ? " e " : (sb.length() > 0 ? ", " : "")
+            stringBuilder.append(
+                    (days > 0 || hours > 0 || minutes > 0) ? " e " : (stringBuilder.length() > 0 ? ", " : "")
             ).append(seconds).append(seconds == 1 ? " segundo" : " segundos");
 
-        String s = sb.toString();
+        String s = stringBuilder.toString();
         return s.isEmpty() ? "0 segundos" : s;
     }
 

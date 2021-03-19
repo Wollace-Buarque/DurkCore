@@ -31,6 +31,38 @@ public enum InventoryTypeName {
         return valueOf(inventoryType.name());
     }
 
+    public static InventoryType of(InventoryTypeName inventoryTypeName) {
+        return getInventoryTypeByName(inventoryTypeName.name());
+    }
+
+    public static InventoryType of(String inventoryName) {
+        InventoryType inventoryType = getInventoryTypeByName(inventoryName);
+
+        if (inventoryType != null) return inventoryType;
+
+        for (InventoryTypeName inventoryTypeName : values()) {
+
+            if (inventoryName.equalsIgnoreCase(inventoryTypeName.getName())) {
+                inventoryType = getInventoryTypeByName(inventoryTypeName.name());
+                break;
+            }
+
+        }
+
+        return inventoryType;
+    }
+
+    private static InventoryType getInventoryTypeByName(String inventoryName) {
+
+        for (InventoryType inventoryType : InventoryType.values()) {
+
+            if (inventoryType.name().equalsIgnoreCase(inventoryName)) return inventoryType;
+
+        }
+
+        return null;
+    }
+
     @Override
     public String toString() {
         return this.name;

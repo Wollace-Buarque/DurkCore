@@ -1,7 +1,5 @@
 package dev.cromo29.durkcore.Util;
 
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 import dev.cromo29.durkcore.SpecificUtils.ListUtil;
 import dev.cromo29.durkcore.SpecificUtils.MapUtil;
 import net.md_5.bungee.api.chat.ClickEvent;
@@ -67,11 +65,11 @@ public class PageManager {
 
         int size = page == 0 ? 1 : (this.size * page) - this.size;
 
-        List<JAction> values = Lists.newArrayList();
+        List<JAction> values = new ArrayList<>();
 
         // To order
 
-        Map<String, JAction> valuesMap = Maps.newHashMap();
+        Map<String, JAction> valuesMap = new HashMap<>();
 
         try {
             int loop = 0;
@@ -114,8 +112,8 @@ public class PageManager {
         } catch (Exception ignored) {
         }
 
-        List<JAction> jActionList = Lists.newArrayList();
-        Map<String, JAction> fakeReturn = Maps.newLinkedHashMap();
+        List<JAction> jActionList = new ArrayList<>();
+        Map<String, JAction> fakeReturn = new LinkedHashMap<>();
 
         int loop = 0;
         int vSize = order ? valuesMap.size() : values.size();
@@ -149,7 +147,7 @@ public class PageManager {
         if (page < 1) page = 0;
 
         int size = page == 0 ? 1 : (this.size * page) - this.size;
-        List<String> values = Lists.newArrayList();
+        List<String> values = new ArrayList<>();
 
         if (order) Collections.sort(list);
 
@@ -186,8 +184,7 @@ public class PageManager {
 
         sender.sendMessage(TXT.parse(" <6><m>---------------------<r> <b>Página: <f>" + page + " <6><m>---------------------<r>"));
 
-        if (useMap)
-            getPageMapList(page).forEach(jAction -> jAction.send(sender));
+        if (useMap) getPageMapList(page).forEach(jAction -> jAction.send(sender));
         else sender.sendMessage(TXT.parse(getPage(page)));
 
         JAction json = new JAction();

@@ -79,8 +79,7 @@ public class TextAnimation {
         }
 
         public void setFrame(int framePosition, String frame, Object... args) {
-            if (framePosition >= frames.size())
-                addFrame(1, frame, args);
+            if (framePosition >= frames.size()) addFrame(1, frame, args);
              else frames.set(framePosition, TXT.parse(frame, args));
         }
 

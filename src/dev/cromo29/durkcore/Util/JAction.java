@@ -2,7 +2,6 @@ package dev.cromo29.durkcore.Util;
 
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
-import com.google.common.collect.Maps;
 import net.md_5.bungee.api.chat.*;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
@@ -15,7 +14,7 @@ import java.util.*;
 
 public class JAction {
 
-    private Map<Integer, ComponentBuilder> components = Maps.newHashMap();
+    private Map<Integer, ComponentBuilder> components = new HashMap<>();
 
     private Integer id = 0;
     private Integer modifyID = 0;

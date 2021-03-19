@@ -524,22 +524,22 @@ public enum ParticleEffect {
     }
 
     /**
-     * Determine if the data stopType for a particle effect is correct
+     * Determine if the data type for a particle effect is correct
      *
      * @param effect Particle effect
      * @param data   Particle data
-     * @return Whether the data stopType is correct or not
+     * @return Whether the data type is correct or not
      */
     private static boolean isDataCorrect(ParticleEffect effect, ParticleData data) {
         return ((effect == BLOCK_CRACK || effect == BLOCK_DUST) && data instanceof BlockData) || (effect == ITEM_CRACK && data instanceof ItemData);
     }
 
     /**
-     * Determine if the color stopType for a particle effect is correct
+     * Determine if the color type for a particle effect is correct
      *
      * @param effect Particle effect
      * @param color  Particle color
-     * @return Whether the color stopType is correct or not
+     * @return Whether the color type is correct or not
      */
     private static boolean isColorCorrect(ParticleEffect effect, ParticleColor color) {
         return ((effect == SPELL_MOB || effect == SPELL_MOB_AMBIENT || effect == REDSTONE) && color instanceof OrdinaryColor) || (effect == NOTE && color instanceof NoteColor);
@@ -703,7 +703,7 @@ public enum ParticleEffect {
      * @param center Center location of the effect
      * @param range  Range of the visibility
      * @throws ParticleVersionException If the particle effect is not supported by the server version
-     * @throws ParticleColorException   If the particle effect is not colorable or the color stopType is incorrect
+     * @throws ParticleColorException   If the particle effect is not colorable or the color type is incorrect
      * @see ParticlePacket#ParticlePacket(ParticleEffect, ParticleColor, boolean)
      * @see ParticlePacket#sendTo(Location, double)
      */
@@ -715,7 +715,7 @@ public enum ParticleEffect {
             throw new ParticleColorException("This particle effect is not colorable");
         }
         if (!isColorCorrect(this, color)) {
-            throw new ParticleColorException("The particle color stopType is incorrect");
+            throw new ParticleColorException("The particle color type is incorrect");
         }
         new ParticlePacket(this, color, range > 256).sendTo(center, range);
     }
@@ -728,7 +728,7 @@ public enum ParticleEffect {
             throw new ParticleColorException("This particle effect is not colorable");
         }
         if (!isColorCorrect(this, color)) {
-            throw new ParticleColorException("The particle color stopType is incorrect");
+            throw new ParticleColorException("The particle color type is incorrect");
         }
         new ParticlePacket(this, color, amount, range > 256).sendTo(center, range);
     }
@@ -740,7 +740,7 @@ public enum ParticleEffect {
      * @param center  Center location of the effect
      * @param players Receivers of the effect
      * @throws ParticleVersionException If the particle effect is not supported by the server version
-     * @throws ParticleColorException   If the particle effect is not colorable or the color stopType is incorrect
+     * @throws ParticleColorException   If the particle effect is not colorable or the color type is incorrect
      * @see ParticlePacket#ParticlePacket(ParticleEffect, ParticleColor, boolean)
      * @see ParticlePacket#sendTo(Location, List)
      */
@@ -752,7 +752,7 @@ public enum ParticleEffect {
             throw new ParticleColorException("This particle effect is not colorable");
         }
         if (!isColorCorrect(this, color)) {
-            throw new ParticleColorException("The particle color stopType is incorrect");
+            throw new ParticleColorException("The particle color type is incorrect");
         }
         new ParticlePacket(this, color, isLongDistance(center, players)).sendTo(center, players);
     }
@@ -764,7 +764,7 @@ public enum ParticleEffect {
      * @param center  Center location of the effect
      * @param players Receivers of the effect
      * @throws ParticleVersionException If the particle effect is not supported by the server version
-     * @throws ParticleColorException   If the particle effect is not colorable or the color stopType is incorrect
+     * @throws ParticleColorException   If the particle effect is not colorable or the color type is incorrect
      * @see #display(ParticleColor, Location, List)
      */
     public void display(ParticleColor color, Location center, Player... players) throws ParticleVersionException, ParticleColorException {
@@ -783,7 +783,7 @@ public enum ParticleEffect {
      * @param center  Center location of the effect
      * @param range   Range of the visibility
      * @throws ParticleVersionException If the particle effect is not supported by the server version
-     * @throws ParticleDataException    If the particle effect does not require additional data or if the data stopType is incorrect
+     * @throws ParticleDataException    If the particle effect does not require additional data or if the data type is incorrect
      * @see ParticlePacket
      * @see ParticlePacket#sendTo(Location, double)
      */
@@ -795,7 +795,7 @@ public enum ParticleEffect {
             throw new ParticleDataException("This particle effect does not require additional data");
         }
         if (!isDataCorrect(this, data)) {
-            throw new ParticleDataException("The particle data stopType is incorrect");
+            throw new ParticleDataException("The particle data type is incorrect");
         }
         new ParticlePacket(this, offsetX, offsetY, offsetZ, speed, amount, range > 256, data).sendTo(center, range);
     }
@@ -812,7 +812,7 @@ public enum ParticleEffect {
      * @param center  Center location of the effect
      * @param players Receivers of the effect
      * @throws ParticleVersionException If the particle effect is not supported by the server version
-     * @throws ParticleDataException    If the particle effect does not require additional data or if the data stopType is incorrect
+     * @throws ParticleDataException    If the particle effect does not require additional data or if the data type is incorrect
      * @see ParticlePacket
      * @see ParticlePacket#sendTo(Location, List)
      */
@@ -824,7 +824,7 @@ public enum ParticleEffect {
             throw new ParticleDataException("This particle effect does not require additional data");
         }
         if (!isDataCorrect(this, data)) {
-            throw new ParticleDataException("The particle data stopType is incorrect");
+            throw new ParticleDataException("The particle data type is incorrect");
         }
         new ParticlePacket(this, offsetX, offsetY, offsetZ, speed, amount, isLongDistance(center, players), data).sendTo(center, players);
     }
@@ -841,7 +841,7 @@ public enum ParticleEffect {
      * @param center  Center location of the effect
      * @param players Receivers of the effect
      * @throws ParticleVersionException If the particle effect is not supported by the server version
-     * @throws ParticleDataException    If the particle effect does not require additional data or if the data stopType is incorrect
+     * @throws ParticleDataException    If the particle effect does not require additional data or if the data type is incorrect
      * @see #display(ParticleData, float, float, float, float, int, Location, List)
      */
     public void display(ParticleData data, float offsetX, float offsetY, float offsetZ, float speed, int amount, Location center, Player... players) throws ParticleVersionException, ParticleDataException {
@@ -857,7 +857,7 @@ public enum ParticleEffect {
      * @param center    Center location of the effect
      * @param range     Range of the visibility
      * @throws ParticleVersionException If the particle effect is not supported by the server version
-     * @throws ParticleDataException    If the particle effect does not require additional data or if the data stopType is incorrect
+     * @throws ParticleDataException    If the particle effect does not require additional data or if the data type is incorrect
      * @see ParticlePacket
      * @see ParticlePacket#sendTo(Location, double)
      */
@@ -869,7 +869,7 @@ public enum ParticleEffect {
             throw new ParticleDataException("This particle effect does not require additional data");
         }
         if (!isDataCorrect(this, data)) {
-            throw new ParticleDataException("The particle data stopType is incorrect");
+            throw new ParticleDataException("The particle data type is incorrect");
         }
         new ParticlePacket(this, direction, speed, range > 256, data).sendTo(center, range);
     }
@@ -883,7 +883,7 @@ public enum ParticleEffect {
      * @param center    Center location of the effect
      * @param players   Receivers of the effect
      * @throws ParticleVersionException If the particle effect is not supported by the server version
-     * @throws ParticleDataException    If the particle effect does not require additional data or if the data stopType is incorrect
+     * @throws ParticleDataException    If the particle effect does not require additional data or if the data type is incorrect
      * @see ParticlePacket
      * @see ParticlePacket#sendTo(Location, List)
      */
@@ -895,7 +895,7 @@ public enum ParticleEffect {
             throw new ParticleDataException("This particle effect does not require additional data");
         }
         if (!isDataCorrect(this, data)) {
-            throw new ParticleDataException("The particle data stopType is incorrect");
+            throw new ParticleDataException("The particle data type is incorrect");
         }
         new ParticlePacket(this, direction, speed, isLongDistance(center, players), data).sendTo(center, players);
     }
@@ -909,7 +909,7 @@ public enum ParticleEffect {
      * @param center    Center location of the effect
      * @param players   Receivers of the effect
      * @throws ParticleVersionException If the particle effect is not supported by the server version
-     * @throws ParticleDataException    If the particle effect does not require additional data or if the data stopType is incorrect
+     * @throws ParticleDataException    If the particle effect does not require additional data or if the data type is incorrect
      * @see #display(ParticleData, Vector, float, Location, List)
      */
     public void display(ParticleData data, Vector direction, float speed, Location center, Player... players) throws ParticleVersionException, ParticleDataException {
@@ -1255,7 +1255,7 @@ public enum ParticleEffect {
     }
 
     /**
-     * Represents a runtime exception that is thrown either if the displayed particle effect requires data and has none or vice-versa or if the data stopType is incorrect
+     * Represents a runtime exception that is thrown either if the displayed particle effect requires data and has none or vice-versa or if the data type is incorrect
      * <p>
      * This class is part of the <b>ParticleEffect Library</b> and follows the same usage conditions
      *
@@ -1276,7 +1276,7 @@ public enum ParticleEffect {
     }
 
     /**
-     * Represents a runtime exception that is thrown either if the displayed particle effect is not colorable or if the particle color stopType is incorrect
+     * Represents a runtime exception that is thrown either if the displayed particle effect is not colorable or if the particle color type is incorrect
      * <p>
      * This class is part of the <b>ParticleEffect Library</b> and follows the same usage conditions
      *

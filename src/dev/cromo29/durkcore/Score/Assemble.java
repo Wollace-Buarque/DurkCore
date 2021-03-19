@@ -57,6 +57,7 @@ public class Assemble {
 			thread.stop();
 			thread = null;
 		}
+
         if (titleThread != null) {
             titleThread.stop();
             titleThread = null;
@@ -68,10 +69,12 @@ public class Assemble {
 	}
 
 	public void cleanup() {
+
 		if (thread != null) {
 			thread.stop();
 			thread = null;
 		}
+
         if (titleThread != null) {
             titleThread.stop();
             titleThread = null;
@@ -83,4 +86,11 @@ public class Assemble {
 		}
 	}
 
+	public AssembleBoard getBoard(UUID uuid) {
+    	return boards.get(uuid);
+	}
+
+	public Map<UUID, AssembleBoard> getBoards() {
+		return boards;
+	}
 }

@@ -13,7 +13,7 @@ import java.util.function.Consumer;
 public class Confirmation {
 
     public static Inv confirm(String title, ItemStack middleItem, Player player, OnConfirm onConfirm, OnReject onReject) {
-        Inv confirm = new Inv(4 * 9, TXT.parse(title));
+        Inv confirm = new Inv(36, TXT.parse(title));
 
         confirm.setItem(13, middleItem);
 

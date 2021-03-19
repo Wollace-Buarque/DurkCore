@@ -17,12 +17,14 @@ public class AssembleTitleThread extends Thread {
     @Override
     public void run() {
         while(true) {
+
             //Tick
             try {
                 tick();
             } catch (NullPointerException exception) {
                 exception.printStackTrace();
             }
+
             //Thread Sleep
             try {
                 sleep(assemble.titleUpdateTick * 50);
@@ -37,8 +39,7 @@ public class AssembleTitleThread extends Thread {
             AssembleBoard board = assemble.boards.get(player.getUniqueId());
 
             // This shouldn't happen, but just in case
-            if (board == null)
-                continue;
+            if (board == null) continue;
 
 
             Scoreboard scoreboard = board.scoreboard;

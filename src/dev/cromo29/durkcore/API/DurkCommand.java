@@ -3,6 +3,7 @@ package dev.cromo29.durkcore.API;
 import com.google.common.collect.Lists;
 import dev.cromo29.durkcore.Entity.DurkPlayer;
 import dev.cromo29.durkcore.SpecificUtils.ListUtil;
+import dev.cromo29.durkcore.SpecificUtils.PlayerUtil;
 import dev.cromo29.durkcore.Util.JAction;
 import dev.cromo29.durkcore.Util.TXT;
 import net.md_5.bungee.api.chat.ClickEvent;
@@ -211,18 +212,18 @@ public abstract class DurkCommand implements Listener {
     }
 
     public void sendTitle(String title, String subtitle, int fadeIn, int stay, int fadeOut) {
-        if (isPlayer()) TXT.sendTitle(asPlayer(), title, subtitle, fadeIn, stay, fadeOut);
+        if (isPlayer()) PlayerUtil.sendTitle(asPlayer(), title, subtitle, fadeIn, stay, fadeOut);
     }
     public void sendTitle(Player player, String title, String subtitle, int fadeIn, int stay, int fadeOut) {
-        TXT.sendTitle(player, title, subtitle, fadeIn, stay, fadeOut);
+        PlayerUtil.sendTitle(player, title, subtitle, fadeIn, stay, fadeOut);
     }
 
     public void sendActionBar(Player player, String actionBar) {
-        TXT.sendActionBar(player, actionBar);
+        PlayerUtil.sendActionBar(player, actionBar);
     }
 
-    public void sendActionBar(Player player, String actionBar, int stayInSeconds) {
-        TXT.sendActionBar(player, actionBar, stayInSeconds);
+    public void sendTimedActionBar(Player player, String actionBar, int stayInSeconds) {
+        PlayerUtil.sendTimedActionBar(player, actionBar, stayInSeconds);
     }
 
     public void sendHoverableMessage(String message, String hover) {

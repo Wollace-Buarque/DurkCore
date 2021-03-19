@@ -59,14 +59,18 @@ public class SectionBuilder<T> {
 
     public List<T> build() {
         List<T> toReturn = new ArrayList<>();
+
         for (String key : mainSection.getKeys(false)) {
+
             try {
                 ConfigurationSection section = mainSection.getConfigurationSection(key);
                 List<Object> objects = new ArrayList<>();
                 objects.add(key);
+
                 for (Map.Entry<String, Class<?>> entry : parameters.entrySet()) {
                     String parameter = entry.getKey();
                     Class<?> parameterClass = entry.getValue();
+
                     if (parametersAdapters.containsKey(parameter)) {
                         objects.add(parametersAdapters.get(parameter).supply(section.get(parameter)));
                     } else if (classAdapters.containsKey(parameterClass)) {
@@ -138,7 +142,8 @@ public class SectionBuilder<T> {
         public List<A> supply(Object object) {
             ConfigurationSection section = (ConfigurationSection) object;
 
-            return section.getKeys(false).stream().map(section::getConfigurationSection).map(adapter::supply).map(o -> (A) o).collect(Collectors.toList());
+            return section.getKeys(false).stream().map(section::getConfigurationSection)
+                    .map(adapter::supply).map(o -> (A) o).collect(Collectors.toList());
         }
     }
 

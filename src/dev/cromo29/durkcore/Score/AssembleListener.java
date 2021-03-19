@@ -11,26 +11,28 @@ import org.bukkit.event.server.PluginDisableEvent;
 
 public class AssembleListener implements Listener {
 
-	private Assemble assemble;
+    private Assemble assemble;
 
-	public AssembleListener(Assemble assemble) {
-		this.assemble = assemble;
-		Bukkit.getScheduler().runTaskLater(assemble.plugin, () ->
-            Bukkit.getOnlinePlayers().forEach(p -> {
-                AssembleBoardCreateEvent createEvent = new AssembleBoardCreateEvent(p);
+    public AssembleListener(Assemble assemble) {
+        this.assemble = assemble;
+        Bukkit.getScheduler().runTaskLater(assemble.plugin, () ->
 
-                Bukkit.getPluginManager().callEvent(createEvent);
-                if (createEvent.isCancelled())
-                    return;
+                Bukkit.getOnlinePlayers().forEach(player -> {
+                    AssembleBoardCreateEvent createEvent = new AssembleBoardCreateEvent(player);
 
-                if (!assemble.boards.containsKey(p.getUniqueId()) && assemble.shouldShowForPlayerOnJoin) assemble.boards.put(p.getUniqueId(), new AssembleBoard(p, assemble));
-            })
-        , 3*20);
-	}
+                    Bukkit.getPluginManager().callEvent(createEvent);
 
-	@EventHandler
-	public void onPlayerJoin(PlayerJoinEvent event) {
-	    if (assemble.shouldShowForPlayerOnJoin) {
+                    if (createEvent.isCancelled()) return;
+
+                    if (!assemble.boards.containsKey(player.getUniqueId()) && assemble.shouldShowForPlayerOnJoin)
+                        assemble.boards.put(player.getUniqueId(), new AssembleBoard(player, assemble));
+
+                }), 3 * 20);
+    }
+
+    @EventHandler
+    public void onPlayerJoin(PlayerJoinEvent event) {
+        if (assemble.shouldShowForPlayerOnJoin) {
             AssembleBoardCreateEvent createEvent = new AssembleBoardCreateEvent(event.getPlayer());
 
             Bukkit.getPluginManager().callEvent(createEvent);
@@ -39,24 +41,24 @@ public class AssembleListener implements Listener {
 
             assemble.boards.put(event.getPlayer().getUniqueId(), new AssembleBoard(event.getPlayer(), assemble));
         }
-	}
+    }
 
-	@EventHandler
-	public void onPlayerQuit(PlayerQuitEvent event) {
-		AssembleBoardDestroyEvent destroyEvent = new AssembleBoardDestroyEvent(event.getPlayer());
+    @EventHandler
+    public void onPlayerQuit(PlayerQuitEvent event) {
+        AssembleBoardDestroyEvent destroyEvent = new AssembleBoardDestroyEvent(event.getPlayer());
 
-		Bukkit.getPluginManager().callEvent(destroyEvent);
-		if (destroyEvent.isCancelled())
-			return;
+        Bukkit.getPluginManager().callEvent(destroyEvent);
+        if (destroyEvent.isCancelled())
+            return;
 
-		assemble.boards.remove(event.getPlayer().getUniqueId());
-		event.getPlayer().setScoreboard(Bukkit.getScoreboardManager().getMainScoreboard());
-	}
+        assemble.boards.remove(event.getPlayer().getUniqueId());
+        event.getPlayer().setScoreboard(Bukkit.getScoreboardManager().getMainScoreboard());
+    }
 
-	//TODO see how we can make this better
-	@EventHandler
-	public void onPluginDisable(PluginDisableEvent event) {
-	    if (event.getPlugin() == assemble.plugin) assemble.cleanup();
-	}
+    //TODO see how we can make this better
+    @EventHandler
+    public void onPluginDisable(PluginDisableEvent event) {
+        if (event.getPlugin() == assemble.plugin) assemble.cleanup();
+    }
 
 }

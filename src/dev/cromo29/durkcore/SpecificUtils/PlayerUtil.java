@@ -1,5 +1,6 @@
 package dev.cromo29.durkcore.SpecificUtils;
 
+import dev.cromo29.durkcore.DurkCore;
 import dev.cromo29.durkcore.Util.RU;
 import dev.cromo29.durkcore.Util.TXT;
 import org.apache.commons.lang.reflect.FieldUtils;
@@ -14,18 +15,20 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.plugin.Plugin;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.IntStream;
 
 public class PlayerUtil {
 
     public static void setMetadata(Plugin plugin, Player player, String key, Object value) {
         removeMetadata(plugin, player, key);
+
         player.setMetadata(key, new FixedMetadataValue(plugin, value));
     }
 
@@ -225,9 +228,7 @@ public class PlayerUtil {
         if (stacks != 0) {
             singleItem.setAmount(stackSize);
 
-            IntStream.range(0, stacks).forEach((i) -> {
-                insert(player, singleItem.clone(), dropExcess);
-            });
+            IntStream.range(0, stacks).forEach(i -> insert(player, singleItem.clone(), dropExcess));
         }
 
         if (left != 0) {
@@ -239,9 +240,7 @@ public class PlayerUtil {
     }
 
     public static void giveItems(Player player, List<ItemStack> items, boolean dropExcess) {
-        items.forEach((item) -> {
-            giveItem(player, item, dropExcess);
-        });
+        items.forEach(item -> giveItem(player, item, dropExcess));
     }
 
     public static void insert(Player player, ItemStack stack) {
@@ -249,15 +248,13 @@ public class PlayerUtil {
     }
 
     public static void insert(Player player, ItemStack stack, boolean playsound) {
-        HashMap<Integer, ItemStack> items = player.getInventory().addItem(stack);
+        Map<Integer, ItemStack> items = player.getInventory().addItem(stack);
 
         if (items.size() == 0 && playsound)
             player.playSound(player.getLocation(), Sound.ITEM_PICKUP, 1.0f, 1.0f);
 
         else {
-            items.values().forEach((itemLeft) -> {
-                player.getWorld().dropItemNaturally(player.getLocation(), itemLeft);
-            });
+            items.values().forEach(itemLeft -> player.getWorld().dropItemNaturally(player.getLocation(), itemLeft));
 
             if (playsound) player.playSound(player.getLocation(), Sound.CHICKEN_EGG_POP, 0.800000011920929f, 1.0f);
 
@@ -265,7 +262,7 @@ public class PlayerUtil {
 
     }
 
-    public enum CardinalDirection {NORTH, EAST, SOUTH, WEST}
+    public enum CardinalDirection { NORTH, EAST, SOUTH, WEST }
 
     public static CardinalDirection getCardinalDirection(Player player) {
         double rotation = (player.getLocation().getYaw() - 90) % 360;
@@ -338,6 +335,82 @@ public class PlayerUtil {
         }
     }
 
+    public static void sendActionBar(HumanEntity humanEntity, String actionBar) {
+        sendActionBar(humanEntity, actionBar);
+    }
+
+    public static void sendActionBar(Player player, String actionBar) {
+
+        if (actionBar == null) return;
+
+        try {
+
+            Object iChatBaseComponent = chatSerializerAMethod.invoke(chatSerializer, "{\"text\":\"" + TXT.parse(actionBar) + "\"}");
+            RU.sendPacket(player, packetPlayOutChatConstructor.newInstance(iChatBaseComponent, (byte) 2));
+
+        } catch (Exception exception) {
+        }
+    }
+
+    public static void sendTimedActionBar(HumanEntity humanEntity, String actionBar, int stayInSeconds) {
+        sendTimedActionBar(humanEntity, actionBar, stayInSeconds);
+    }
+
+    public static void sendTimedActionBar(Player player, String actionBar, int stayInSeconds) {
+
+        if (actionBar == null) return;
+
+        sendActionBar(player, actionBar);
+
+        new BukkitRunnable() {
+            int i = stayInSeconds;
+
+            @Override
+            public void run() {
+                i--;
+
+                if (i <= 0) {
+                    cancel();
+                    return;
+                }
+
+                sendActionBar(player, actionBar);
+            }
+        }.runTaskTimer(DurkCore.durkCore, 0, 20L);
+    }
+
+    public static void sendTitle(HumanEntity humanEntity, String title, String subtitle, int fadeIn, int stay, int fadeOut) {
+        sendTitle((Player) humanEntity, title, subtitle, fadeIn, stay, fadeOut);
+    }
+
+    public static void sendTitle(Player player, String title, String subtitle, int fadeIn, int stay, int fadeOut) {
+        try {
+
+            // TIMES
+            Object packetPlayOutTitleTimes = packetPlayOutTitleTimesConstructor.newInstance(enumTimes, null, fadeIn, stay, fadeOut);
+
+            // TIMES
+            // SUBTITLE
+            subtitle = TXT.parse(subtitle);
+            Object iChatBaseComponentSubtitle = chatSerializerAMethod.invoke(null, "{\"text\":\"" + subtitle + "\"}");
+            Object packetPlayOutTitleSubtitle = packetPlayOutTitleConstructor.newInstance(enumSubtitle, iChatBaseComponentSubtitle);
+
+            // SUBTITLE
+            // TITLE
+            title = TXT.parse(title);
+            Object iChatBaseComponentTitle = chatSerializerAMethod.invoke(null, "{\"text\":\"" + title + "\"}");
+            Object packetPlayOutTitleTitle = packetPlayOutTitleConstructor.newInstance(enumTitle, iChatBaseComponentTitle);
+
+            // TITLE
+            RU.sendPacket(player, packetPlayOutTitleTimes);
+            RU.sendPacket(player, packetPlayOutTitleSubtitle);
+            RU.sendPacket(player, packetPlayOutTitleTitle);
+
+        } catch (Exception exception) {
+            exception.printStackTrace();
+        }
+    }
+
     public static void sendTablist(HumanEntity humanEntity, List<String> header, List<String> footer) {
         sendTablist((Player) humanEntity, header, footer);
     }
@@ -365,6 +438,7 @@ public class PlayerUtil {
 
     public static void sendTablist(Player player, String header, String footer) {
         if (header == null || footer == null) return;
+
         try {
             Object tabHeader = chatSerializerAMethod.invoke(null, "{\"text\":\"" + TXT.parse(header) + "\"}");
             Object tabFooter = chatSerializerAMethod.invoke(null, "{\"text\":\"" + TXT.parse(footer) + "\"}");

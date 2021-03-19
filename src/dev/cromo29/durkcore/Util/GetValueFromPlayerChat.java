@@ -1,6 +1,5 @@
 package dev.cromo29.durkcore.Util;
 
-import com.google.common.collect.Maps;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -8,12 +7,13 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Consumer;
 
 public class GetValueFromPlayerChat implements Listener {
 
-    private static Map<Player, GettingValueFromPlayer> gettingValueFromPlayerMap = Maps.newHashMap();
+    private static Map<Player, GettingValueFromPlayer> gettingValueFromPlayerMap = new HashMap<>();
 
     public static void removePlayer(Player player) {
         gettingValueFromPlayerMap.remove(player);
@@ -24,36 +24,39 @@ public class GetValueFromPlayerChat implements Listener {
     }
 
     @EventHandler
-    public void onQuit(PlayerQuitEvent event) { GetValueFromPlayerChat.gettingValueFromPlayerMap.remove(event.getPlayer()); }
+    public void onQuit(PlayerQuitEvent event) {
+        gettingValueFromPlayerMap.remove(event.getPlayer());
+    }
 
     @EventHandler(priority = EventPriority.LOWEST)
     public void onChat(AsyncPlayerChatEvent event) {
-        if (GetValueFromPlayerChat.gettingValueFromPlayerMap.containsKey(event.getPlayer())) {
-            event.setCancelled(true);
 
-            Player whoTyped = event.getPlayer();
-            String message = event.getMessage();
+        if (!gettingValueFromPlayerMap.containsKey(event.getPlayer())) return;
 
-            GettingValueFromPlayer gettingValueFromPlayer = GetValueFromPlayerChat.gettingValueFromPlayerMap.get(whoTyped);
-            GetValueFromPlayerChat.gettingValueFromPlayerMap.remove(whoTyped);
+        event.setCancelled(true);
 
-            if (gettingValueFromPlayer.typeToCancel != null && !gettingValueFromPlayer.typeToCancel.equals("")) {
-                if (gettingValueFromPlayer.ignoreCase) {
-                    if (message.equalsIgnoreCase(gettingValueFromPlayer.typeToCancel) && gettingValueFromPlayer.onCancel != null) {
+        Player whoTyped = event.getPlayer();
+        String message = event.getMessage();
 
-                        gettingValueFromPlayer.onCancel.accept(new GettingValue(true, null, whoTyped, event, gettingValueFromPlayer));
-                        return;
-                    }
-                } else if (message.equals(gettingValueFromPlayer.typeToCancel) && gettingValueFromPlayer.onCancel != null) {
+        GettingValueFromPlayer gettingValueFromPlayer = gettingValueFromPlayerMap.get(whoTyped);
+        gettingValueFromPlayerMap.remove(whoTyped);
+
+        if (gettingValueFromPlayer.typeToCancel != null && !gettingValueFromPlayer.typeToCancel.equals("")) {
+            if (gettingValueFromPlayer.ignoreCase) {
+                if (message.equalsIgnoreCase(gettingValueFromPlayer.typeToCancel) && gettingValueFromPlayer.onCancel != null) {
 
                     gettingValueFromPlayer.onCancel.accept(new GettingValue(true, null, whoTyped, event, gettingValueFromPlayer));
                     return;
                 }
-            }
+            } else if (message.equals(gettingValueFromPlayer.typeToCancel) && gettingValueFromPlayer.onCancel != null) {
 
-            if (gettingValueFromPlayer.onGetValue != null)
-                gettingValueFromPlayer.onGetValue.accept(new GettingValue(false, message, whoTyped, event, gettingValueFromPlayer));
+                gettingValueFromPlayer.onCancel.accept(new GettingValue(true, null, whoTyped, event, gettingValueFromPlayer));
+                return;
+            }
         }
+
+        if (gettingValueFromPlayer.onGetValue != null)
+            gettingValueFromPlayer.onGetValue.accept(new GettingValue(false, message, whoTyped, event, gettingValueFromPlayer));
     }
 
     public static void getValueFrom(Player player, String typeToCancel, boolean ignoreCase, OnGetValue onGetValue, OnCancel onCancel) {

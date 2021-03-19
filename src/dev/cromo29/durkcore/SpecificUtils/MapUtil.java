@@ -13,21 +13,23 @@ public class MapUtil {
 
         ret.put(key1, value1);
 
-        Iterator<Object> iter = Arrays.asList(objects).iterator();
-        while (iter.hasNext()) {
-            K key = (K) iter.next();
-            V value = (V) iter.next();
+        Iterator<Object> iterator = Arrays.asList(objects).iterator();
+
+        while (iterator.hasNext()) {
+            K key = (K) iterator.next();
+            V value = (V) iterator.next();
+
             ret.put(key, value);
         }
 
         return ret;
     }
     public static <V, K> Map<V, K> invertMap(Map<K, V> toInvert) {
-        Map<V, K> out = new HashMap(toInvert.size());
-        Iterator var2 = toInvert.entrySet().iterator();
+        Map<V, K> out = new HashMap<>(toInvert.size());
+        Iterator<Map.Entry<K, V>> iterator = toInvert.entrySet().iterator();
 
-        while(var2.hasNext()) {
-            Map.Entry<K, V> entry = (Map.Entry)var2.next();
+        while(iterator.hasNext()) {
+            Map.Entry<K, V> entry = iterator.next();
             out.put(entry.getValue(), entry.getKey());
         }
 

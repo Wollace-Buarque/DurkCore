@@ -1,24 +1,9 @@
 package dev.cromo29.durkcore.Util;
 
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
-import dev.cromo29.durkcore.DurkCore;
-import net.minecraft.server.v1_8_R3.IChatBaseComponent;
-import net.minecraft.server.v1_8_R3.PacketPlayOutChat;
-import net.minecraft.server.v1_8_R3.PacketPlayOutTitle;
-import net.minecraft.server.v1_8_R3.PlayerConnection;
 import org.bukkit.*;
 import org.bukkit.command.CommandSender;
-import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
-import org.bukkit.entity.EntityType;
-import org.bukkit.entity.Firework;
-import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.PlayerInventory;
-import org.bukkit.inventory.meta.FireworkMeta;
 import org.bukkit.plugin.Plugin;
-import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 
 import java.util.*;
@@ -27,14 +12,13 @@ import java.util.regex.Pattern;
 
 public class TXT {
 
+    private TXT() {
+    }
+
     private static Pattern parsePattern;
     private static Pattern unparsePattern;
-    private static Map<String, String> colors = Maps.newHashMap();
-    private static List<String> unparse = Lists.newArrayList();
-
-    public static double compareStrings(String stringA, String stringB) {
-        return org.apache.commons.lang3.StringUtils.getJaroWinklerDistance(stringA, stringB) * 100.0D;
-    }
+    private static Map<String, String> colors = new HashMap<>();
+    private static List<String> unparse = new ArrayList<>();
 
     public static BukkitTask runLater(Plugin plugin, long after, Runnable runnable) {
         return Bukkit.getScheduler().runTaskLater(plugin, runnable, after);
@@ -99,136 +83,6 @@ public class TXT {
         return string.toString();
     }
 
-    public int getColumn(int slot) {
-        int toReturn = 0;
-
-        if (slot < 9)
-            toReturn += 1;
-        else toReturn = (slot % 9) + 1;
-
-        return toReturn;
-    }
-
-    public String[] getList(String... values) {
-        List<String> list = new ArrayList<>();
-
-        for (String s : values) {
-            list.add(parse(s));
-        }
-
-        return list.toArray(new String[0]);
-    }
-
-    public static boolean isValidInt(String toCheck) {
-        if (toCheck.equalsIgnoreCase("nan"))
-            return false;
-        else {
-            try {
-                Integer.parseInt(toCheck);
-                return true;
-            } catch (Exception exception) {
-                return false;
-            }
-        }
-    }
-
-    public static boolean isValidDouble(String toCheck) {
-        if (toCheck.equalsIgnoreCase("nan"))
-            return false;
-        else {
-            try {
-                Double.parseDouble(toCheck);
-                return true;
-            } catch (Exception exception) {
-                return false;
-            }
-        }
-    }
-
-    public static boolean isValidBoolean(String toCheck) {
-        try {
-            Boolean.parseBoolean(toCheck);
-            return true;
-        } catch (Exception exception) {
-            return false;
-        }
-    }
-
-    public static int getEmptySlots(Player player) {
-        PlayerInventory inventory = player.getInventory();
-        ItemStack[] cont = inventory.getContents();
-        int i = 0;
-
-        for (ItemStack item : cont)
-            if (item != null && item.getType() != Material.AIR)
-                i++;
-
-        return 36 - i;
-    }
-
-    public static boolean isEmptyInventory(Player target) {
-        for (ItemStack itens : target.getInventory().getContents())
-            if (itens != null
-                    || target.getInventory().getHelmet() != null
-                    || target.getInventory().getChestplate() != null
-                    || target.getInventory().getLeggings() != null
-                    || target.getInventory().getBoots() != null)
-                return false;
-        return true;
-    }
-
-    public static void sendTitle(Player player, String title, String subtitle, int fadeIn, int stay, int fadeOut) {
-        if (title == null || subtitle == null) return;
-
-        // TIMES
-
-        PacketPlayOutTitle packetPlayOutTimes = new PacketPlayOutTitle(PacketPlayOutTitle.EnumTitleAction.TIMES, null, fadeIn, stay, fadeOut);
-
-        // SUBTITLE
-
-        IChatBaseComponent titleSub = IChatBaseComponent.ChatSerializer.a("{\"text\": \"" + parse(subtitle) + "\"}");
-        PacketPlayOutTitle packetPlayOutSubTitle = new PacketPlayOutTitle(PacketPlayOutTitle.EnumTitleAction.SUBTITLE, titleSub);
-
-        // TITLE
-
-        IChatBaseComponent titleMain = IChatBaseComponent.ChatSerializer.a("{\"text\": \"" + parse(title) + "\"}");
-        PacketPlayOutTitle packetPlayOutTitle = new PacketPlayOutTitle(PacketPlayOutTitle.EnumTitleAction.TITLE, titleMain);
-
-        // SEND
-
-        PlayerConnection connection = ((CraftPlayer) player).getHandle().playerConnection;
-        connection.sendPacket(packetPlayOutTimes);
-        connection.sendPacket(packetPlayOutSubTitle);
-        connection.sendPacket(packetPlayOutTitle);
-    }
-
-    public static void sendActionBar(Player player, String actionBar) {
-
-        PacketPlayOutChat packet = new PacketPlayOutChat(IChatBaseComponent.ChatSerializer.a("{\"text\":\"" + parse(actionBar) + "\"}"), (byte) 2);
-        ((CraftPlayer) player).getHandle().playerConnection.sendPacket(packet);
-    }
-
-    public static void sendActionBar(Player player, String actionBar, int stayInSeconds) {
-        sendActionBar(player, actionBar);
-
-        new BukkitRunnable() {
-            int i = stayInSeconds;
-
-            @Override
-            public void run() {
-                i--;
-
-                if (i < 0) {
-                    cancel();
-
-                    return;
-                }
-
-                sendActionBar(player, actionBar);
-            }
-        }.runTaskTimer(DurkCore.durkCore, 0, 20L);
-    }
-
     public static String parse(String string) {
         if (string == null) return null;
 
@@ -285,80 +139,24 @@ public class TXT {
     public static boolean endsWith(String string, String endsWith, boolean ignoreCase) {
         if (string != null && endsWith != null) {
 
-            if (endsWith.length() > string.length())
-                return false;
-            else {
-                String substring = string.substring(string.length() - endsWith.length());
+            if (endsWith.length() > string.length()) return false;
 
-                return ignoreCase ? substring.equalsIgnoreCase(endsWith) : substring.equals(endsWith);
-            }
+            String substring = string.substring(string.length() - endsWith.length());
+
+            return ignoreCase ? substring.equalsIgnoreCase(endsWith) : substring.equals(endsWith);
+
         } else return false;
     }
 
     public static int getMiddleSlot(Inventory inv) {
-        int[] i = {10, 11, 12, 13, 14, 15, 16, 19, 20, 21, 22, 23, 24, 25, 28, 29, 30, 31, 32, 33, 34, 37, 38, 39, 40, 41, 42, 43};
+        int[] slots = {10, 11, 12, 13, 14, 15, 16, 19, 20, 21, 22, 23, 24, 25, 28, 29, 30, 31, 32, 33, 34, 37, 38, 39, 40, 41, 42, 43};
 
-        for (int slot : i)
-            if (inv.getItem(slot) == null || inv.getItem(slot).getType() == Material.AIR)
-                return slot;
+        for (int slot : slots) {
+
+            if (inv.getItem(slot) == null || inv.getItem(slot).getType() == Material.AIR) return slot;
+        }
+
         return -1;
-    }
-
-    public static void spawnRandomFirework(Location loc) {
-        Firework fw = (Firework) loc.getWorld().spawnEntity(loc, EntityType.FIREWORK);
-        FireworkMeta fwm = fw.getFireworkMeta();
-        Random r = new Random();
-        int rt = r.nextInt(4) + 1;
-
-        FireworkEffect.Type stopType = FireworkEffect.Type.BALL;
-
-        if (rt == 2) stopType = FireworkEffect.Type.BALL_LARGE;
-        if (rt == 3) stopType = FireworkEffect.Type.BURST;
-        if (rt == 4) stopType = FireworkEffect.Type.CREEPER;
-        if (rt == 5) stopType = FireworkEffect.Type.STAR;
-
-        int r1i = r.nextInt(18) + 1;
-        int r2i = r.nextInt(18) + 1;
-
-        Color c1 = getColor(r1i);
-        Color c2 = getColor(r2i);
-
-        FireworkEffect effect = FireworkEffect.builder()
-                .flicker(r.nextBoolean())
-                .withColor(c1)
-                .withFade(c2)
-                .with(stopType)
-                .trail(r.nextBoolean())
-                .build();
-
-        fwm.addEffect(effect);
-        fwm.setPower(2);
-        fw.setFireworkMeta(fwm);
-    }
-
-    public static Color getColor(int i) {
-        Color c = null;
-
-        if (i == 1) c = Color.AQUA;
-        if (i == 2) c = Color.BLACK;
-        if (i == 3) c = Color.BLUE;
-        if (i == 4) c = Color.FUCHSIA;
-        if (i == 5) c = Color.GRAY;
-        if (i == 6) c = Color.GREEN;
-        if (i == 7) c = Color.LIME;
-        if (i == 8) c = Color.MAROON;
-        if (i == 9) c = Color.NAVY;
-        if (i == 10) c = Color.OLIVE;
-        if (i == 11) c = Color.ORANGE;
-        if (i == 12) c = Color.PURPLE;
-        if (i == 13) c = Color.RED;
-        if (i == 14) c = Color.SILVER;
-        if (i == 15) c = Color.TEAL;
-        if (i == 16) c = Color.WHITE;
-        if (i == 17) c = Color.YELLOW;
-        if (i == 18) c = Color.fromBGR(9, 255, 0);
-
-        return c;
     }
 
     private static Object[] fix(Object... obs) {
@@ -477,9 +275,9 @@ public class TXT {
 
         StringBuilder unpatternStringBuilder = new StringBuilder();
 
-        for (String find2 : unparse) {
+        for (String find : unparse) {
             unpatternStringBuilder.append('(');
-            unpatternStringBuilder.append(Pattern.quote(find2));
+            unpatternStringBuilder.append(Pattern.quote(find));
             unpatternStringBuilder.append(")|");
         }
 

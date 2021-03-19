@@ -20,17 +20,19 @@ public class AssembleThread extends Thread {
     @Override
     public void run() {
         while(true) {
+
             //Tick
             try {
                 tick();
-            } catch (NullPointerException e) {
-                e.printStackTrace();
+            } catch (NullPointerException exception) {
+                exception.printStackTrace();
             }
+
             //Thread Sleep
             try {
                 sleep(assemble.scoreUpdateTick * 50);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+            } catch (InterruptedException exception) {
+                exception.printStackTrace();
             }
         }
     }
@@ -40,8 +42,7 @@ public class AssembleThread extends Thread {
             AssembleBoard board = assemble.boards.get(player.getUniqueId());
 
             // This shouldn't happen, but just in case
-            if (board == null)
-                continue;
+            if (board == null) continue;
 
             Scoreboard scoreboard = board.scoreboard;
 
@@ -72,8 +73,7 @@ public class AssembleThread extends Thread {
                     for (int i = newLines.size(); i < board.entries.size(); i++) {
                         AssembleBoardEntry entry = board.getEntryAtPosition(i);
 
-                        if (entry != null)
-                            entry.remove();
+                        if (entry != null) entry.remove();
 
                     }
                 }
@@ -86,13 +86,13 @@ public class AssembleThread extends Thread {
                     // Translate any colors
                     String newLine = TXT.parse(newLines.get(i));
                     if (newLine != null && newLine.length() > 32) newLine = newLine.substring(0, 32);
+
                     String line = newLine;
 
                     // If the entry is null, just create a new one.
                     // Creating a new AssembleBoardEntry instance will add
                     // itself to the provided board's entries list.
-                    if (entry == null)
-                        entry = new AssembleBoardEntry(board, line);
+                    if (entry == null) entry = new AssembleBoardEntry(board, line);
 
                     // Update text, setup the team, and update the display values
                     entry.text = line;

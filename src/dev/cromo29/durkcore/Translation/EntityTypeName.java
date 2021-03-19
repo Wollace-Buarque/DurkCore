@@ -62,6 +62,27 @@ public enum EntityTypeName {
         return valueOf(entityType.name());
     }
 
+    public static EntityType of(EntityTypeName entityTypeName) {
+        return EntityType.fromName(entityTypeName.name());
+    }
+
+    public static EntityType of(String entityName) {
+        EntityType entityType = EntityType.fromName(entityName);
+
+        if (entityType != null) return entityType;
+
+        for (EntityTypeName entityTypeName : values()) {
+
+            if (entityTypeName.getName().equalsIgnoreCase(entityName)) {
+                entityType = EntityType.fromName(entityTypeName.name());
+                break;
+            }
+
+        }
+
+        return entityType;
+    }
+
     @Override
     public String toString() {
         return this.name;

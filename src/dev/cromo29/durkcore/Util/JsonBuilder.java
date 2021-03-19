@@ -1,6 +1,5 @@
 package dev.cromo29.durkcore.Util;
 
-import com.google.common.collect.Lists;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import dev.cromo29.durkcore.SpecificUtils.ItemUtil;
@@ -13,8 +12,8 @@ import java.util.List;
 import java.util.Map;
 
 public class JsonBuilder {
-    public JsonBuilder() {}
 
+    public JsonBuilder() {}
     public JsonBuilder(String jsonToMap) { data = new Gson().fromJson(jsonToMap, Map.class); }
 
     private final Gson gson = (new GsonBuilder()).setPrettyPrinting().create();
@@ -65,7 +64,7 @@ public class JsonBuilder {
     public JsonBuilder putLocation(String key, Location location) { data.put(key, GsonManager.serealizeLocationFull(location)); return this; }
     public JsonBuilder putLocations(String key, List<Location> locations) {
 
-        List<String> serializedLocations = Lists.newArrayList();
+        List<String> serializedLocations = new ArrayList<>();
         locations.forEach(loc -> serializedLocations.add(GsonManager.serealizeLocationFull(loc)));
 
         data.put(key, serializedLocations);
@@ -75,7 +74,7 @@ public class JsonBuilder {
     public JsonBuilder putItemStack(String key, ItemStack location) { data.put(key, ItemUtil.toJson(location)); return this; }
     public JsonBuilder putItemStackList(String key, List<ItemStack> locations) {
 
-        List<String> serializedItems = Lists.newArrayList();
+        List<String> serializedItems = new ArrayList<>();
         locations.forEach(itemStack -> serializedItems.add(ItemUtil.toJson(itemStack)));
 
         data.put(key, serializedItems);

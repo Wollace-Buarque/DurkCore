@@ -1,7 +1,5 @@
 package dev.cromo29.durkcore.SpecificUtils;
 
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 import com.google.common.io.BaseEncoding;
 import dev.cromo29.durkcore.Translation.EntityTypeName;
 import dev.cromo29.durkcore.Util.JsonBuilder;
@@ -25,10 +23,7 @@ import java.io.OutputStream;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 
 public class ItemUtil {
 
@@ -56,6 +51,7 @@ public class ItemUtil {
         } catch (NumberFormatException ex) {
             throw new IllegalArgumentException("Invalid amount \"" + split[1] + "\"", ex);
         }
+
         ItemStack item = new ItemStack(material, amount, (short) Math.max(0, durability));
         ItemMeta meta = item.getItemMeta();
 
@@ -224,7 +220,7 @@ public class ItemUtil {
 
                 } else if (meta instanceof EnchantmentStorageMeta) {
 
-                    Map<String, String> enchantmentMap = Maps.newHashMap();
+                    Map<String, String> enchantmentMap = new HashMap<>();
                     ((EnchantmentStorageMeta) meta).getStoredEnchants().forEach((ench, level) -> enchantmentMap.put(ench.getName(), level + ""));
                     json.put("storedEnchantments", enchantmentMap);
                     json.put("metaType", MetaType.ENCHANTMENT_STORAGE.name());
@@ -253,24 +249,27 @@ public class ItemUtil {
 
                 }
 
-                json.put("lore", !meta.hasLore() ? Lists.newArrayList() : meta.getLore());
+                json.put("lore", !meta.hasLore() ? new ArrayList<>() : meta.getLore());
 
-                List<String> itemFlags = Lists.newArrayList();
+                List<String> itemFlags = new ArrayList<>();
                 meta.getItemFlags().forEach(itemFlag -> itemFlags.add(itemFlag.name()));
                 json.put("itemFlags", itemFlags);
 
                 json.put("displayName", meta.hasDisplayName() ? meta.getDisplayName() : item.getType().name());
                 boolean unbreakable = false;
+
                 try {
                     unbreakable = meta.spigot().isUnbreakable();
-                } catch (Exception e) {
+                } catch (Exception ignored) {
                 }
+
                 json.put("unbreakable", unbreakable);
 
             }
 
             if (!json.getCurrentMap().containsKey("metaType")) json.put("metaType", MetaType.ITEM.name());
-            Map<String, String> enchantmentMap = Maps.newHashMap();
+
+            Map<String, String> enchantmentMap = new HashMap<>();
             item.getEnchantments().forEach((ench, level) -> enchantmentMap.put(ench.getName(), level + ""));
             json.put("enchantments", enchantmentMap);
 
@@ -288,13 +287,13 @@ public class ItemUtil {
 
             Map<String, Object> jsonMap = new JsonBuilder(itemJson).getCurrentMap();
 
-            Material stopType = Material.valueOf(jsonMap.get("material").toString());
+            Material type = Material.valueOf(jsonMap.get("material").toString());
             int amount = Double.valueOf(jsonMap.get("amount").toString()).intValue();
             short durability = Double.valueOf(jsonMap.get("durability").toString()).shortValue();
 
             MetaType metaType = MetaType.valueOf(jsonMap.get("metaType").toString());
 
-            ItemStack makeItem = new ItemStack(stopType, amount, durability);
+            ItemStack makeItem = new ItemStack(type, amount, durability);
 
             if (jsonMap.containsKey("lore")) {
 
@@ -370,13 +369,13 @@ public class ItemUtil {
 
                 meta.setLore((List<String>) jsonMap.get("lore"));
 
-                List<ItemFlag> itemFlags = Lists.newArrayList();
+                List<ItemFlag> itemFlags = new ArrayList<>();
                 ((List<String>) jsonMap.get("itemFlags")).forEach(itemFlag -> itemFlags.add(ItemFlag.valueOf(itemFlag)));
                 meta.addItemFlags(itemFlags.toArray(new ItemFlag[]{}));
 
                 ((Map<String, String>) jsonMap.get("enchantments")).forEach((ench, level) -> makeItem.addUnsafeEnchantment(Enchantment.getByName(ench), Double.valueOf(level).intValue()));
 
-                if (!jsonMap.get("displayName").equals(stopType.name()))
+                if (!jsonMap.get("displayName").equals(type.name()))
                     meta.setDisplayName(jsonMap.get("displayName").toString());
 
                 try {

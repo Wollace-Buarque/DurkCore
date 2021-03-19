@@ -1,8 +1,6 @@
 package dev.cromo29.durkcore.Util;
 
 
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
@@ -34,15 +32,15 @@ public class GsonManager {
     }
 
     public Map<String, Object> cloneData() {
-        return data != null ? Maps.newHashMap(data) : null;
+        return data != null ? new HashMap<>(data) : null;
     }
 
     public List<String> getDataPaths() {
-        return data != null ? Lists.newArrayList(data.keySet()) : null;
+        return data != null ? new ArrayList<>(data.keySet()) : null;
     }
 
     public List<Object> getDataValues() {
-        return data != null ? Lists.newArrayList(data.values()) : null;
+        return data != null ? new ArrayList<>(data.values()) : null;
     }
 
     public GsonManager(File location, String name) {
@@ -104,7 +102,7 @@ public class GsonManager {
 
     public GsonManager load() {
         try {
-            data = Maps.newHashMap();
+            data = new HashMap<>();
             Map<String, Object> update = gson.fromJson(Files.newBufferedReader(file.toPath()), data.getClass());
 
             if (update != null && !update.isEmpty()) data = update;
@@ -218,12 +216,12 @@ public class GsonManager {
         return (new GettingValue(data.get(path))).asList();
     }
 
-    public String convertClassInString(Object clazz, Type stopType) {
-        return gson.toJson(clazz, stopType);
+    public String convertClassInString(Object clazz, Type type) {
+        return gson.toJson(clazz, type);
     }
 
-    public Object convertStringInClass(String data, Type stopType) {
-        return gson.fromJson(data, stopType);
+    public Object convertStringInClass(String data, Type type) {
+        return gson.fromJson(data, type);
     }
 
     public List<String> getSection(String path) {
@@ -288,7 +286,7 @@ public class GsonManager {
     }
 
     public GsonManager removeAll(String path) {
-        Lists.newArrayList(data.keySet()).forEach(dataPath -> {
+        new ArrayList<>(data.keySet()).forEach(dataPath -> {
             if (dataPath.startsWith(path + ".")) data.remove(dataPath);
         });
 
@@ -308,7 +306,7 @@ public class GsonManager {
     }
 
     public GsonManager putLocations(String path, List<Location> value) {
-        List<String> serializedLocations = Lists.newArrayList();
+        List<String> serializedLocations = new ArrayList<>();
 
         value.forEach((loc) -> serializedLocations.add(serealizeLocationFull(loc)));
 
@@ -553,11 +551,11 @@ public class GsonManager {
         }
 
         public <K, V> Map<K, V> asMap() {
-            return obj == null ? Maps.newHashMap() : (Map<K, V>) obj;
+            return obj == null ? new HashMap<>() : (Map<K, V>) obj;
         }
 
         public <E> List<E> asList() {
-            return obj == null ? Lists.newArrayList() : (List<E>) obj;
+            return obj == null ? new ArrayList<>() : (List<E>) obj;
         }
 
         public ItemStack asItemStack() {

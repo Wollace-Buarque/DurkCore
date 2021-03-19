@@ -1,6 +1,5 @@
 package dev.cromo29.durkcore.Util;
 
-import com.google.common.collect.Lists;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
@@ -9,9 +8,8 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.*;
 import java.util.List;
-import java.util.Map;
-import java.util.WeakHashMap;
 
 public class PlayerFaceToString {
 
@@ -25,20 +23,20 @@ public class PlayerFaceToString {
     public static boolean isCached(Player player) { return isCached(player.getName()); }
     public static boolean isCached(String playerName) { return cachedNames.containsKey(playerName.toLowerCase()); }
 
-    public static String getOf(Player player) { return getOf(player, true, Lists.newArrayList()); }
-    public static String getOf(String playerName) { return getOf(playerName, true, Lists.newArrayList()); }
+    public static String getOf(Player player) { return getOf(player, true, new ArrayList<>()); }
+    public static String getOf(String playerName) { return getOf(playerName, true, new ArrayList<>()); }
 
-    public static String getOf(Player player, String... stringPrefixSuffix) { return getOf(player, true, Lists.newArrayList(stringPrefixSuffix)); }
-    public static String getOf(String playerName, String...stringPrefixSuffix) { return getOf(playerName, true, Lists.newArrayList(stringPrefixSuffix)); }
+    public static String getOf(Player player, String... stringPrefixSuffix) { return getOf(player, true, Arrays.asList(stringPrefixSuffix)); }
+    public static String getOf(String playerName, String...stringPrefixSuffix) { return getOf(playerName, true, Arrays.asList(stringPrefixSuffix)); }
 
     public static String getOf(Player player, List<String> stringPrefixSuffix) { return getOf(player, true, stringPrefixSuffix); }
     public static String getOf(String playerName, List<String> stringPrefixSuffix) { return getOf(playerName, true, stringPrefixSuffix); }
 
-    public static String getOf(Player player, boolean cacheString) { return getOf(player, cacheString, Lists.newArrayList()); }
-    public static String getOf(String playerName, boolean cacheString) { return getOf(playerName, cacheString, Lists.newArrayList()); }
+    public static String getOf(Player player, boolean cacheString) { return getOf(player, cacheString, new ArrayList<>()); }
+    public static String getOf(String playerName, boolean cacheString) { return getOf(playerName, cacheString, new ArrayList<>()); }
 
-    public static String getOf(Player player, boolean cacheString, String... stringPrefixSuffix) { return getOf(player, cacheString, Lists.newArrayList(stringPrefixSuffix)); }
-    public static String getOf(String playerName, boolean cacheString, String...stringPrefixSuffix) { return getOf(playerName, cacheString, Lists.newArrayList(stringPrefixSuffix)); }
+    public static String getOf(Player player, boolean cacheString, String... stringPrefixSuffix) { return getOf(player, cacheString, Arrays.asList(stringPrefixSuffix)); }
+    public static String getOf(String playerName, boolean cacheString, String...stringPrefixSuffix) { return getOf(playerName, cacheString, Arrays.asList(stringPrefixSuffix)); }
 
     public static String getOf(Player player, boolean cacheString, List<String> stringPrefixSuffix) { return getOf(player.getName(), cacheString, stringPrefixSuffix); }
     public static String getOf(String playerName, boolean cacheString, List<String> stringPrefixSuffix) {
@@ -53,10 +51,10 @@ public class PlayerFaceToString {
 
             head = new BufferedImage(8, 8, BufferedImage.TYPE_INT_RGB);
 
-            Graphics2D g = head.createGraphics();
+            Graphics2D graphics = head.createGraphics();
 
-            g.drawImage(image, 0, 0, 8, 8, null);
-            g.dispose();
+            graphics.drawImage(image, 0, 0, 8, 8, null);
+            graphics.dispose();
 
         } catch (Exception ignored) { return getOf("MHF_Steve", cacheString, stringPrefixSuffix); }
 
@@ -131,6 +129,7 @@ public class PlayerFaceToString {
         }
         return ChatColor.values()[idx];
     }
+
     private static double getDistance(Color firstColor, Color secondColor) {
         double r = (firstColor.getRed() + secondColor.getRed()) / 2.0;
         double red = firstColor.getRed() - secondColor.getRed();
@@ -141,6 +140,7 @@ public class PlayerFaceToString {
 
         return w1 * red * red + 4 * green * green + w2 * blue * blue;
     }
+
     private static boolean isEqual(Color firstColor, Color secondColor) {
         return Math.abs(firstColor.getRed() - secondColor.getRed()) <= 5
                 && Math.abs(firstColor.getGreen() - secondColor.getGreen()) <= 5

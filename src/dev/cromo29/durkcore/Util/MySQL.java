@@ -1,8 +1,5 @@
 package dev.cromo29.durkcore.Util;
 
-
-import org.bukkit.plugin.Plugin;
-
 import java.sql.*;
 import java.util.concurrent.CompletableFuture;
 
@@ -12,11 +9,6 @@ public class MySQL {
     private int port;
     private Connection c;
     private Statement ps;
-
-    @Deprecated
-    public MySQL(Plugin pl, String host, int port, String database, String user, String pass) {
-        this(host, port, database, user, pass);
-    }
 
     public MySQL(String host, int port, String database, String user, String pass) {
         this.host = host;

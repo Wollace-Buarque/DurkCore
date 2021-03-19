@@ -36,6 +36,27 @@ public enum PotionTypeName {
         return valueOf(potionEffect.getName());
     }
 
+    public static PotionEffectType of(PotionTypeName potionTypeName) {
+        return PotionEffectType.getByName(potionTypeName.name());
+    }
+
+    public static PotionEffectType of(String potionName) {
+        PotionEffectType potionEffectType = PotionEffectType.getByName(potionName);
+
+        if (potionEffectType != null) return potionEffectType;
+
+        for (PotionTypeName potionTypeName : values()) {
+
+            if (potionName.equalsIgnoreCase(potionTypeName.getName())) {
+                potionEffectType = PotionEffectType.getByName(potionTypeName.name());
+                break;
+            }
+
+        }
+
+        return potionEffectType;
+    }
+
     @Override
     public String toString() {
         return this.name;

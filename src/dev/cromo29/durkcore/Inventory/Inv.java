@@ -1,8 +1,5 @@
 package dev.cromo29.durkcore.Inventory;
 
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
-import com.google.common.collect.Sets;
 import dev.cromo29.durkcore.Util.TXT;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -37,6 +34,7 @@ public class Inv implements InventoryHolder {
     private boolean cancelClick;
 
     public Inv clone() {
+
         try {
             Inv toRet = new Inv(inventory.getSize(), inventory.getName() == null ? inventory.getType().getDefaultTitle() : inventory.getName());
 
@@ -44,20 +42,15 @@ public class Inv implements InventoryHolder {
             toRet.closeFilter = closeFilter;
             toRet.itemHandlers.putAll(itemHandlers);
 
-            if (openHandlers != null)
-                toRet.openHandlers = Sets.newHashSet(openHandlers);
+            if (openHandlers != null) toRet.openHandlers = new HashSet<>(openHandlers);
 
-            if (closeHandlers != null)
-                toRet.closeHandlers = Sets.newHashSet(closeHandlers);
+            if (closeHandlers != null) toRet.closeHandlers = new HashSet<>(closeHandlers);
 
-            if (clickHandlers != null)
-                toRet.clickHandlers = Sets.newHashSet(clickHandlers);
+            if (clickHandlers != null) toRet.clickHandlers = new HashSet<>(clickHandlers);
 
-            if (pages != null)
-                toRet.pages = Lists.newArrayList(pages);
+            if (pages != null) toRet.pages = new ArrayList<>(pages);
 
-            if (pagesByKey != null)
-                toRet.pagesByKey = Maps.newHashMap(pagesByKey);
+            if (pagesByKey != null) toRet.pagesByKey = new HashMap<>(pagesByKey);
 
             toRet.ignorePlayerInventory = ignorePlayerInventory;
             toRet.cancelPlayerInventoryClick = cancelPlayerInventoryClick;
@@ -91,12 +84,10 @@ public class Inv implements InventoryHolder {
     }
 
     public boolean setPage(int id, Inv page) {
-        if (!hasPage(id))
-            return false;
-        else {
-            pages.set(id, page);
-            return true;
-        }
+        if (!hasPage(id)) return false;
+
+        pages.set(id, page);
+        return true;
     }
 
     public void addPage(String id, Inv page) {
@@ -104,30 +95,24 @@ public class Inv implements InventoryHolder {
     }
 
     public boolean setPage(String id, Inv page) {
-        if (!hasPage(id))
-            return false;
-        else {
-            pagesByKey.put(id, page);
-            return true;
-        }
+        if (!hasPage(id)) return false;
+
+        pagesByKey.put(id, page);
+        return true;
     }
 
     public boolean removePage(int id) {
-        if (!hasPage(id))
-            return false;
-        else {
-            pages.remove(id);
-            return true;
-        }
+        if (!hasPage(id)) return false;
+
+        pages.remove(id);
+        return true;
     }
 
     public boolean removePage(String id) {
-        if (!hasPage(id))
-            return false;
-        else {
-            pagesByKey.remove(id);
-            return true;
-        }
+        if (!hasPage(id)) return false;
+
+        pagesByKey.remove(id);
+        return true;
     }
 
     public List<Inv> getPages() {
@@ -144,14 +129,14 @@ public class Inv implements InventoryHolder {
     }
 
     public void closeInventoryForAll() {
-        Lists.newArrayList(getViewers()).forEach(HumanEntity::closeInventory);
+        new ArrayList<>(getViewers()).forEach(HumanEntity::closeInventory);
     }
 
     public void closeInventoryAndPagesForAll() {
         closeInventoryForAll();
 
-        Lists.newArrayList(getPages()).forEach(Inv::closeInventoryAndPagesForAll);
-        Lists.newArrayList(getPagesByStringId().values()).forEach(Inv::closeInventoryAndPagesForAll);
+        new ArrayList<>(getPages()).forEach(Inv::closeInventoryAndPagesForAll);
+        new ArrayList<>(getPagesByStringId().values()).forEach(Inv::closeInventoryAndPagesForAll);
     }
 
     public Inv(int size) {
@@ -172,8 +157,8 @@ public class Inv implements InventoryHolder {
 
     private Inv(int size, InventoryType checkType, String title) {
         itemHandlers = new HashMap<>();
-        pages = Lists.newArrayList();
-        pagesByKey = Maps.newHashMap();
+        pages = new ArrayList<>();
+        pagesByKey = new HashMap<>();
         ignorePlayerInventory = false;
         cancelPlayerInventoryClick = true;
         cancelClick = true;
@@ -206,8 +191,7 @@ public class Inv implements InventoryHolder {
     public void addItem(ItemStack item, Consumer<InventoryClickEvent> handler) {
         int slot = inventory.firstEmpty();
 
-        if (slot >= 0)
-            setItem(slot, item, handler);
+        if (slot >= 0) setItem(slot, item, handler);
     }
 
     public boolean isPlayerInventory(Inventory inventory) {
@@ -221,8 +205,7 @@ public class Inv implements InventoryHolder {
     public void setItem(int slot, ItemStack item, Consumer<InventoryClickEvent> handler) {
         inventory.setItem(slot, item);
 
-        if (handler != null)
-            itemHandlers.put(slot, handler);
+        if (handler != null) itemHandlers.put(slot, handler);
         else itemHandlers.remove(slot);
     }
 
@@ -235,7 +218,7 @@ public class Inv implements InventoryHolder {
     }
 
     public void setItems(int slotFrom, int slotTo, ItemStack... items) {
-        Iterator<ItemStack> iterator = Lists.newArrayList(items).iterator();
+        Iterator<ItemStack> iterator = Arrays.asList(items).iterator();
 
         for (int i = slotFrom; i <= slotTo && iterator.hasNext(); ++i)
             setItem(i, iterator.next());
@@ -258,7 +241,7 @@ public class Inv implements InventoryHolder {
     }
 
     public List<ItemStack> getItems() {
-        List<ItemStack> items = Lists.newArrayList();
+        List<ItemStack> items = new ArrayList<>();
 
         for (ItemStack content : inventory.getContents())
             if (content != null && content.getType() != Material.AIR) items.add(content);
@@ -267,11 +250,11 @@ public class Inv implements InventoryHolder {
     }
 
     public List<ItemStack> getItemsIncludingNull() {
-        return Lists.newArrayList(inventory.getContents());
+        return Arrays.asList(inventory.getContents());
     }
 
     public List<ItemStack> getItems(int fromSlot, int toSlot) {
-        List<ItemStack> items = Lists.newArrayList();
+        List<ItemStack> items = new ArrayList<>();
 
         for (int i = fromSlot; i <= toSlot; i++) {
             ItemStack item = getItem(i);
@@ -283,7 +266,7 @@ public class Inv implements InventoryHolder {
     }
 
     public List<ItemStack> getItemsIncludingNull(int fromSlot, int toSlot) {
-        List<ItemStack> items = Lists.newArrayList();
+        List<ItemStack> items = new ArrayList<>();
 
         for (int i = fromSlot; i <= toSlot; i++) items.add(getItem(i));
 
@@ -291,19 +274,19 @@ public class Inv implements InventoryHolder {
     }
 
     public List<ItemStack> getItems(int... slots) {
-        List<ItemStack> items = Lists.newArrayList();
+        List<ItemStack> items = new ArrayList<>();
 
         for (int slot : slots) {
             ItemStack item = getItem(slot);
 
-            if (item != null && item.getType() != Material.AIR)
-                items.add(item);
+            if (item != null && item.getType() != Material.AIR) items.add(item);
         }
+
         return items;
     }
 
     public List<ItemStack> getItemsIncludingNull(int... slots) {
-        List<ItemStack> items = Lists.newArrayList();
+        List<ItemStack> items = new ArrayList<>();
 
         for (int slot : slots) items.add(getItem(slot));
 
@@ -464,9 +447,15 @@ public class Inv implements InventoryHolder {
     }
 
     public void setItems(Consumer<InventoryClickEvent> handler, int[] slots, ItemStack... items) {
-        for (ItemStack itemStack : items)
-            for (int slot : slots)
-                setItem(slot, itemStack, handler);
+
+        if (slots.length != items.length) return;
+
+        int index = 0;
+        for (ItemStack itemStack : items) {
+            setItem(slots[index], itemStack, handler);
+
+            index++;
+        }
     }
 
     public ItemStack getItem(int slot) {
@@ -480,8 +469,7 @@ public class Inv implements InventoryHolder {
 
     public void removeItems(int... slots) {
 
-        for (int slot : slots)
-            removeItem(slot);
+        for (int slot : slots) removeItem(slot);
     }
 
     public void setCloseFilter(Predicate<Player> closeFilter) {
@@ -489,8 +477,7 @@ public class Inv implements InventoryHolder {
     }
 
     public void addOpenHandler(Consumer<InventoryOpenEvent> openHandler) {
-        if (openHandlers == null)
-            openHandlers = new HashSet<>();
+        if (openHandlers == null) openHandlers = new HashSet<>();
 
         openHandlers.add(openHandler);
     }
@@ -501,14 +488,6 @@ public class Inv implements InventoryHolder {
 
     public boolean isCancellingClick() {
         return cancelClick;
-    }
-
-    /**
-     * @deprecated
-     */
-    @Deprecated
-    public void ignorePlayerInventoryClick(boolean ignore) {
-        ignorePlayerInventory = ignore;
     }
 
     public void setIgnorePlayerInventoryClick(boolean ignore, boolean cancelClick) {
@@ -525,8 +504,7 @@ public class Inv implements InventoryHolder {
     }
 
     public void addCloseHandler(Consumer<InventoryCloseEvent> closeHandler) {
-        if (closeHandlers == null)
-            closeHandlers = new HashSet<>();
+        if (closeHandlers == null) closeHandlers = new HashSet<>();
 
         closeHandlers.add(closeHandler);
     }
@@ -593,12 +571,13 @@ public class Inv implements InventoryHolder {
 
     public void clearInventorySafe(int... slot) {
 
-        for (int i = 0; i < inventory.getSize(); i++)
+        for (int index = 0; index < inventory.getSize(); index++) {
             for (int safeSlot : slot) {
-                if (i == safeSlot) continue;
+                if (index == safeSlot) continue;
 
                 removeItem(safeSlot);
             }
+        }
     }
 
     public void clearInventory() {
@@ -609,14 +588,15 @@ public class Inv implements InventoryHolder {
     public int emptySlots() {
         int empty = 0;
 
-        for (ItemStack content : inventory.getContents())
+        for (ItemStack content : inventory.getContents()) {
             if (content == null || content.getType() == Material.AIR) empty++;
+        }
 
         return empty;
     }
 
     public void removeAll(ItemStack item) {
-        Map<Integer, ItemStack> items = Maps.newHashMap();
+        Map<Integer, ItemStack> items = new HashMap<>();
         int slot = 0;
 
         for (ItemStack content : inventory.getContents()) {
@@ -630,7 +610,7 @@ public class Inv implements InventoryHolder {
     }
 
     public void removeAll(Material material) {
-        Map<Integer, Material> items = Maps.newHashMap();
+        Map<Integer, Material> items = new HashMap<>();
         int slot = 0;
 
         for (ItemStack content : inventory.getContents()) {
@@ -644,8 +624,7 @@ public class Inv implements InventoryHolder {
     }
 
     public void addClickHandler(Consumer<InventoryClickEvent> clickHandler) {
-        if (clickHandlers == null)
-            clickHandlers = new HashSet<>();
+        if (clickHandlers == null) clickHandlers = new HashSet<>();
 
         clickHandlers.add(clickHandler);
     }
@@ -685,22 +664,13 @@ public class Inv implements InventoryHolder {
     public void handleOpen(InventoryOpenEvent inventoryOpenEvent) {
         onOpen(inventoryOpenEvent);
 
-        if (openHandlers != null) {
-            openHandlers.forEach((consumer) -> {
-                consumer.accept(inventoryOpenEvent);
-            });
-        }
-
+        if (openHandlers != null) openHandlers.forEach(consumer -> consumer.accept(inventoryOpenEvent));
     }
 
     public boolean handleClose(InventoryCloseEvent inventoryCloseEvent) {
         onClose(inventoryCloseEvent);
 
-        if (closeHandlers != null) {
-            closeHandlers.forEach((consumer) -> {
-                consumer.accept(inventoryCloseEvent);
-            });
-        }
+        if (closeHandlers != null) closeHandlers.forEach(consumer -> consumer.accept(inventoryCloseEvent));
 
         return closeFilter != null && closeFilter.test((Player) inventoryCloseEvent.getPlayer());
     }
@@ -708,16 +678,11 @@ public class Inv implements InventoryHolder {
     public void handleClick(InventoryClickEvent inventoryClickEvent) {
         onClick(inventoryClickEvent);
 
-        if (clickHandlers != null) {
-            clickHandlers.forEach((consumer) -> {
-                consumer.accept(inventoryClickEvent);
-            });
-        }
+        if (clickHandlers != null) clickHandlers.forEach(consumer -> consumer.accept(inventoryClickEvent));
 
         Consumer<InventoryClickEvent> clickConsumer = itemHandlers.get(inventoryClickEvent.getSlot());
-        if (clickConsumer != null) {
-            clickConsumer.accept(inventoryClickEvent);
-        }
+
+        if (clickConsumer != null) clickConsumer.accept(inventoryClickEvent);
 
     }
 }

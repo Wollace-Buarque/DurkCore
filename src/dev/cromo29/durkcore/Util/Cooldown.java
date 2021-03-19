@@ -15,18 +15,6 @@ public class Cooldown {
         return time - getCurrentTime() <= 0L;
     }
 
-    public static String getDate() {
-        SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy @ HH:mm:ss");
-
-        return format.format(new Date()).replace("@", "às");
-    }
-
-    public static String getDateSimplified() {
-        SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
-
-        return format.format(new Date());
-    }
-
     public static String getDate(Long time) {
         if (time == 0L) {
             return "?";
@@ -314,7 +302,8 @@ public class Cooldown {
         }
     }
 
-    public static enum Time {
+    public enum Time {
+
         DAY,
         MONTH,
         YEAR,

@@ -31,6 +31,27 @@ public enum EnchantmentName {
         return EnchantmentName.valueOf(enchantment.getName());
     }
 
+    public static Enchantment of(EnchantmentName enchantmentName) {
+        return Enchantment.getByName(enchantmentName.name());
+    }
+
+    public static Enchantment of(String enchantmentName) {
+        Enchantment enchantment = Enchantment.getByName(enchantmentName);
+
+        if (enchantment != null) return enchantment;
+
+        for (EnchantmentName enchantName : values()) {
+
+            if (enchantmentName.equalsIgnoreCase(enchantName.getName())) {
+                enchantment = Enchantment.getByName(enchantName.name());
+                break;
+            }
+
+        }
+
+        return enchantment;
+    }
+
     @Override
     public String toString() {
         return this.name;
