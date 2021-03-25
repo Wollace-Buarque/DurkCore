@@ -340,19 +340,28 @@ public class DurkPlayer implements Player {
                 && getBoots() == null;
     }
 
-    public boolean containsItem(Material material, String name) {
-        if (player.getInventory().contains(material)) return false;
+    public boolean containsItem(Material material, String name, boolean parse) {
+        if (!player.getInventory().contains(material)) return false;
 
         for (ItemStack item : getInventory()) {
 
-            if (item.hasItemMeta() && item.getItemMeta().getDisplayName().equals(name)) return true;
+            if (parse) {
+
+                if (item.hasItemMeta() && TXT.parse(item.getItemMeta().getDisplayName()).equals(TXT.parse(name)))
+                    return true;
+
+            } else {
+
+                if (item.hasItemMeta() && item.getItemMeta().getDisplayName().equals(name)) return true;
+
+            }
         }
 
         return false;
     }
 
     public boolean containsItem(Material material, String name, String... lore) {
-        if (player.getInventory().contains(material)) return false;
+        if (!player.getInventory().contains(material)) return false;
 
         for (ItemStack item : getInventory()) {
             if (item.hasItemMeta() && item.getItemMeta().getDisplayName().equals(name) && item.getItemMeta().hasLore()) {

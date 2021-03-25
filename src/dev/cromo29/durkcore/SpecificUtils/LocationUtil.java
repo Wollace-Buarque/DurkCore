@@ -591,8 +591,8 @@ public class LocationUtil {
         if (typeRandom == 4) type = Type.CREEPER;
         if (typeRandom == 5) type = Type.STAR;
 
-        int firstRandom = random.nextInt(18) + 1;
-        int secondRandom = random.nextInt(18) + 1;
+        int firstRandom = random.nextInt(17) + 1;
+        int secondRandom = random.nextInt(17) + 1;
         Color firstColor = getColor(firstRandom);
         Color secondColor = getColor(secondRandom);
 
