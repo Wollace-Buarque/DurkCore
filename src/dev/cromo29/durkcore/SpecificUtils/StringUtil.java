@@ -9,6 +9,10 @@ public class StringUtil {
     private final static int CENTER_PX = 154;
     private final static int MAX_PX = 250;
 
+    public static String replaceLast(String text, String regex, String replacement) {
+        return text.replaceFirst("(?s)(.*)" + regex, "$1" + replacement);
+    }
+
     public static boolean isStringLength(String string, int minimumLength, int maximumLength) {
         return string.matches("^\\w{" + minimumLength + "," + maximumLength + "}$");
     }
@@ -58,8 +62,7 @@ public class StringUtil {
     }
 
     public static void sendCenteredWithBreak(CommandSender sender, String... messages) {
-        for (String message : messages)
-            sendCenteredWithBreak(sender, message);
+        for (String message : messages) sendCenteredWithBreak(sender, message);
     }
 
     public static void sendCenteredWithBreak(CommandSender sender, String message) {
@@ -117,7 +120,7 @@ public class StringUtil {
             compensated += spaceLength;
         }
 
-        sender.sendMessage(TXT.parse(sb.toString() + message));
+        sender.sendMessage(TXT.parse(sb + message));
 
         if (toSendAfter != null) sendCenteredWithBreak(sender, toSendAfter);
     }

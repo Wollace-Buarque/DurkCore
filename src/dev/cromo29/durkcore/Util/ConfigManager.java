@@ -10,13 +10,12 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 public class ConfigManager {
+
     private String fileName;
     private File file;
     private FileConfiguration fileConfiguration;
@@ -35,6 +34,7 @@ public class ConfigManager {
 
             load();
         } catch (Exception exception) {
+            exception.printStackTrace();
             TXT.print("<c>Nao foi possivel criar o arquivo: " + fileName, "<c>Diretorio: " + this.file.getAbsolutePath());
         }
 
@@ -47,11 +47,12 @@ public class ConfigManager {
 
         file = new File(plugin.getDataFolder(), fileName);
 
-        if (!new File(plugin.getDataFolder(), fileName).exists()) plugin.saveResource(fileName, false);
+   //     if (!file.exists()) plugin.saveResource(fileName, false);
 
         if (!file.exists()) {
             try {
-                file.createNewFile();
+              //  file.createNewFile();
+                plugin.saveResource(fileName, false);
                 fileConfiguration = YamlConfiguration.loadConfiguration(new InputStreamReader(new FileInputStream(file), StandardCharsets.UTF_8));
 
                 save();
@@ -74,11 +75,12 @@ public class ConfigManager {
 
         file = new File(plugin.getDataFolder(), fileName);
 
-        if (!new File(plugin.getDataFolder(), fileName).exists()) plugin.saveResource(fileName, false);
+        //  if (!new File(plugin.getDataFolder(), fileName).exists()) plugin.saveResource(fileName, false);
 
         if (!file.exists()) {
             try {
-                file.createNewFile();
+               // file.createNewFile();
+                plugin.saveResource(fileName, false);
                 fileConfiguration = YamlConfiguration.loadConfiguration(new InputStreamReader(new FileInputStream(file), StandardCharsets.UTF_8));
 
                 save();

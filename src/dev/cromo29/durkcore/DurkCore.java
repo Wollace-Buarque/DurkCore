@@ -1,6 +1,7 @@
 package dev.cromo29.durkcore;
 
 import dev.cromo29.durkcore.API.DurkPlugin;
+import dev.cromo29.durkcore.Commands.Errors;
 import dev.cromo29.durkcore.Commands.Plugins;
 import dev.cromo29.durkcore.Entity.DurkPlayer;
 import dev.cromo29.durkcore.Events.PlayerChangeBlockEvent;
@@ -31,9 +32,8 @@ import java.util.*;
 
 public class DurkCore extends DurkPlugin {
 
-    public DurkCore() {
-        super("<d>DurkCore", "Cromo29");
-    }
+    public Map<UUID, DurkPlayer.DurkMoving> playersMoving = new HashMap<>();
+    private final Set<UUID> prevPlayersOnGround = new HashSet<>();
 
     public static DurkCore durkCore;
 
@@ -49,7 +49,7 @@ public class DurkCore extends DurkPlugin {
                 , " <7>My discord: <8>Cromo29#9928"
                 , "");
 
-        registerCommand(new Plugins());
+        registerCommands(new Plugins(), new Errors());
         setListener(new GetValueFromPlayerChat());
 
         new Updater(this);
@@ -62,8 +62,6 @@ public class DurkCore extends DurkPlugin {
         playersMoving.remove(player.getUniqueId());
         prevPlayersOnGround.remove(player.getUniqueId());
     }
-
-    public Map<UUID, DurkPlayer.DurkMoving> playersMoving = new HashMap<>();
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onMoveEvent(PlayerMoveEvent event) {
@@ -127,8 +125,6 @@ public class DurkCore extends DurkPlugin {
 
     }
 
-    private Set<UUID> prevPlayersOnGround = new HashSet<>();
-
     @EventHandler(priority = EventPriority.HIGH)
     public void onMove(PlayerMoveEvent event) {
 
@@ -166,7 +162,7 @@ public class DurkCore extends DurkPlugin {
         //PlayerJumpEvent
         Player player = event.getPlayer();
         if (notZero && player.getVelocity().getY() > 0) {
-            double jumpVelocity = 0.42F;
+            double jumpVelocity = 0.42;
 
             if (player.hasPotionEffect(PotionEffectType.JUMP)) {
                 int level = 0;
@@ -178,7 +174,7 @@ public class DurkCore extends DurkPlugin {
                     }
                 }
 
-                jumpVelocity += (float) (level + 1) * 0.1F;
+                jumpVelocity += (level + 1) * 0.1;
             }
 
             if (player.getLocation().getBlock().getType() != Material.LADDER && prevPlayersOnGround.contains(player.getUniqueId())) {

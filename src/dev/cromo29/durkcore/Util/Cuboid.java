@@ -1,11 +1,11 @@
 package dev.cromo29.durkcore.Util;
 
+import com.avaje.ebean.validation.NotNull;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 

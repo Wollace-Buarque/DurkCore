@@ -2,6 +2,7 @@ package dev.cromo29.durkcore.Commands;
 
 import dev.cromo29.durkcore.API.DurkCommand;
 import dev.cromo29.durkcore.DurkCore;
+import dev.cromo29.durkcore.SpecificUtils.StringUtil;
 import dev.cromo29.durkcore.Util.JAction;
 import dev.cromo29.durkcore.Util.TXT;
 import net.md_5.bungee.api.chat.HoverEvent;
@@ -29,6 +30,7 @@ public class Plugins extends DurkCommand {
 
             if (plugin.getDescription().getAuthors() != null && !plugin.getDescription().getAuthors().isEmpty()) {
                 author = TXT.createString(plugin.getDescription().getAuthors().toArray(new String[0]), 0, "<f>, <7>");
+                author = StringUtil.replaceLast(author, ",", " e");
             }
 
             List<String> depends = new ArrayList<>();
@@ -39,14 +41,15 @@ public class Plugins extends DurkCommand {
 
             if (!depends.isEmpty()) {
                 dependencies = TXT.createString(depends.toArray(new String[0]), 0, "<f>, <7>");
+                dependencies = StringUtil.replaceLast(dependencies, ",", " e");
             }
 
             if (plugin.isEnabled()) {
                 String text = (comma ? ", " : "") + "<a>" + pluginName;
                 jAction.parseText(text)
                         .setParseEvent(
-                                "<8>Plugin: <7>" + pluginName
-                                        + "\n<8>Versão: <7>" + plugin.getDescription().getVersion()
+                                "<8>Plugin: <7>" + pluginName + "<f>."
+                                        + "\n<8>Versão: <7>" + plugin.getDescription().getVersion() + "<f>."
                                         + "\n<8>Autor(es): <7>" + author + "<f>."
                                         + "\n<8>Dependência(s): <7>" + dependencies + "<f>.",
                                 HoverEvent.Action.SHOW_TEXT);
@@ -54,8 +57,8 @@ public class Plugins extends DurkCommand {
                 String text = (comma ? ", " : "") + "<c>" + pluginName;
                 jAction.parseText(text)
                         .setParseEvent(
-                                "<8>Plugin: <7>" + pluginName
-                                        + "\n<8>Versão: <7>" + plugin.getDescription().getVersion()
+                                "<8>Plugin: <7>" + pluginName + "<f>."
+                                        + "\n<8>Versão: <7>" + plugin.getDescription().getVersion() + "<f>."
                                         + "\n<8>Autor(es): <7>" + author + "<f>."
                                         + "\n<8>Dependência(s): <7>" + dependencies + "<f>.",
                                 HoverEvent.Action.SHOW_TEXT);

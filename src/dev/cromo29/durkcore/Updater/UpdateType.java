@@ -50,7 +50,7 @@ public enum UpdateType {
         timeSpent = 0L;
     }
 
-    private boolean elapsed(long t1, long t2) {
+    public boolean elapsed(long t1, long t2) {
         return System.currentTimeMillis() - t1 > t2;
     }
 }

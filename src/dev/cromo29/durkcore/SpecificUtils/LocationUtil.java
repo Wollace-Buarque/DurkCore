@@ -591,13 +591,13 @@ public class LocationUtil {
         if (typeRandom == 4) type = Type.CREEPER;
         if (typeRandom == 5) type = Type.STAR;
 
-        int firstRandom = random.nextInt(18) + 1;
-        int secondRandom = random.nextInt(18) + 1;
+        int firstRandom = random.nextInt(17) + 1;
+        int secondRandom = random.nextInt(17) + 1;
         Color firstColor = getColor(firstRandom);
         Color secondColor = getColor(secondRandom);
 
         FireworkEffect effect = FireworkEffect.builder()
-                .flicker(random.nextBoolean())
+                .flicker(false)
                 .withColor(firstColor)
                 .withFade(secondColor)
                 .with(type)
@@ -610,7 +610,7 @@ public class LocationUtil {
         firework.detonate();
     }
 
-    private static Color getColor(int index) {
+    public static Color getColor(int index) {
         Color color = null;
 
         if (index == 1) color = Color.AQUA;
@@ -632,5 +632,25 @@ public class LocationUtil {
         if (index == 17) color = Color.YELLOW;
 
         return color;
+    }
+
+    public static BlockFace getCardinalDirection(Location loc) {
+        double rotation = (loc.getYaw() - 90.0F) % 360.0F;
+
+        if (rotation < 0.0D) {
+            rotation += 360.0D;
+        }
+        if ((0.0D <= rotation) && (rotation < 45.0D))
+            return BlockFace.WEST;
+        if ((45.0D <= rotation) && (rotation < 135.0D))
+            return BlockFace.NORTH;
+        if ((135.0D <= rotation) && (rotation < 225.0D))
+            return BlockFace.EAST;
+        if ((225.0D <= rotation) && (rotation < 315.0D))
+            return BlockFace.SOUTH;
+        if ((315.0D <= rotation) && (rotation < 360.0D)) {
+            return BlockFace.WEST;
+        }
+        return null;
     }
 }

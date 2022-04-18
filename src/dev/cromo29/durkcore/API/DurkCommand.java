@@ -249,7 +249,7 @@ public abstract class DurkCommand implements Listener {
 
 
     public boolean isPlayer() {
-        return player != null;
+        return sender instanceof Player;
     }
 
     public boolean isPlayer(CommandSender sender) {
