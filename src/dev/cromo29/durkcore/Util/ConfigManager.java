@@ -47,11 +47,11 @@ public class ConfigManager {
 
         file = new File(plugin.getDataFolder(), fileName);
 
-   //     if (!file.exists()) plugin.saveResource(fileName, false);
+        //     if (!file.exists()) plugin.saveResource(fileName, false);
 
         if (!file.exists()) {
             try {
-              //  file.createNewFile();
+                //  file.createNewFile();
                 plugin.saveResource(fileName, false);
                 fileConfiguration = YamlConfiguration.loadConfiguration(new InputStreamReader(new FileInputStream(file), StandardCharsets.UTF_8));
 
@@ -79,7 +79,7 @@ public class ConfigManager {
 
         if (!file.exists()) {
             try {
-               // file.createNewFile();
+                // file.createNewFile();
                 plugin.saveResource(fileName, false);
                 fileConfiguration = YamlConfiguration.loadConfiguration(new InputStreamReader(new FileInputStream(file), StandardCharsets.UTF_8));
 
@@ -338,6 +338,14 @@ public class ConfigManager {
         } catch (Exception exception) {
             exception.printStackTrace();
             return new HashSet<>();
+        }
+    }
+
+    public ConfigurationSection getSection(String path) {
+        try {
+            return fileConfiguration.getConfigurationSection(path);
+        } catch (Exception exception) {
+            return null;
         }
     }
 
