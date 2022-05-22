@@ -1,9 +1,10 @@
-package dev.cromo29.durkcore.Commands;
+package dev.cromo29.durkcore.commands;
 
-import dev.cromo29.durkcore.API.DurkCommand;
-import dev.cromo29.durkcore.Inventory.Inv;
-import dev.cromo29.durkcore.Util.MakeItem;
-import dev.cromo29.durkcore.Util.TimeFormat;
+import dev.cromo29.durkcore.api.DurkCommand;
+import dev.cromo29.durkcore.inventory.Inv;
+import dev.cromo29.durkcore.util.MakeItem;
+import dev.cromo29.durkcore.util.TimeFormat;
+import org.apache.commons.lang3.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Sound;
 import org.bukkit.plugin.Plugin;
@@ -26,7 +27,12 @@ public class Errors extends DurkCommand {
 
             Inv inv = new Inv(54, "<c>Erros de alguns plugins.");
 
-            errorPluginMap.forEach((pluginName, errorPlugins) -> {
+            Iterator<Map.Entry<String, List<ErrorPlugin>>> iterator = errorPluginMap.entrySet().iterator();
+
+            while (iterator.hasNext()) {
+                Map.Entry<String, List<ErrorPlugin>> next = iterator.next();
+                String pluginName = next.getKey();
+                List<ErrorPlugin> errorPlugins = next.getValue();
 
                 Plugin plugin = getPlugin(pluginName);
 
@@ -48,18 +54,29 @@ public class Errors extends DurkCommand {
                             .setName(" <r>")
                             .addLoreList(
                                     "",
-                                    " <d>Comando com erro<f>: <7>" + errorPlugin.getCommand(),
-                                    " <d>Quem usou<f>: <7>" + errorPlugin.getUser(),
+                                    " <d>Plugin com erro<f>: <7>" + plugin.getName(),
+                                    " <d>Comando<f>: <7>/" + StringUtils.capitalize(errorPlugin.getCommand()),
+                                    " <d>Sujeito<f>: <7>" + errorPlugin.getUser(),
                                     " <d>Data<f>: <7>" + TimeFormat.getTime(errorPlugin.getDate(), true),
                                     " <d>Erro<f>: <7>" + errorPlugin.getError(),
                                     "",
-                                    " <8>Clique aqui para ver o local do erro. ",
+                                    " <8>Clique com o botão esquerdo para ver o local do erro. ",
+                                    " <8>Clique com o botão direito para remover. ",
                                     "")
                             .build(), event -> {
 
                         asPlayer().closeInventory();
 
                         playSound(Sound.CLICK, 1, 1);
+
+                        if (event.isRightClick()) {
+                            iterator.remove();
+                            sendMessages(
+                                    "",
+                                    "  <d>Você removeu o aviso de erro do plugin <7>" + plugin.getName() + "<d>!",
+                                    "");
+                            return;
+                        }
 
                         sendMessages("",
                                 " <7><m>---------------------<r> <d>LOCAL <7><m>---------------------<r>",
@@ -71,15 +88,13 @@ public class Errors extends DurkCommand {
                     });
 
                 });
-            });
+            }
 
             playSound(Sound.CHEST_OPEN, 1, 1);
 
             inv.open(asPlayer());
+
             sendMessage(" <a>Menu de erros aberto com sucesso.");
-
-        } else if (isArgsLength(1)) {
-
         }
 
     }
@@ -133,8 +148,8 @@ public class Errors extends DurkCommand {
 
     public static class ErrorPlugin {
 
-        private String user, command, error, path;
-        private long date;
+        private final String user, command, error, path;
+        private final long date;
 
         public ErrorPlugin(String user, String command, String error, String path) {
             this.user = user;

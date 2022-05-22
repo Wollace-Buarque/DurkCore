@@ -1,4 +1,4 @@
-package dev.cromo29.durkcore.Updater;
+package dev.cromo29.durkcore.updater;
 
 public enum UpdateType {
 

@@ -1,4 +1,4 @@
-package dev.cromo29.durkcore.Util;
+package dev.cromo29.durkcore.util;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -13,33 +13,33 @@ import java.util.function.Consumer;
 
 public class GetValueFromPlayerChat implements Listener {
 
-    private static Map<Player, GettingValueFromPlayer> gettingValueFromPlayerMap = new HashMap<>();
+    private static final Map<Player, GettingValueFromPlayer> GETTING_VALUE_MAP = new HashMap<>();
 
     public static void removePlayer(Player player) {
-        gettingValueFromPlayerMap.remove(player);
+        GETTING_VALUE_MAP.remove(player);
     }
 
     public static boolean isGettingValueFrom(Player player) {
-        return gettingValueFromPlayerMap.containsKey(player);
+        return GETTING_VALUE_MAP.containsKey(player);
     }
 
     @EventHandler
     public void onQuit(PlayerQuitEvent event) {
-        gettingValueFromPlayerMap.remove(event.getPlayer());
+        GETTING_VALUE_MAP.remove(event.getPlayer());
     }
 
     @EventHandler(priority = EventPriority.LOWEST)
     public void onChat(AsyncPlayerChatEvent event) {
 
-        if (!gettingValueFromPlayerMap.containsKey(event.getPlayer())) return;
+        if (!GETTING_VALUE_MAP.containsKey(event.getPlayer())) return;
 
         event.setCancelled(true);
 
         Player whoTyped = event.getPlayer();
         String message = event.getMessage();
 
-        GettingValueFromPlayer gettingValueFromPlayer = gettingValueFromPlayerMap.get(whoTyped);
-        gettingValueFromPlayerMap.remove(whoTyped);
+        GettingValueFromPlayer gettingValueFromPlayer = GETTING_VALUE_MAP.get(whoTyped);
+        GETTING_VALUE_MAP.remove(whoTyped);
 
         if (gettingValueFromPlayer.typeToCancel != null && !gettingValueFromPlayer.typeToCancel.equals("")) {
             if (gettingValueFromPlayer.ignoreCase) {
@@ -68,7 +68,7 @@ public class GetValueFromPlayerChat implements Listener {
         gettingValueFromPlayer.onGetValue = onGetValue;
         gettingValueFromPlayer.onCancel = onCancel;
 
-        gettingValueFromPlayerMap.put(player, gettingValueFromPlayer);
+        GETTING_VALUE_MAP.put(player, gettingValueFromPlayer);
     }
 
     private static class GettingValueFromPlayer {
@@ -82,13 +82,13 @@ public class GetValueFromPlayerChat implements Listener {
 
     public static class GettingValue {
 
-        private boolean isCancelled;
-        private String valueString;
-        private Player whoTyped;
-        private AsyncPlayerChatEvent asyncPlayerChatEvent;
-        private GettingValueFromPlayer gettingValueFromPlayer;
+        private final boolean isCancelled;
+        private final String valueString;
+        private final Player whoTyped;
+        private final AsyncPlayerChatEvent asyncPlayerChatEvent;
+        private final GettingValueFromPlayer gettingValueFromPlayer;
 
-        GettingValue(boolean isCancelled, String valueString, Player whoTyped, AsyncPlayerChatEvent asyncPlayerChatEvent, GettingValueFromPlayer gettingValueFromPlayer) {
+        public GettingValue(boolean isCancelled, String valueString, Player whoTyped, AsyncPlayerChatEvent asyncPlayerChatEvent, GettingValueFromPlayer gettingValueFromPlayer) {
             this.isCancelled = isCancelled;
             this.valueString = valueString;
             this.whoTyped = whoTyped;

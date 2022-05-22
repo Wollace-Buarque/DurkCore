@@ -1,10 +1,10 @@
-package dev.cromo29.durkcore.Commands;
+package dev.cromo29.durkcore.commands;
 
-import dev.cromo29.durkcore.API.DurkCommand;
+import dev.cromo29.durkcore.api.DurkCommand;
 import dev.cromo29.durkcore.DurkCore;
-import dev.cromo29.durkcore.SpecificUtils.StringUtil;
-import dev.cromo29.durkcore.Util.JAction;
-import dev.cromo29.durkcore.Util.TXT;
+import dev.cromo29.durkcore.specificutils.StringUtil;
+import dev.cromo29.durkcore.util.JAction;
+import dev.cromo29.durkcore.util.TXT;
 import net.md_5.bungee.api.chat.HoverEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;

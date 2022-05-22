@@ -1,9 +1,9 @@
-package dev.cromo29.durkcore.Util.json.fanciful;
+package dev.cromo29.durkcore.util.json.fanciful;
 
 import com.google.common.collect.BiMap;
 import com.google.common.collect.ImmutableBiMap;
 import com.google.gson.stream.JsonWriter;
-import dev.cromo29.durkcore.Util.json.util.TextUtil;
+import dev.cromo29.durkcore.util.json.util.TextUtil;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;

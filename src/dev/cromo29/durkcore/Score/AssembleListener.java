@@ -1,7 +1,7 @@
-package dev.cromo29.durkcore.Score;
+package dev.cromo29.durkcore.score;
 
-import dev.cromo29.durkcore.Score.Events.AssembleBoardCreateEvent;
-import dev.cromo29.durkcore.Score.Events.AssembleBoardDestroyEvent;
+import dev.cromo29.durkcore.score.events.AssembleBoardCreateEvent;
+import dev.cromo29.durkcore.score.events.AssembleBoardDestroyEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;

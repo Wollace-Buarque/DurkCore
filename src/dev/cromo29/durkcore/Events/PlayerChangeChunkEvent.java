@@ -1,4 +1,4 @@
-package dev.cromo29.durkcore.Events;
+package dev.cromo29.durkcore.events;
 
 import org.bukkit.Chunk;
 import org.bukkit.Location;

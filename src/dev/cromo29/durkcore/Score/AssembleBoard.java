@@ -1,6 +1,6 @@
-package dev.cromo29.durkcore.Score;
+package dev.cromo29.durkcore.score;
 
-import dev.cromo29.durkcore.Score.Events.AssembleBoardCreatedEvent;
+import dev.cromo29.durkcore.score.events.AssembleBoardCreatedEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;

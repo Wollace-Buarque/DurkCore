@@ -1,4 +1,4 @@
-package dev.cromo29.durkcore.Util;
+package dev.cromo29.durkcore.util;
 
 import com.google.common.collect.Iterables;
 import com.google.common.io.ByteArrayDataInput;
@@ -19,7 +19,7 @@ import java.util.function.BiFunction;
 
 public class BungeeUtil implements PluginMessageListener {
 
-    private static WeakHashMap<Plugin, BungeeUtil> registeredInstances = new WeakHashMap<>();
+    private static final WeakHashMap<Plugin, BungeeUtil> REGISTERED_INSTANCES = new WeakHashMap<>();
 
     private final Plugin plugin;
     private final Map<String, Queue<CompletableFuture<?>>> callbackMap;
@@ -35,7 +35,7 @@ public class BungeeUtil implements PluginMessageListener {
      * @throws NullPointerException if the {@code plugin} is {@code null}
      */
     public synchronized static BungeeUtil of(Plugin plugin) {
-        return registeredInstances.compute(plugin, (k, v) -> {
+        return REGISTERED_INSTANCES.compute(plugin, (k, v) -> {
             if (v == null) v = new BungeeUtil(plugin);
             return v;
         });
@@ -47,8 +47,8 @@ public class BungeeUtil implements PluginMessageListener {
 
         // Prevent dev's from registering multiple channel listeners,
         // by unregistering the old instance.
-        synchronized (registeredInstances) {
-            registeredInstances.compute(plugin, (k, oldInstance) -> {
+        synchronized (REGISTERED_INSTANCES) {
+            REGISTERED_INSTANCES.compute(plugin, (k, oldInstance) -> {
                 if (oldInstance != null) oldInstance.unregister();
                 return this;
             });

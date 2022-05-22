@@ -1,9 +1,9 @@
-package dev.cromo29.durkcore.Score;
+package dev.cromo29.durkcore.score;
 
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Scoreboard;
-import dev.cromo29.durkcore.Util.TXT;
+import dev.cromo29.durkcore.util.TXT;
 
 public class AssembleTitleThread extends Thread {
 

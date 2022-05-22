@@ -1,6 +1,6 @@
-package dev.cromo29.durkcore.Updater.event;
+package dev.cromo29.durkcore.updater.event;
 
-import dev.cromo29.durkcore.Updater.UpdateType;
+import dev.cromo29.durkcore.updater.UpdateType;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 

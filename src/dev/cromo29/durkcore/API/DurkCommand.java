@@ -1,11 +1,11 @@
-package dev.cromo29.durkcore.API;
+package dev.cromo29.durkcore.api;
 
 import com.google.common.collect.Lists;
-import dev.cromo29.durkcore.Entity.DurkPlayer;
-import dev.cromo29.durkcore.SpecificUtils.ListUtil;
-import dev.cromo29.durkcore.SpecificUtils.PlayerUtil;
-import dev.cromo29.durkcore.Util.JAction;
-import dev.cromo29.durkcore.Util.TXT;
+import dev.cromo29.durkcore.entity.DurkPlayer;
+import dev.cromo29.durkcore.specificutils.ListUtil;
+import dev.cromo29.durkcore.specificutils.PlayerUtil;
+import dev.cromo29.durkcore.util.JAction;
+import dev.cromo29.durkcore.util.TXT;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.HoverEvent;
 import org.bukkit.Bukkit;

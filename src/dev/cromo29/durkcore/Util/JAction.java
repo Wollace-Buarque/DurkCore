@@ -1,4 +1,4 @@
-package dev.cromo29.durkcore.Util;
+package dev.cromo29.durkcore.util;
 
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
@@ -198,8 +198,9 @@ public class JAction {
         if (player != null) {
             Player.Spigot playerSpigot = player.spigot();
 
-            for (ComponentBuilder componentBuilder : components.values())
+            for (ComponentBuilder componentBuilder : components.values()) {
                 playerSpigot.sendMessage(componentBuilder.create());
+            }
 
         } else {
             StringBuilder stringBuilder = new StringBuilder();
@@ -209,12 +210,12 @@ public class JAction {
 
                 stringBuilder.append(component.toLegacyText());
             }
+
             sender.sendMessage(stringBuilder.toString());
 
         }
 
-        if (reset)
-            resetAll();
+        if (reset) resetAll();
     }
 
     public static class CustomComponentBuilder extends ComponentBuilder {

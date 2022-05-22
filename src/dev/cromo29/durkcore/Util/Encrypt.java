@@ -1,4 +1,4 @@
-package dev.cromo29.durkcore.Util;
+package dev.cromo29.durkcore.util;
 
 import java.util.Base64;
 

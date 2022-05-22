@@ -1,4 +1,4 @@
-package dev.cromo29.durkcore.Score;
+package dev.cromo29.durkcore.score;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;

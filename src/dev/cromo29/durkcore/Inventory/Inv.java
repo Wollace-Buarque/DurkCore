@@ -1,6 +1,6 @@
-package dev.cromo29.durkcore.Inventory;
+package dev.cromo29.durkcore.inventory;
 
-import dev.cromo29.durkcore.Util.TXT;
+import dev.cromo29.durkcore.util.TXT;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.HumanEntity;

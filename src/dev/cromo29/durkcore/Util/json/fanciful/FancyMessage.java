@@ -1,4 +1,4 @@
-package dev.cromo29.durkcore.Util.json.fanciful;
+package dev.cromo29.durkcore.util.json.fanciful;
 
 
 import com.google.common.collect.Iterables;
@@ -7,9 +7,9 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.stream.JsonWriter;
-import dev.cromo29.durkcore.Util.json.util.ArrayWrapper;
-import dev.cromo29.durkcore.Util.json.util.ReflectionUtil;
-import dev.cromo29.durkcore.Util.json.util.TextUtil;
+import dev.cromo29.durkcore.util.json.util.ArrayWrapper;
+import dev.cromo29.durkcore.util.json.util.ReflectionUtil;
+import dev.cromo29.durkcore.util.json.util.TextUtil;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
@@ -24,7 +24,7 @@ import java.lang.reflect.Method;
 import java.util.*;
 import java.util.logging.Level;
 
-import static dev.cromo29.durkcore.Util.json.fanciful.TextualComponent.rawText;
+import static dev.cromo29.durkcore.util.json.fanciful.TextualComponent.rawText;
 
 /**
  * Represents a formattable message. Such messages can use elements such as colors, formatting codes, hover and click data, and other features provided by the vanilla Minecraft <a href="http://minecraft.gamepedia.com/Tellraw#Raw_JSON_Text">JSON message formatter</a>.

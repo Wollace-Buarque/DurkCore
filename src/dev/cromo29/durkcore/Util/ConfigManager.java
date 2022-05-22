@@ -1,7 +1,7 @@
-package dev.cromo29.durkcore.Util;
+package dev.cromo29.durkcore.util;
 
-import dev.cromo29.durkcore.API.DurkPlugin;
-import dev.cromo29.durkcore.SpecificUtils.ItemUtil;
+import dev.cromo29.durkcore.api.DurkPlugin;
+import dev.cromo29.durkcore.specificutils.ItemUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
@@ -16,7 +16,7 @@ import java.util.*;
 
 public class ConfigManager {
 
-    private String fileName;
+    private final String fileName;
     private File file;
     private FileConfiguration fileConfiguration;
 

@@ -1,8 +1,8 @@
-package dev.cromo29.durkcore.Util;
+package dev.cromo29.durkcore.util;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import dev.cromo29.durkcore.SpecificUtils.ItemUtil;
+import dev.cromo29.durkcore.specificutils.ItemUtil;
 import org.bukkit.Location;
 import org.bukkit.inventory.ItemStack;
 

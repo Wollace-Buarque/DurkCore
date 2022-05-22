@@ -1,4 +1,4 @@
-package dev.cromo29.durkcore.Util;
+package dev.cromo29.durkcore.util;
 
 
 import java.util.ArrayList;
@@ -6,7 +6,7 @@ import java.util.List;
 
 public class TextAnimation {
 
-    private AnimationType animationType;
+    private final AnimationType animationType;
 
     public TextAnimation(AnimationType animationType) {
         this.animationType = animationType;
@@ -382,10 +382,9 @@ public class TextAnimation {
             String three = colorMid + str.charAt(position);
 
             int m = one.length();
-            int l = two.length();
 
             String first = (m <= 1) ? (colorBefore + one) : (one.substring(0, one.length() - 1) + colorBefore + one.substring(one.length() - 1));
-            String second = (l <= 1) ? (colorAfter + two) : (colorAfter + two);
+            String second = colorAfter + two;
             String fin = textColor + first + three + second;
 
             position--;
@@ -397,7 +396,7 @@ public class TextAnimation {
         public ColorBlink(int blinks, int blinkTime, String text, String firstColor, String secondColor, boolean endWithFirstColor) {
             framePosition = 0;
 
-            for (int i = 0; i < blinks; ++i) {
+            for (int index = 0; index < blinks; ++index) {
                 addFrame(blinkTime, firstColor + text);
                 addFrame(blinkTime, secondColor + text);
             }
@@ -422,8 +421,8 @@ public class TextAnimation {
     }
 
     public static class Hypixel extends AnimationType {
-        private TextAnimation fillColorForward;
-        private TextAnimation colorBlink;
+        private final TextAnimation fillColorForward;
+        private final TextAnimation colorBlink;
 
         public Hypixel(String text, String textColor, String colorBefore, String colorMid, String colorAfter, int blinks, int blinkTime, String firstColor, String secondColor, int lastBlinkTime) {
             this.originalStr = text;

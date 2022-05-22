@@ -1,7 +1,7 @@
-package dev.cromo29.durkcore.Util;
+package dev.cromo29.durkcore.util;
 
-import dev.cromo29.durkcore.SpecificUtils.ListUtil;
-import dev.cromo29.durkcore.SpecificUtils.MapUtil;
+import dev.cromo29.durkcore.specificutils.ListUtil;
+import dev.cromo29.durkcore.specificutils.MapUtil;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.HoverEvent;
 import org.bukkit.command.CommandSender;
@@ -10,10 +10,10 @@ import java.util.*;
 
 public class PageManager {
 
-    private int size;
+    private final int size;
     private List<String> list;
     private Map<String, PageManagerJson> map;
-    private boolean useMap, order;
+    private final boolean useMap, order;
 
     public PageManager(int size, String... values) {
         this(size, false, values);

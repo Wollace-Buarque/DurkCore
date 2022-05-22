@@ -1,9 +1,9 @@
-package dev.cromo29.durkcore.API;
+package dev.cromo29.durkcore.api;
 
 import com.google.common.collect.Maps;
-import dev.cromo29.durkcore.Commands.Errors;
-import dev.cromo29.durkcore.Util.BreakLine;
-import dev.cromo29.durkcore.Util.TXT;
+import dev.cromo29.durkcore.commands.Errors;
+import dev.cromo29.durkcore.util.BreakLine;
+import dev.cromo29.durkcore.util.TXT;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -18,7 +18,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import java.lang.reflect.Method;
 import java.util.*;
 
-import static dev.cromo29.durkcore.Util.RU.getBukkitClass;
+import static dev.cromo29.durkcore.util.RU.getBukkitClass;
 
 public abstract class DurkPlugin extends JavaPlugin implements Listener {
 
@@ -211,7 +211,7 @@ public abstract class DurkPlugin extends JavaPlugin implements Listener {
         try {
 
             String command = durkCommand.getCommand().toLowerCase();
-            List<String> aliases = durkCommand.getAliases();
+            List<String> aliases = durkCommand.getAliases() == null ? new ArrayList<>() : durkCommand.getAliases();
 
             if (command.isEmpty()) throw new Exception();
 
@@ -238,12 +238,12 @@ public abstract class DurkPlugin extends JavaPlugin implements Listener {
 
             if (permission != null) originalCommand.setPermission(permission);
 
-            if (aliases != null && !aliases.isEmpty()) {
+            if (!aliases.isEmpty()) {
                 originalCommand.setAliases(aliases);
 
-                for (String aliase : aliases) {
-                    if (aliase != null && !aliase.isEmpty() && !" ".equals(aliase) && !aliase.contentEquals(" ")) {
-                        registeredCommands.put(aliase, durkCommand);
+                for (String name : aliases) {
+                    if (name != null && !name.trim().isEmpty()) {
+                        registeredCommands.put(name, durkCommand);
                         aliasesSize++;
                     }
                 }

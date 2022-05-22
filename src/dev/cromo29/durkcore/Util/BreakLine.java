@@ -1,27 +1,28 @@
-package dev.cromo29.durkcore.Util;
+package dev.cromo29.durkcore.util;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class BreakLine {
 
-    private List<String> message = new ArrayList<>();
+    private final List<String> messages = new ArrayList<>();
 
     public BreakLine addWordOnBreak(String word, String message) {
         if (message == null || message.equals("")) {
             return this;
         }
 
-        message = message.replace("<a>", "§a");
-        message = message.replace("<b>", "§b");
-        message = message.replace("<c>", "§c");
-        message = message.replace("<d>", "§d");
-        message = message.replace("<e>", "§e");
-        message = message.replace("<f>", "§f");
-        message = message.replace("<l>", "§l");
-        message = message.replace("<m>", "§m");
-        message = message.replace("<n>", "§n");
-        message = message.replace("<o>", "§o");
+        message = message.replace("<a>", "§a")
+                .replace("<b>", "§b")
+                .replace("<c>", "§c")
+                .replace("<d>", "§d")
+                .replace("<e>", "§e")
+                .replace("<f>", "§f")
+                .replace("<k>", "§k")
+                .replace("<l>", "§l")
+                .replace("<m>", "§m")
+                .replace("<n>", "§n")
+                .replace("<o>", "§o");
 
         for (int i = 0; i < 10; i++)
             message = message.replace("<" + i + ">", "§" + i);
@@ -68,7 +69,7 @@ public class BreakLine {
             charIndex++;
         }
 
-        this.message.add(message);
+        this.messages.add(message);
 
         if (breakedMessage != null) addWordOnBreak(word, breakedMessage);
 
@@ -78,9 +79,9 @@ public class BreakLine {
     public String get() {
         StringBuilder x = new StringBuilder();
 
-        message.forEach(x::append);
+        messages.forEach(x::append);
 
-        message.clear();
+        messages.clear();
 
         return x.toString();
     }

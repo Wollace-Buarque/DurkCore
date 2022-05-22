@@ -16,7 +16,6 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" scope="PROVIDED" name="Vault" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="spigot-1.8.8" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="Vault" level="application" />
   </component>

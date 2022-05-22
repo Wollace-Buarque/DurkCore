@@ -1,6 +1,6 @@
-package dev.cromo29.durkcore.Updater;
+package dev.cromo29.durkcore.updater;
 
-import dev.cromo29.durkcore.Updater.event.UpdaterEvent;
+import dev.cromo29.durkcore.updater.event.UpdaterEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class Updater implements Runnable {

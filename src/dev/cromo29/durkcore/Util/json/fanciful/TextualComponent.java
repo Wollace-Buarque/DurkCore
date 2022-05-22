@@ -1,4 +1,4 @@
-package dev.cromo29.durkcore.Util.json.fanciful;
+package dev.cromo29.durkcore.util.json.fanciful;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableMap;

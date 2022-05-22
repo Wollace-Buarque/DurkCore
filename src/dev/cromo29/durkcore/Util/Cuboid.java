@@ -1,4 +1,4 @@
-package dev.cromo29.durkcore.Util;
+package dev.cromo29.durkcore.util;
 
 import com.avaje.ebean.validation.NotNull;
 import com.google.common.collect.Lists;

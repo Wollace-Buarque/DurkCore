@@ -15,7 +15,7 @@
  You should have received a copy of the GNU Lesser General Public License along
  with TextAPI. If not, see <http://www.gnu.org/licenses/>.
  */
-package dev.cromo29.durkcore.Util.json.util;
+package dev.cromo29.durkcore.util.json.util;
 
 import org.bukkit.Bukkit;
 

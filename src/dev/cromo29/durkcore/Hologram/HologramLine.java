@@ -1,7 +1,7 @@
-package dev.cromo29.durkcore.Hologram;
+package dev.cromo29.durkcore.hologram;
 
 import dev.cromo29.durkcore.DurkCore;
-import dev.cromo29.durkcore.Util.TXT;
+import dev.cromo29.durkcore.util.TXT;
 import org.bukkit.Location;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.metadata.FixedMetadataValue;

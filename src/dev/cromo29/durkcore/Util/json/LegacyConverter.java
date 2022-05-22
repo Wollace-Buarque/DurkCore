@@ -1,6 +1,6 @@
-package dev.cromo29.durkcore.Util.json;
+package dev.cromo29.durkcore.util.json;
 
-import dev.cromo29.durkcore.Util.json.fanciful.FancyMessage;
+import dev.cromo29.durkcore.util.json.fanciful.FancyMessage;
 import net.md_5.bungee.api.ChatColor;
 
 import java.net.MalformedURLException;
@@ -140,11 +140,11 @@ public class LegacyConverter {
         return fancyMessage;
     }
 
-    public List<dev.cromo29.durkcore.Util.json.fanciful.MessagePart> toMessageParts() {
+    public List<dev.cromo29.durkcore.util.json.fanciful.MessagePart> toMessageParts() {
         return fancyMessage.getMessageParts();
     }
 
-    static List<dev.cromo29.durkcore.Util.json.fanciful.MessagePart> getMessageParts(String message) {
+    static List<dev.cromo29.durkcore.util.json.fanciful.MessagePart> getMessageParts(String message) {
         return new LegacyConverter(message).toMessageParts();
     }
 

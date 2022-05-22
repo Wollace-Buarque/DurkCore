@@ -1,11 +1,11 @@
-package dev.cromo29.durkcore.Util;
+package dev.cromo29.durkcore.util;
 
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
-import dev.cromo29.durkcore.SpecificUtils.ItemUtil;
-import dev.cromo29.durkcore.SpecificUtils.LocationUtil;
+import dev.cromo29.durkcore.specificutils.ItemUtil;
+import dev.cromo29.durkcore.specificutils.LocationUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.inventory.ItemStack;
@@ -21,8 +21,8 @@ import java.util.*;
 
 public class GsonManager {
 
-    private String name;
-    private File location;
+    private final String name;
+    private final File location;
     private File file;
     private final Gson gson = (new GsonBuilder()).setPrettyPrinting().create();
     private Map<String, Object> data;

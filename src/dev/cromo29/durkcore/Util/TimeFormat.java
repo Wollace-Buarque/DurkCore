@@ -1,4 +1,4 @@
-package dev.cromo29.durkcore.Util;
+package dev.cromo29.durkcore.util;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -44,33 +44,27 @@ public class TimeFormat {
 
         StringBuilder sb = new StringBuilder();
 
-        if (years > 0) {
+        if (years > 0)
             sb.append(years).append(years == 1 ? " ano" : " anos");
-        }
 
-        if (months > 0) {
+        if (months > 0)
             sb.append(years > 0 ? (weeks > 0 ? ", " : " e ") : "").append(months).append(months == 1 ? " mês" : " meses");
-        }
 
-        if (weeks > 0) {
+        if (weeks > 0)
             sb.append(years > 0 || months > 0 ? (days > 0 ? ", " : " e ") : "").append(weeks).append(weeks == 1 ? " semana" : " semanas");
-        }
 
-        if (days > 0) {
+        if (days > 0)
             sb.append(years > 0 || months > 0 || weeks > 0 ? (hours > 0 ? ", " : " e ") : "").append(days).append(days == 1 ? " dia" : " dias");
-        }
 
-        if (hours > 0) {
+        if (hours > 0)
             sb.append(years > 0 || months > 0 || weeks > 0 || days > 0 ? (minutes > 0 ? ", " : " e ") : "").append(hours).append(hours == 1 ? " hora" : " horas");
-        }
 
-        if (minutes > 0) {
+        if (minutes > 0)
             sb.append(years > 0 || months > 0 || weeks > 0 || days > 0 || hours > 0 ? (seconds > 0 ? ", " : " e ") : "").append(minutes).append(minutes == 1 ? " minuto" : " minutos");
-        }
 
-        if (seconds > 0) {
+        if (seconds > 0)
             sb.append(years > 0 || months > 0 || weeks > 0 || days > 0 || hours > 0 || minutes > 0 ? " e " : (sb.length() > 0 ? ", " : "")).append(seconds).append(seconds == 1 ? " segundo" : " segundos");
-        }
+
 
         return sb.toString().isEmpty() ? "agora" : sb.toString();
     }
@@ -98,33 +92,20 @@ public class TimeFormat {
 
         StringBuilder sb = new StringBuilder();
 
-        if (years > 0) {
-            sb.append(years).append("a");
-        }
+        if (years > 0) sb.append(years).append("a");
 
-        if (months > 0) {
-            sb.append(" ").append(months).append("m");
-        }
+        if (months > 0) sb.append(" ").append(months).append("m");
 
-        if (weeks > 0) {
-            sb.append(" ").append(weeks).append("se");
-        }
+        if (weeks > 0) sb.append(" ").append(weeks).append("se");
 
-        if (days > 0) {
-            sb.append(" ").append(days).append("d");
-        }
+        if (days > 0) sb.append(" ").append(days).append("d");
 
-        if (hours > 0) {
-            sb.append(" ").append(hours).append("h");
-        }
+        if (hours > 0) sb.append(" ").append(hours).append("h");
 
-        if (minutes > 0) {
-            sb.append(" ").append(minutes).append("m");
-        }
+        if (minutes > 0) sb.append(" ").append(minutes).append("m");
 
-        if (seconds > 0) {
-            sb.append(" ").append(seconds).append("s");
-        }
+        if (seconds > 0) sb.append(" ").append(seconds).append("s");
+
 
         return sb.toString().isEmpty() ? "agora" : sb.toString();
     }

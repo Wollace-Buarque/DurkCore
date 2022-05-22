@@ -1,7 +1,7 @@
-package dev.cromo29.durkcore.Util.json;
+package dev.cromo29.durkcore.util.json;
 
-import dev.cromo29.durkcore.SpecificUtils.ListUtil;
-import dev.cromo29.durkcore.Util.json.fanciful.FancyMessage;
+import dev.cromo29.durkcore.specificutils.ListUtil;
+import dev.cromo29.durkcore.util.json.fanciful.FancyMessage;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.Arrays;

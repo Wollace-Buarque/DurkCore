@@ -1,4 +1,4 @@
-package dev.cromo29.durkcore.Util;
+package dev.cromo29.durkcore.util;
 
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -15,13 +15,14 @@ public class PlayerFaceToString {
 
     private PlayerFaceToString() {}
 
-    private static Map<String, String> cachedNames = new WeakHashMap<>();
+    private static final Map<String, String> CACHED_NAMES = new WeakHashMap<>();
+
 
     public static void uncache(Player player) { uncache(player.getName()); }
-    public static void uncache(String playerName) { cachedNames.remove(playerName.toLowerCase()); }
+    public static void uncache(String playerName) { CACHED_NAMES.remove(playerName.toLowerCase()); }
 
     public static boolean isCached(Player player) { return isCached(player.getName()); }
-    public static boolean isCached(String playerName) { return cachedNames.containsKey(playerName.toLowerCase()); }
+    public static boolean isCached(String playerName) { return CACHED_NAMES.containsKey(playerName.toLowerCase()); }
 
     public static String getOf(Player player) { return getOf(player, true, new ArrayList<>()); }
     public static String getOf(String playerName) { return getOf(playerName, true, new ArrayList<>()); }
@@ -41,7 +42,7 @@ public class PlayerFaceToString {
     public static String getOf(Player player, boolean cacheString, List<String> stringPrefixSuffix) { return getOf(player.getName(), cacheString, stringPrefixSuffix); }
     public static String getOf(String playerName, boolean cacheString, List<String> stringPrefixSuffix) {
 
-        if (cachedNames.containsKey(playerName.toLowerCase())) return cachedNames.get(playerName.toLowerCase());
+        if (CACHED_NAMES.containsKey(playerName.toLowerCase())) return CACHED_NAMES.get(playerName.toLowerCase());
 
         BufferedImage head;
 
@@ -88,7 +89,7 @@ public class PlayerFaceToString {
 
         String string = stringBuilder.toString();
 
-        if (cacheString) cachedNames.put(playerName, string);
+        if (cacheString) CACHED_NAMES.put(playerName, string);
 
         return string;
 

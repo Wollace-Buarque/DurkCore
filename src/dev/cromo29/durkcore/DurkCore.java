@@ -1,16 +1,16 @@
 package dev.cromo29.durkcore;
 
-import dev.cromo29.durkcore.API.DurkPlugin;
-import dev.cromo29.durkcore.Commands.Errors;
-import dev.cromo29.durkcore.Commands.Plugins;
-import dev.cromo29.durkcore.Entity.DurkPlayer;
-import dev.cromo29.durkcore.Events.PlayerChangeBlockEvent;
-import dev.cromo29.durkcore.Events.PlayerChangeChunkEvent;
-import dev.cromo29.durkcore.Events.PlayerJumpEvent;
-import dev.cromo29.durkcore.Events.PlayerOpenChestEvent;
-import dev.cromo29.durkcore.Inventory.Inv;
-import dev.cromo29.durkcore.Updater.Updater;
-import dev.cromo29.durkcore.Util.GetValueFromPlayerChat;
+import dev.cromo29.durkcore.api.DurkPlugin;
+import dev.cromo29.durkcore.commands.Errors;
+import dev.cromo29.durkcore.commands.Plugins;
+import dev.cromo29.durkcore.entity.DurkPlayer;
+import dev.cromo29.durkcore.events.PlayerChangeBlockEvent;
+import dev.cromo29.durkcore.events.PlayerChangeChunkEvent;
+import dev.cromo29.durkcore.events.PlayerJumpEvent;
+import dev.cromo29.durkcore.events.PlayerOpenChestEvent;
+import dev.cromo29.durkcore.inventory.Inv;
+import dev.cromo29.durkcore.updater.Updater;
+import dev.cromo29.durkcore.util.GetValueFromPlayerChat;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Chest;

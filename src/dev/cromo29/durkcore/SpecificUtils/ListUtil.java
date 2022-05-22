@@ -1,6 +1,6 @@
-package dev.cromo29.durkcore.SpecificUtils;
+package dev.cromo29.durkcore.specificutils;
 
-import dev.cromo29.durkcore.Util.TXT;
+import dev.cromo29.durkcore.util.TXT;
 
 import java.util.*;
 

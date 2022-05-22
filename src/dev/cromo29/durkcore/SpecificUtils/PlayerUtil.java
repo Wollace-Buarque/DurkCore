@@ -1,8 +1,8 @@
-package dev.cromo29.durkcore.SpecificUtils;
+package dev.cromo29.durkcore.specificutils;
 
 import dev.cromo29.durkcore.DurkCore;
-import dev.cromo29.durkcore.Util.RU;
-import dev.cromo29.durkcore.Util.TXT;
+import dev.cromo29.durkcore.util.RU;
+import dev.cromo29.durkcore.util.TXT;
 import org.apache.commons.lang.reflect.FieldUtils;
 import org.bukkit.Location;
 import org.bukkit.Material;

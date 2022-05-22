@@ -1,7 +1,7 @@
-package dev.cromo29.durkcore.Util.json;
+package dev.cromo29.durkcore.util.json;
 
-import dev.cromo29.durkcore.Util.json.fanciful.FancyMessage;
-import dev.cromo29.durkcore.Util.json.util.TextUtil;
+import dev.cromo29.durkcore.util.json.fanciful.FancyMessage;
+import dev.cromo29.durkcore.util.json.util.TextUtil;
 
 public class LegacyMessagePart implements MessagePart {
 

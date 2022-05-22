@@ -1,4 +1,4 @@
-package dev.cromo29.durkcore.API;
+package dev.cromo29.durkcore.api;
 
 import java.util.List;
 

@@ -1,7 +1,7 @@
-package dev.cromo29.durkcore.Util;
+package dev.cromo29.durkcore.util;
 
 
-import dev.cromo29.durkcore.Util.ReflectionUtils.PackageType;
+import dev.cromo29.durkcore.util.ReflectionUtils.PackageType;
 import org.bukkit.Bukkit;
 import org.bukkit.Color;
 import org.bukkit.Location;

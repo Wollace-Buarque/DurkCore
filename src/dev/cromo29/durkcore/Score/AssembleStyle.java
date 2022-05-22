@@ -1,4 +1,4 @@
-package dev.cromo29.durkcore.Score;
+package dev.cromo29.durkcore.score;
 
 public enum AssembleStyle {
 

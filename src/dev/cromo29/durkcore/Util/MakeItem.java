@@ -1,8 +1,8 @@
-package dev.cromo29.durkcore.Util;
+package dev.cromo29.durkcore.util;
 
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
-import dev.cromo29.durkcore.SpecificUtils.ItemUtil;
+import dev.cromo29.durkcore.specificutils.ItemUtil;
 import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;

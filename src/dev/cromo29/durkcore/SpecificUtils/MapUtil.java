@@ -1,4 +1,4 @@
-package dev.cromo29.durkcore.SpecificUtils;
+package dev.cromo29.durkcore.specificutils;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;

@@ -1,6 +1,6 @@
-package dev.cromo29.durkcore.Util.json;
+package dev.cromo29.durkcore.util.json;
 
-import dev.cromo29.durkcore.Util.json.fanciful.FancyMessage;
+import dev.cromo29.durkcore.util.json.fanciful.FancyMessage;
 
 public interface MessagePart {
 

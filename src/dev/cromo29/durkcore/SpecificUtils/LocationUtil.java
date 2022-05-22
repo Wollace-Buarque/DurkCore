@@ -1,4 +1,4 @@
-package dev.cromo29.durkcore.SpecificUtils;
+package dev.cromo29.durkcore.specificutils;
 
 import org.bukkit.*;
 import org.bukkit.FireworkEffect.Type;
@@ -16,7 +16,7 @@ import java.util.concurrent.ThreadLocalRandom;
 
 public class LocationUtil {
 
-    public static ThreadLocalRandom random = ThreadLocalRandom.current();
+    private final static ThreadLocalRandom RANDOM = ThreadLocalRandom.current();
 
     public static String locationToString(Location location) {
         return location.getWorld().getName() + ", " + location.getBlockX() + ", " + location.getBlockY() + ", " + location.getBlockZ();
@@ -583,7 +583,7 @@ public class LocationUtil {
         Firework firework = (Firework) location.getWorld().spawnEntity(location, EntityType.FIREWORK);
         FireworkMeta fireworkMeta = firework.getFireworkMeta();
 
-        int typeRandom = random.nextInt(4) + 1;
+        int typeRandom = RANDOM.nextInt(4) + 1;
         Type type = Type.BALL;
 
         if (typeRandom == 2) type = Type.BALL_LARGE;
@@ -591,8 +591,8 @@ public class LocationUtil {
         if (typeRandom == 4) type = Type.CREEPER;
         if (typeRandom == 5) type = Type.STAR;
 
-        int firstRandom = random.nextInt(17) + 1;
-        int secondRandom = random.nextInt(17) + 1;
+        int firstRandom = RANDOM.nextInt(17) + 1;
+        int secondRandom = RANDOM.nextInt(17) + 1;
         Color firstColor = getColor(firstRandom);
         Color secondColor = getColor(secondRandom);
 
@@ -601,7 +601,7 @@ public class LocationUtil {
                 .withColor(firstColor)
                 .withFade(secondColor)
                 .with(type)
-                .trail(random.nextBoolean())
+                .trail(RANDOM.nextBoolean())
                 .build();
 
         fireworkMeta.addEffect(effect);

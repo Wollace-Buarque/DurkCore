@@ -1,10 +1,10 @@
-package dev.cromo29.durkcore.SpecificUtils;
+package dev.cromo29.durkcore.specificutils;
 
 import com.google.common.io.BaseEncoding;
-import dev.cromo29.durkcore.Translation.EntityTypeName;
-import dev.cromo29.durkcore.Util.JsonBuilder;
-import dev.cromo29.durkcore.Util.RU;
-import dev.cromo29.durkcore.Util.TXT;
+import dev.cromo29.durkcore.translation.EntityTypeName;
+import dev.cromo29.durkcore.util.JsonBuilder;
+import dev.cromo29.durkcore.util.RU;
+import dev.cromo29.durkcore.util.TXT;
 import org.bukkit.Bukkit;
 import org.bukkit.Color;
 import org.bukkit.DyeColor;

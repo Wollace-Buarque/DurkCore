@@ -1,4 +1,4 @@
-package dev.cromo29.durkcore.Util.json.util;
+package dev.cromo29.durkcore.util.json.util;
 
 
 import org.apache.commons.lang.Validate;

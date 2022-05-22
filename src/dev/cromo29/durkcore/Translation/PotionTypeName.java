@@ -1,4 +1,4 @@
-package dev.cromo29.durkcore.Translation;
+package dev.cromo29.durkcore.translation;
 
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;

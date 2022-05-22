@@ -1,4 +1,4 @@
-package dev.cromo29.durkcore.Util;
+package dev.cromo29.durkcore.util;
 
 import org.bukkit.*;
 import org.bukkit.command.CommandSender;
@@ -15,10 +15,10 @@ public class TXT {
     private TXT() {
     }
 
-    private static Pattern parsePattern;
-    private static Pattern unparsePattern;
-    private static Map<String, String> colors = new HashMap<>();
-    private static List<String> unparse = new ArrayList<>();
+    private static final Pattern PARSE_PATTERN;
+    private static final Pattern UNPARSE_PATTERN;
+    private static final Map<String, String> COLORS = new HashMap<>();
+    private static final List<String> UNPARSE = new ArrayList<>();
 
     public static BukkitTask runLater(Plugin plugin, long after, Runnable runnable) {
         return Bukkit.getScheduler().runTaskLater(plugin, runnable, after);
@@ -87,10 +87,10 @@ public class TXT {
         if (string == null) return null;
 
         StringBuffer ret = new StringBuffer();
-        Matcher matcher = parsePattern.matcher(string);
+        Matcher matcher = PARSE_PATTERN.matcher(string);
 
         while (matcher.find()) {
-            matcher.appendReplacement(ret, colors.get(matcher.group(0)));
+            matcher.appendReplacement(ret, COLORS.get(matcher.group(0)));
         }
 
         matcher.appendTail(ret);
@@ -101,7 +101,7 @@ public class TXT {
         if (string == null) return null;
 
         StringBuffer ret = new StringBuffer();
-        Matcher matcher = unparsePattern.matcher(string);
+        Matcher matcher = UNPARSE_PATTERN.matcher(string);
 
         while (matcher.find()) {
             matcher.appendReplacement(ret, "");
@@ -169,100 +169,100 @@ public class TXT {
     }
 
     static {
-        colors.put("<?>", "�");
-        colors.put("<snowman>", "☃");
-        colors.put("<wheelchair>", "♿");
-        colors.put("<swords>", "⚔");
-        colors.put("<warning>", "⚠");
-        colors.put("<hammer and pick>", "⚒");
-        colors.put("<anchor>", "⚓");
-        colors.put("<empty flag>", "⚐");
-        colors.put("<flag>", "⚑");
-        colors.put("<recicle>", "♺");
-        colors.put("<yin yang>", "☯");
-        colors.put("<radioactive>", "☣");
-        colors.put("<approve>", "✔");
-        colors.put("<disapprove>", "✖");
-        colors.put("<disapprove2>", "✘");
-        colors.put("<plus>", "✚");
-        colors.put("<crosshair>", "✛");
-        colors.put("<zap>", "⚡");
-        colors.put("<star inside ball>", "✪");
-        colors.put("<star>", "⭑");
-        colors.put("<cube>", "■");
-        colors.put("<small cube>", "▪");
-        colors.put("<big cube>", "▉");
-        colors.put("<empty cube>", "□");
-        colors.put("<small ball>", "•");
-        colors.put("<ball>", "●");
-        colors.put("<empty ball>", "○");
-        colors.put("<iene>", "¥");
-        colors.put("<heart>", "❤");
-        colors.put("<triangle>", "▲");
-        colors.put("<left arrow>", "⬅");
-        colors.put("<right arrow>", "➡");
-        colors.put("<arrow>", "➡");
-        colors.put("<down arrow>", "⬇");
-        colors.put("<up arrow>", "⬆");
-        colors.put("<down left arrow>", "↙");
-        colors.put("<down right arrow>", "↘");
-        colors.put("<up left arrow>", "↖");
-        colors.put("<up right arrow>", "↗");
-        colors.put("<arrows>", "↔");
-        colors.put("<up arrows", "↕");
-        colors.put("<notes>", "♫");
-        colors.put("<notes2>", "♬");
-        colors.put("<note>", "♪");
-        colors.put("<left triangle>", "◀");
-        colors.put("<right triangle>", "▶");
-        colors.put("<down triangle>", "▼");
-        colors.put("<up triangle>", "▲");
-        colors.put("<smile face>", "☺");
-        colors.put("<smile>", "☺");
-        colors.put("<full smile face>", "☻");
-        colors.put("<full smile>", "☻");
+        COLORS.put("<?>", "�");
+        COLORS.put("<snowman>", "☃");
+        COLORS.put("<wheelchair>", "♿");
+        COLORS.put("<swords>", "⚔");
+        COLORS.put("<warning>", "⚠");
+        COLORS.put("<hammer and pick>", "⚒");
+        COLORS.put("<anchor>", "⚓");
+        COLORS.put("<empty flag>", "⚐");
+        COLORS.put("<flag>", "⚑");
+        COLORS.put("<recicle>", "♺");
+        COLORS.put("<yin yang>", "☯");
+        COLORS.put("<radioactive>", "☣");
+        COLORS.put("<approve>", "✔");
+        COLORS.put("<disapprove>", "✖");
+        COLORS.put("<disapprove2>", "✘");
+        COLORS.put("<plus>", "✚");
+        COLORS.put("<crosshair>", "✛");
+        COLORS.put("<zap>", "⚡");
+        COLORS.put("<star inside ball>", "✪");
+        COLORS.put("<star>", "⭑");
+        COLORS.put("<cube>", "■");
+        COLORS.put("<small cube>", "▪");
+        COLORS.put("<big cube>", "▉");
+        COLORS.put("<empty cube>", "□");
+        COLORS.put("<small ball>", "•");
+        COLORS.put("<ball>", "●");
+        COLORS.put("<empty ball>", "○");
+        COLORS.put("<iene>", "¥");
+        COLORS.put("<heart>", "❤");
+        COLORS.put("<triangle>", "▲");
+        COLORS.put("<left arrow>", "⬅");
+        COLORS.put("<right arrow>", "➡");
+        COLORS.put("<arrow>", "➡");
+        COLORS.put("<down arrow>", "⬇");
+        COLORS.put("<up arrow>", "⬆");
+        COLORS.put("<down left arrow>", "↙");
+        COLORS.put("<down right arrow>", "↘");
+        COLORS.put("<up left arrow>", "↖");
+        COLORS.put("<up right arrow>", "↗");
+        COLORS.put("<arrows>", "↔");
+        COLORS.put("<up arrows", "↕");
+        COLORS.put("<notes>", "♫");
+        COLORS.put("<notes2>", "♬");
+        COLORS.put("<note>", "♪");
+        COLORS.put("<left triangle>", "◀");
+        COLORS.put("<right triangle>", "▶");
+        COLORS.put("<down triangle>", "▼");
+        COLORS.put("<up triangle>", "▲");
+        COLORS.put("<smile face>", "☺");
+        COLORS.put("<smile>", "☺");
+        COLORS.put("<full smile face>", "☻");
+        COLORS.put("<full smile>", "☻");
 
-        colors.put("<0>", "§0");
-        colors.put("<1>", "§1");
-        colors.put("<2>", "§2");
-        colors.put("<3>", "§3");
-        colors.put("<4>", "§4");
-        colors.put("<5>", "§5");
-        colors.put("<6>", "§6");
-        colors.put("<7>", "§7");
-        colors.put("<8>", "§8");
-        colors.put("<9>", "§9");
-        colors.put("<a>", "§a");
-        colors.put("<b>", "§b");
-        colors.put("<c>", "§c");
-        colors.put("<d>", "§d");
-        colors.put("<e>", "§e");
-        colors.put("<f>", "§f");
-        colors.put("<l>", "§l");
-        colors.put("<o>", "§o");
-        colors.put("<n>", "§n");
-        colors.put("<m>", "§m");
-        colors.put("<k>", "§k");
-        colors.put("<r>", "§r");
+        COLORS.put("<0>", "§0");
+        COLORS.put("<1>", "§1");
+        COLORS.put("<2>", "§2");
+        COLORS.put("<3>", "§3");
+        COLORS.put("<4>", "§4");
+        COLORS.put("<5>", "§5");
+        COLORS.put("<6>", "§6");
+        COLORS.put("<7>", "§7");
+        COLORS.put("<8>", "§8");
+        COLORS.put("<9>", "§9");
+        COLORS.put("<a>", "§a");
+        COLORS.put("<b>", "§b");
+        COLORS.put("<c>", "§c");
+        COLORS.put("<d>", "§d");
+        COLORS.put("<e>", "§e");
+        COLORS.put("<f>", "§f");
+        COLORS.put("<l>", "§l");
+        COLORS.put("<o>", "§o");
+        COLORS.put("<n>", "§n");
+        COLORS.put("<m>", "§m");
+        COLORS.put("<k>", "§k");
+        COLORS.put("<r>", "§r");
 
         for (int i = 48; i <= 122; ++i) {
             char c = (char) i;
 
-            colors.put("§" + c, "§" + c);
-            colors.put("&" + c, "§" + c);
-            colors.put(("§" + c).toUpperCase(), ("§" + c).toUpperCase());
-            colors.put(("&" + c).toUpperCase(), ("§" + c).toUpperCase());
+            COLORS.put("§" + c, "§" + c);
+            COLORS.put("&" + c, "§" + c);
+            COLORS.put(("§" + c).toUpperCase(), ("§" + c).toUpperCase());
+            COLORS.put(("&" + c).toUpperCase(), ("§" + c).toUpperCase());
 
             if (i == 57) {
                 i = 96;
             }
         }
 
-        unparse.addAll(colors.values());
+        UNPARSE.addAll(COLORS.values());
 
         StringBuilder patternStringBuilder = new StringBuilder();
 
-        for (String find : colors.keySet()) {
+        for (String find : COLORS.keySet()) {
             patternStringBuilder.append('(');
             patternStringBuilder.append(Pattern.quote(find));
             patternStringBuilder.append(")|");
@@ -271,11 +271,11 @@ public class TXT {
         String patternString = patternStringBuilder.toString();
         patternString = patternString.substring(0, patternString.length() - 1);
 
-        parsePattern = Pattern.compile(patternString);
+        PARSE_PATTERN = Pattern.compile(patternString);
 
         StringBuilder unpatternStringBuilder = new StringBuilder();
 
-        for (String find : unparse) {
+        for (String find : UNPARSE) {
             unpatternStringBuilder.append('(');
             unpatternStringBuilder.append(Pattern.quote(find));
             unpatternStringBuilder.append(")|");
@@ -284,6 +284,6 @@ public class TXT {
         String unpatternString = unpatternStringBuilder.toString();
         unpatternString = unpatternString.substring(0, unpatternString.length() - 1);
 
-        unparsePattern = Pattern.compile(unpatternString);
+        UNPARSE_PATTERN = Pattern.compile(unpatternString);
     }
 }

@@ -1,7 +1,7 @@
-package dev.cromo29.durkcore.Util.json.util;
+package dev.cromo29.durkcore.util.json.util;
 
 import dev.cromo29.durkcore.DurkCore;
-import dev.cromo29.durkcore.Util.json.LegacyConverter;
+import dev.cromo29.durkcore.util.json.LegacyConverter;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;

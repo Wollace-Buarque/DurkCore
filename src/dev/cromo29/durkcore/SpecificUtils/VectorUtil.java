@@ -1,4 +1,4 @@
-package dev.cromo29.durkcore.SpecificUtils;
+package dev.cromo29.durkcore.specificutils;
 
 import org.bukkit.Location;
 import org.bukkit.util.Vector;
@@ -9,7 +9,7 @@ public final class VectorUtil {
         throw new UnsupportedOperationException("This is a utility class and cannot be instantiated");
     }
 
-    public static final Vector rotateAroundAxisX(Vector vector, double angle) {
+    public static Vector rotateAroundAxisX(Vector vector, double angle) {
         double y, z, cos, sin;
         cos = Math.cos(angle);
         sin = Math.sin(angle);
@@ -19,7 +19,7 @@ public final class VectorUtil {
         return vector.setY(y).setZ(z);
     }
 
-    public static final Vector rotateAroundAxisY(Vector vector, double angle) {
+    public static Vector rotateAroundAxisY(Vector vector, double angle) {
         double x, z, cos, sin;
         cos = Math.cos(angle);
         sin = Math.sin(angle);
@@ -29,7 +29,7 @@ public final class VectorUtil {
         return vector.setX(x).setZ(z);
     }
 
-    public static final Vector rotateAroundAxisZ(Vector vector, double angle) {
+    public static Vector rotateAroundAxisZ(Vector vector, double angle) {
         double x, y, cos, sin;
         cos = Math.cos(angle);
         sin = Math.sin(angle);
@@ -60,7 +60,7 @@ public final class VectorUtil {
         return vector.setX(x).setY(y);
     }
 
-    public static final Vector rotateVector(Vector vector, double angleX, double angleY, double angleZ) {
+    public static Vector rotateVector(Vector vector, double angleX, double angleY, double angleZ) {
         rotateAroundAxisX(vector, angleX);
         rotateAroundAxisY(vector, angleY);
         rotateAroundAxisZ(vector, angleZ);
@@ -75,7 +75,7 @@ public final class VectorUtil {
      * @param location
      * @return
      */
-    public static final Vector rotateVector(Vector vector, Location location) {
+    public static Vector rotateVector(Vector vector, Location location) {
         return rotateVector(vector, location.getYaw(), location.getPitch());
     }
 
@@ -89,7 +89,7 @@ public final class VectorUtil {
      * @param pitchDegrees
      * @return
      */
-    public static final Vector rotateVector(Vector vector, float yawDegrees, float pitchDegrees) {
+    public static Vector rotateVector(Vector vector, float yawDegrees, float pitchDegrees) {
         double yaw = Math.toRadians(-1 * (yawDegrees + 90));
         double pitch = Math.toRadians(-pitchDegrees);
 
@@ -116,7 +116,7 @@ public final class VectorUtil {
         return new Vector(x, y, z);
     }
 
-    public static final double angleToXAxis(Vector vector) {
+    public static double angleToXAxis(Vector vector) {
         return Math.atan2(vector.getX(), vector.getY());
     }
 }

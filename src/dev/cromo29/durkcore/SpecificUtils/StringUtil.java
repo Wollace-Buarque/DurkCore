@@ -1,13 +1,14 @@
-package dev.cromo29.durkcore.SpecificUtils;
+package dev.cromo29.durkcore.specificutils;
 
-import dev.cromo29.durkcore.Util.DefaultFontInfo;
-import dev.cromo29.durkcore.Util.TXT;
+import dev.cromo29.durkcore.util.DefaultFontInfo;
+import dev.cromo29.durkcore.util.TXT;
 import org.bukkit.command.CommandSender;
+
+import java.util.Arrays;
 
 public class StringUtil {
 
-    private final static int CENTER_PX = 154;
-    private final static int MAX_PX = 250;
+    private final static int CENTER_PX = 154, MAX_PX = 250;
 
     public static String replaceLast(String text, String regex, String replacement) {
         return text.replaceFirst("(?s)(.*)" + regex, "$1" + replacement);
@@ -40,21 +41,23 @@ public class StringUtil {
             newcost[0] = j;
 
             // transformation cost for each letter in s0
-            for(int i = 1; i < len0; i++) {
+            for (int i = 1; i < len0; i++) {
                 // matching current letters in both strings
                 int match = (stringA.charAt(i - 1) == stringB.charAt(j - 1)) ? 0 : 1;
 
                 // computing cost for each transformation
                 int cost_replace = cost[i - 1] + match;
-                int cost_insert  = cost[i] + 1;
-                int cost_delete  = newcost[i - 1] + 1;
+                int cost_insert = cost[i] + 1;
+                int cost_delete = newcost[i - 1] + 1;
 
                 // keep minimum cost
                 newcost[i] = Math.min(Math.min(cost_insert, cost_delete), cost_replace);
             }
 
             // swap cost/newcost arrays
-            int[] swap = cost; cost = newcost; newcost = swap;
+            int[] swap = cost;
+            cost = newcost;
+            newcost = swap;
         }
 
         // the distance is the cost for transforming all letters in both strings
@@ -62,7 +65,7 @@ public class StringUtil {
     }
 
     public static void sendCenteredWithBreak(CommandSender sender, String... messages) {
-        for (String message : messages) sendCenteredWithBreak(sender, message);
+        Arrays.asList(messages).forEach(message -> sendCenteredWithBreak(sender, message));
     }
 
     public static void sendCenteredWithBreak(CommandSender sender, String message) {
@@ -126,8 +129,7 @@ public class StringUtil {
     }
 
     public static void sendCentered(CommandSender sender, String... messages) {
-        for (String message : messages)
-            sendCentered(sender, message);
+        Arrays.asList(messages).forEach(message -> sendCentered(sender, message));
     }
 
     public static void sendCentered(CommandSender sender, String message) {
@@ -195,13 +197,13 @@ public class StringUtil {
         int spaceLength = DefaultFontInfo.SPACE.getLength() + 1;
         int compensated = 0;
 
-        StringBuilder sb = new StringBuilder();
+        StringBuilder stringBuilder = new StringBuilder();
 
         while (compensated < toCompensate) {
-            sb.append(" ");
+            stringBuilder.append(" ");
             compensated += spaceLength;
         }
 
-        return TXT.parse(sb.toString() + message);
+        return TXT.parse(stringBuilder + message);
     }
 }

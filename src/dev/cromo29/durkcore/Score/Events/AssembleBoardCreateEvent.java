@@ -1,4 +1,4 @@
-package dev.cromo29.durkcore.Score.Events;
+package dev.cromo29.durkcore.score.events;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;

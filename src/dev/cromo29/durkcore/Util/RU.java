@@ -1,4 +1,4 @@
-package dev.cromo29.durkcore.Util;
+package dev.cromo29.durkcore.util;
 
 
 import org.bukkit.Bukkit;
@@ -282,6 +282,7 @@ public class RU {
             setObject(RU.class, null, "serverVersion", Bukkit.getServer().getClass().getPackage().getName()
                     .substring(Bukkit.getServer().getClass().getPackage().getName().lastIndexOf(46) + 1));
         } catch (Exception ignored) {
+            ignored.printStackTrace();
         }
 
     }

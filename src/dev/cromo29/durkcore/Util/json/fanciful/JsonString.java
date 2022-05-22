@@ -1,4 +1,4 @@
-package dev.cromo29.durkcore.Util.json.fanciful;
+package dev.cromo29.durkcore.util.json.fanciful;
 
 import com.google.gson.stream.JsonWriter;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;

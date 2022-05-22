@@ -1,4 +1,4 @@
-package dev.cromo29.durkcore.Util;
+package dev.cromo29.durkcore.util;
 
 public enum DefaultFontInfo {
 
@@ -53,8 +53,8 @@ public enum DefaultFontInfo {
     PERIOD('.', 1), COMMA(',', 1),
     SPACE(' ', 3), DEFAULT('a', 4);
 
-    private char character;
-    private int length;
+    private final char character;
+    private final int length;
 
     DefaultFontInfo(char character, int length) {
         this.character = character;

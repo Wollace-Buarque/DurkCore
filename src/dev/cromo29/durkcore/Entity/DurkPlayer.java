@@ -1,13 +1,13 @@
-package dev.cromo29.durkcore.Entity;
+package dev.cromo29.durkcore.entity;
 
 import com.google.common.collect.Lists;
 import dev.cromo29.durkcore.DurkCore;
-import dev.cromo29.durkcore.Inventory.Inv;
-import dev.cromo29.durkcore.SpecificUtils.LocationUtil;
-import dev.cromo29.durkcore.SpecificUtils.PlayerUtil;
-import dev.cromo29.durkcore.Util.MakeItem;
-import dev.cromo29.durkcore.Util.ParticleEffect;
-import dev.cromo29.durkcore.Util.TXT;
+import dev.cromo29.durkcore.inventory.Inv;
+import dev.cromo29.durkcore.specificutils.LocationUtil;
+import dev.cromo29.durkcore.specificutils.PlayerUtil;
+import dev.cromo29.durkcore.util.MakeItem;
+import dev.cromo29.durkcore.util.ParticleEffect;
+import dev.cromo29.durkcore.util.TXT;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.conversations.Conversation;
@@ -32,7 +32,7 @@ import java.util.*;
 
 public class DurkPlayer implements Player {
 
-    private Player player;
+    private final Player player;
 
     private DurkPlayer(Player player) {
         this.player = player;
