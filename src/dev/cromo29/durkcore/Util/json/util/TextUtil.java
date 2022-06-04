@@ -1,13 +1,12 @@
 package dev.cromo29.durkcore.util.json.util;
 
-import dev.cromo29.durkcore.DurkCore;
 import dev.cromo29.durkcore.util.json.LegacyConverter;
 import net.md_5.bungee.api.ChatColor;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 
 public class TextUtil {
 
@@ -135,26 +134,36 @@ public class TextUtil {
      * Sends json-formatted message to player
      */
     public void sendJson(Player player, String json) {
-        /*try {
+        try {
             Class<?> clsIChatBaseComponent = ServerPackage.MINECRAFT.getClass("IChatBaseComponent");
-            Class<?> clsChatMessageType = ServerPackage.MINECRAFT.getClass("ChatMessageType");
             Object entityPlayer = player.getClass().getMethod("getHandle").invoke(player);
             Object playerConnection = entityPlayer.getClass().getField("playerConnection").get(entityPlayer);
-            Object chatBaseComponent = ServerPackage.MINECRAFT.getClass("IChatBaseComponent$ChatSerializer").getMethod("jsonToComponent", String.class).invoke(null, json);
-            Object chatMessageType = clsChatMessageType.getMethod("valueOf", String.class).invoke(null, "CHAT");
+            Object chatBaseComponent = ServerPackage.MINECRAFT.getClass("IChatBaseComponent$ChatSerializer").getMethod("a", String.class).invoke(null, json);
             Object packetPlayOutChat;
+
             try {
-                packetPlayOutChat = ServerPackage.MINECRAFT.getClass("PacketPlayOutChat").getConstructor(clsIChatBaseComponent, clsChatMessageType).newInstance(chatBaseComponent, chatMessageType);
+                packetPlayOutChat = ServerPackage.MINECRAFT.getClass("PacketPlayOutChat").getConstructor(clsIChatBaseComponent).newInstance(chatBaseComponent);
             } catch (Throwable t) {
-                // New constructor for v1_16
-                packetPlayOutChat = ServerPackage.MINECRAFT.getClass("PacketPlayOutChat").getConstructor(clsIChatBaseComponent, clsChatMessageType, UUID.class).newInstance(chatBaseComponent, chatMessageType, null);
+                Class<?> clsChatMessageType = ServerPackage.MINECRAFT.getClass("ChatMessageType");
+                Object chatMessageType = clsChatMessageType.getMethod("valueOf", String.class).invoke(null, "CHAT");
+                chatBaseComponent = ServerPackage.MINECRAFT.getClass("IChatBaseComponent$ChatSerializer").getMethod("jsonToComponent", String.class).invoke(null, json);
+
+                try {
+                    packetPlayOutChat = ServerPackage.MINECRAFT.getClass("PacketPlayOutChat").getConstructor(clsIChatBaseComponent, clsChatMessageType).newInstance(chatBaseComponent, chatMessageType);
+                } catch (Throwable t1) {
+                    // New constructor for v1_16
+                    packetPlayOutChat = ServerPackage.MINECRAFT.getClass("PacketPlayOutChat").getConstructor(clsIChatBaseComponent, clsChatMessageType, UUID.class).newInstance(chatBaseComponent, chatMessageType, null);
+                }
+
             }
+
             playerConnection.getClass().getMethod("sendPacket", ServerPackage.MINECRAFT.getClass("Packet")).invoke(playerConnection, packetPlayOutChat);
         } catch (Throwable e) {
             throw new RuntimeException("Json components is not supported on your server version (" + ServerPackage.getServerVersion() + ")", e);
-        }*/ // <- Metodo para plugins acima da 1.8.9 (Eu acho)
+        }
 
-        Bukkit.getScheduler().runTask(DurkCore.durkCore, () -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "tellraw " + player.getName() + " " + json));
+
+        //Bukkit.getScheduler().runTask(DurkCore.durkCore, () -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "tellraw " + player.getName() + " " + json));
     }
 
    /* private Color calculateGradientColor(int x, int parts, Color from, Color to) {

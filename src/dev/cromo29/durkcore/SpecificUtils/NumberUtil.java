@@ -27,14 +27,6 @@ public class NumberUtil {
         return FORMAT.format(number / (double) VALUES[1][index]) + VALUES[0][index];
     }
 
-    public static int getPercentageRounded(double value, double percentage) {
-        return (int) getPercentage(value, percentage);
-    }
-
-    public static double getPercentage(double value, double percentage) {
-        return Math.round(value * percentage / 100d);
-    }
-
     public static double randomPercentage() {
         return ThreadLocalRandom.current().nextDouble() * 100.0;
     }
@@ -48,7 +40,6 @@ public class NumberUtil {
 
         return (int) (maxValue * percent);
     }
-
 
     public static String getProgressBar(double current, double max, int totalBars, String symbol, String completedColor, String notCompletedColor) {
         float percent = (float) current / (float) max;

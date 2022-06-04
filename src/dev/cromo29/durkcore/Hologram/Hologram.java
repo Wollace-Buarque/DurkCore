@@ -1,7 +1,6 @@
 package dev.cromo29.durkcore.hologram;
 
 import com.google.common.collect.ImmutableList;
-import dev.cromo29.durkcore.DurkCore;
 import dev.cromo29.durkcore.util.TXT;
 import org.bukkit.Location;
 import org.bukkit.entity.ArmorStand;
@@ -94,7 +93,7 @@ public class Hologram implements Listener {
         for (int index = 0; index < hologramLines.size(); index++) {
             HologramLine hologramLine = hologramLines.get(index);
 
-            hologramLine.getArmorStand().setMetadata(metadata, new FixedMetadataValue(DurkCore.durkCore, metadata));
+            hologramLine.getArmorStand().setMetadata(metadata, new FixedMetadataValue(plugin, metadata));
         }
 
         return this;
@@ -105,13 +104,13 @@ public class Hologram implements Listener {
     }
 
     @EventHandler
-    public void onManiple(PlayerArmorStandManipulateEvent event) {
+    private void onManiple(PlayerArmorStandManipulateEvent event) {
 
         if (event.getRightClicked().hasMetadata(metadata)) event.setCancelled(true);
     }
 
     @EventHandler
-    public void onDisable(PluginDisableEvent event) {
+    private void onDisable(PluginDisableEvent event) {
 
         if (!event.isAsynchronous() && removeOnDisable) clear();
     }
